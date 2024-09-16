@@ -15,6 +15,9 @@ const SignIn = () => {
           <Input size="large" placeholder="example@gmail.com" />
           <p>Password</p>
           <Input size="large" placeholder="aaAA@12345" />
+          <div className="forgot">
+            <Link to={"/forgot-password"}>Forgot password</Link>
+          </div>
           <div className="button_hightline">
             <Button className="button">Login</Button>
             <span className="hightline_v2"></span>
