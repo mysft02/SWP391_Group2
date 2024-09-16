@@ -1,67 +1,17 @@
-.card {
+.title {
+    p {
+        text-align: center;
+    }
+}
+
+.card_signin {
+    margin-top: 50px;
     margin-left: 70px;
     margin-bottom: 20px;
     width: 500px;
-    height: 480px;
+    height: 400px;
     background-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 10px rgba(0, 0 ,0 , 0.4); 
     border-radius: 40px;  
     position: relative; 
-}
-.title {
-    position: relative;   
-    font-family: "Roboto", sans-serif;
-    font-weight: 500;
-    font-size: 27px;
-    margin-top: -40px;
-}
-
-.hightline {
-    position: absolute;
-    content: "";
-    background-color: black;
-    width: 100%;
-    height: 1%;
-    margin-top: -20px;
-}
-
-
-.form-signin {
-    p {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        font-size: 15px;
-    }
-}
-
-.checkbox {
-    margin-top: 8px;
-}
-
-.button {
-    width: 100%;
-    height: 40px;
-    margin-top: 15px;
-    background-color: #DE3B40;
-    position: relative;
-}
-
-.button_hightline {
-    position: relative;
-}
-
-.hightline_v2 {
-    position: absolute;
-    height: 1px;
-    width: 100%;
-    background-color: black;
-    top: 100%;
-    left: 0;
-    margin-top: 5px;
-}
-
-.return {
-    color: #ffff;
-    text-align: center;
-    margin-top: 15px;
 }

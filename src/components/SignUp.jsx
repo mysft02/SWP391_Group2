@@ -1,6 +1,6 @@
 import { Button, Card, Checkbox, Col, Input, Row } from "antd";
 import React from "react";
-import "../styles/SignIn.css";
+import "../styles/SignUp.css";
 import { Link } from "react-router-dom";
 const SignUp = () => {
   return (
@@ -38,7 +38,7 @@ const SignUp = () => {
             </div>
             <div className="return">
               <p>
-                Returning user?<Link>Log in here</Link>
+                Returning user? <Link to={"/sign-in"}>Log in here</Link>
               </p>
             </div>
           </form>
