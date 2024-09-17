@@ -1,6 +1,6 @@
 import { Button, Card, Input } from "antd";
 import React from "react";
-import "../styles/RestorePassword.css";
+import './RestorePassword.css'
 import { IoMdReturnLeft } from "react-icons/io";
 import { Link } from "react-router-dom";
 

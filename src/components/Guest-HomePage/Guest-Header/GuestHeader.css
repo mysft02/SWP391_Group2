@@ -9,7 +9,7 @@ body {
 }
 
 body {
-    background-image: url('../assets/Header_BG.svg');
+    background-image: url('../../../assets/Header_BG.svg');
     background-size: cover;
     background-position: top left;
     background-repeat: no-repeat;

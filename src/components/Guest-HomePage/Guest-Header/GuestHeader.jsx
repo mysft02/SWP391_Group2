@@ -1,9 +1,9 @@
 import React from "react";
-import logo from "../assets/logo.svg";
-import "../styles/Header.css";
+import logo from "../../../assets/logo.svg";
+import './GuestHeader.css'
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const GuestHeader = () => {
   return (
     <div className="header">
       <div className="logo">
@@ -26,4 +26,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default GuestHeader;

@@ -1,6 +1,6 @@
 import { Button, Card, Checkbox, Col, Input, Row } from "antd";
 import React from "react";
-import "../styles/SignUp.css";
+import './SignUp.css'
 import { Link } from "react-router-dom";
 const SignUp = () => {
   return (
