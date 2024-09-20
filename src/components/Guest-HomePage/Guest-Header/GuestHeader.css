@@ -6,7 +6,8 @@
   }
   
   .logo img {
-    width: 150px;
+    width: 170px;
+    margin-left: 35px;
   }
   
   .link ul {
@@ -35,7 +36,7 @@
   .ul_2 {
     display: flex;
     align-items: center;
-    gap: 10px;
+    
   }
   
   /* Nút mặc định */
@@ -55,7 +56,6 @@
   /* Điều chỉnh khi hover nút */
   .ant-btn:hover {
     background-color: #a1715e !important; /* Màu nền khi hover */
-    color: #fff; /* Màu chữ khi hover */
   }
   
   /* Màu sắc nút "Sign in" */
@@ -66,7 +66,7 @@
   
   /* Màu sắc nút "Register" */
   .ant-btn-default {
-    background-color: #7e6161; /* Màu nền */
+    background-color: #7e6161 !important; /* Màu nền */
     border-color: #5c4343; /* Màu viền */
   }
   
@@ -74,6 +74,5 @@
   .ant-btn-small {
     height: 30px; /* Chiều cao nhỏ hơn */
     font-size: 14px; /* Kích thước chữ nhỏ hơn */
-    padding: 0 10px;
   }
   

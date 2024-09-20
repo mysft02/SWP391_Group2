@@ -1,6 +1,6 @@
 import './index.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LayoutHome from "./template/LayoutHome";
+import LayoutHome from "./template/LayoutHome/LayoutHome";
 import SignIn from "./components/Guest-HomePage/SignIn/SignIn";
 import SignUp from "./components/Guest-HomePage/SignUp/SignUp";
 import RestorePassword from "./components/Guest-HomePage/Restorepassword/RestorePassword";
