@@ -1,8 +1,12 @@
-import { Button, Card, Checkbox, Col, Input, Row } from "antd";
+import { Button, Card, Checkbox, Col, Form, Input, Row } from "antd";
 import React from "react";
-import './SignUp.css'
+import "./SignUp.css";
 import { Link } from "react-router-dom";
 const SignUp = () => {
+  const onFinish = (msg) => {
+    console.log(JSON.stringify(msg));
+  };
+
   return (
     <div>
       <Card className="card">
@@ -11,37 +15,171 @@ const SignUp = () => {
           <span className="hightline"></span>
         </div>
         <div className="form-signin">
-          <form>
+          <Form
+            labelCol={{
+              span: 24,
+            }}
+            style={{ marginTop: "-20px" }}
+            onFinish={onFinish}
+          >
             <Row>
               <Col span={12} style={{ paddingRight: "5px" }}>
-                <p>Full Name</p>
-                <Input size="middle" placeholder="Nguyen Van  A" />
+                <Form.Item
+                  label="Full Name"
+                  name="fullname"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your full name",
+                    },
+                  ]}
+                >
+                  <Input size="middle" placeholder="Nguyen Van  A" />
+                </Form.Item>
               </Col>
               <Col span={12}>
-                <p>Phone</p>
-                <Input size="middle" placeholder="0xxxxxxxxx" />
+                <Form.Item
+                  label="Phone"
+                  name="phone"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "please input your phone",
+                    },
+                    {
+                      pattern: new RegExp(/^[0-9]{10}$/), // Validate số điện thoại
+                      message: "Phone number must be 10 digits",
+                    },
+                  ]}
+                >
+                  <Input size="middle" placeholder="0xxxxxxxxx" />
+                </Form.Item>
               </Col>
             </Row>
-            <p>Email</p>
-            <Input size="middle" placeholder="example@gmail.com" />
-            <p>Username</p>
-            <Input size="middle" placeholder="Name1234@@@" />
-            <p>Password</p>
-            <Input size="middle" placeholder="aaAA@12345" />
+            <Row>
+              <Col span={12} style={{ paddingRight: "5px" }}>
+                <Form.Item
+                  label="Email"
+                  name="emai"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your email",
+                    },
+                    {
+                      type: "email",
+                      message: "The input is not valid email",
+                    },
+                  ]}
+                >
+                  <Input size="middle" placeholder="example@gmail.com" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Username"
+                  name="username"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your username",
+                    },
+                  ]}
+                >
+                  <Input size="middle" placeholder="Name1234@@@" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12} style={{ paddingRight: "5px" }}>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password",
+                    },
+                  ]}
+                >
+                  <Input.Password size="middle" placeholder="aaAA@12345" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Confirm Password"
+                  dependencies={["password"]}
+                  name="password2"
+                  style={{ marginBottom: "1px" }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input confirm your password",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(
+                          new Error("Passwords do not match!")
+                        );
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password size="middle" placeholder="aaAA@12345" />
+                </Form.Item>
+              </Col>
+            </Row>
+
             <div className="checkbox">
+
               <Checkbox>By signing up, I agree with the</Checkbox>{" "}
               <Link>Terms of Service & Privacy Policy</Link>
+
+              <Form.Item
+                name="agreement"
+                valuePropName="checked"
+                validateTrigger="onSubmit"
+                style={{ marginBottom: "1px" }}
+                rules={[
+                  {
+                    validator: (_, value) =>
+                      value
+                        ? Promise.resolve()
+                        : Promise.reject(
+                            new Error("You must accept the terms")
+                          ),
+                  },
+                ]}
+              >
+                <Checkbox>
+                  By signing up, I agree with the{" "}
+                  <Link>Terms of Use & Privacy Policy</Link>
+                </Checkbox>
+              </Form.Item>
+
             </div>
             <div className="button_hightline">
-              <Button className="button">Register</Button>
-              <span className="hightline_v2"></span>
+              <Form.Item>
+                <Button className="button" htmlType="submit">
+                  Register
+                </Button>
+                <span className="hightline_v2"></span>
+              </Form.Item>
             </div>
             <div className="return">
               <p>
                 Returning user? <Link to={"/sign-in"}>Log in here</Link>
               </p>
             </div>
-          </form>
+          </Form>
         </div>
       </Card>
     </div>

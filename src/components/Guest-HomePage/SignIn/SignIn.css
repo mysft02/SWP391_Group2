@@ -17,5 +17,9 @@
 }
 .forgot {
    text-align: right;
-   margin: 5px 0 5px 0px;
+   margin: -3px 0px -10px 0px;
+}
+
+form > p {
+    margin-bottom: 10px;
 }

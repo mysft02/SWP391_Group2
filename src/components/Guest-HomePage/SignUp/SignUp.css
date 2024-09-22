@@ -8,12 +8,14 @@
     border-radius: 40px;  
     position: relative; 
 }
+
+
 .title {
     position: relative;   
     font-family: "Roboto", sans-serif;
     font-weight: 500;
-    font-size: 27px;
-    margin-top: -40px;
+    font-size: 25px;
+    margin-top: -45px;
 }
 
 .hightline {
@@ -22,20 +24,14 @@
     background-color: black;
     width: 100%;
     height: 1%;
-    margin-top: -20px;
+    margin-top: -25px;
 }
 
 
-.form-signin {
-    p {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        font-size: 15px;
-    }
-}
+
 
 .checkbox {
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .button {
@@ -67,5 +63,5 @@
 .return {
     color: #ffff;
     text-align: center;
-    margin-top: 15px;
+    margin-top: -20px;
 }
