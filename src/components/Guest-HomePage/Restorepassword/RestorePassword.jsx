@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const RestorePassword = () => {
   return (
-    <div>
+    <div className="page-background">
       <Card className="card_restore">
         <Form
           labelCol={{
