@@ -1,47 +1,72 @@
 import logo from "../../../assets/logo.svg";
-import './GuestHeader.css';
+import "./GuestHeader.css";
 import { Link } from "react-router-dom";
-import { Button } from 'antd';
-import { HomeOutlined, FileTextOutlined, TrophyOutlined, PhoneOutlined, UserOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Button } from "antd";
+import {
+  HomeOutlined,
+  FileTextOutlined,
+  TrophyOutlined,
+  PhoneOutlined,
+  UserOutlined,
+  UserAddOutlined,
+} from "@ant-design/icons";
 
 const GuestHeader = () => {
   return (
     <div className="guest-header">
       <div className="logo">
-        <img src={logo} alt="logo" />
+        <Link to={"/"}>
+          <img src={logo} alt="logo" />
+        </Link>
       </div>
       <div className="link">
         <ul className="ul_1">
           <li>
-            <Button type="primary" icon={<HomeOutlined />}>
-              <Link to={"/"}>Home</Link>
-            </Button>
+            <Link to={"/"}>
+              <Button type="primary" icon={<HomeOutlined />}>
+                Home
+              </Button>
+            </Link>
           </li>
           <li>
-            <Button type="primary" icon={<FileTextOutlined />}>
-              <Link to={"/news"}>News</Link>
-            </Button>
+            <Link to={"/news"}>
+              <Button type="primary" icon={<FileTextOutlined />}>
+                News
+              </Button>
+            </Link>
           </li>
           <li>
-            <Button type="primary" icon={<TrophyOutlined />}>
-              <Link to={"/competition"}>Competition</Link>
-            </Button>
+            <Link to={"/competition"}>
+              <Button type="primary" icon={<TrophyOutlined />}>
+                Competition
+              </Button>
+            </Link>
           </li>
           <li>
-            <Button type="primary" icon={<PhoneOutlined />}>
-              <Link to={"/contact"}>Contact</Link>
-            </Button>
+            <Link to={"/contact"}>
+              <Button type="primary" icon={<PhoneOutlined />}>
+                Contact
+              </Button>
+            </Link>
           </li>
           <ul className="ul_2">
             <li>
-              <Button type="primary" icon={<UserOutlined />}>
-                <Link to={"/sign-in"}>Sign in</Link>
-              </Button>
+              <Link to={"/sign-in"}>
+                <Button type="primary" icon={<UserOutlined />}>
+                  Sign in
+                </Button>
+              </Link>
             </li>
             <li>
-              <Button type="default" icon={<UserAddOutlined />}>
-                <Link to={"/sign-up"}>Register</Link>
-              </Button>
+              <Link to={"/sign-up"}>
+                <Button
+                  type="default"
+                  htmlType="button"
+                  icon={<UserAddOutlined />}
+                >
+                  Register
+                </Button>
+              </Link>
             </li>
           </ul>
         </ul>
