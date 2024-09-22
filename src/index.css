@@ -4,11 +4,7 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-
 }
 body {
-    background-image: url('./assets/Header_BG.svg');
-    background-size: cover;
-    background-position: top left;
-    background-repeat: no-repeat;
+ background-color: #F49E7B;
 }

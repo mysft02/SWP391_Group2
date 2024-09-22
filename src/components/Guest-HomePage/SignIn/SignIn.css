@@ -23,3 +23,11 @@
 form > p {
     margin-bottom: 10px;
 }
+
+.page-background {
+    background-image: url('../../../assets/Header_BG.svg');
+    background-size: cover;
+    background-position: top left;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}

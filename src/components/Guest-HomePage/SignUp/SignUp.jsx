@@ -8,7 +8,7 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className="page-background">
       <Card className="card">
         <div className="title">
           <p>Create your account</p>
@@ -139,10 +139,6 @@ const SignUp = () => {
             </Row>
 
             <div className="checkbox">
-
-              <Checkbox>By signing up, I agree with the</Checkbox>{" "}
-              <Link>Terms of Service & Privacy Policy</Link>
-
               <Form.Item
                 name="agreement"
                 valuePropName="checked"
@@ -164,7 +160,6 @@ const SignUp = () => {
                   <Link>Terms of Use & Privacy Policy</Link>
                 </Checkbox>
               </Form.Item>
-
             </div>
             <div className="button_hightline">
               <Form.Item>
