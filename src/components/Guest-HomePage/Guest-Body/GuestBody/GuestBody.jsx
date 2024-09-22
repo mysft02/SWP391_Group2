@@ -8,10 +8,10 @@ function GuestBody() {
             <GuestBanner/>
         </div>
         <div className='guest-news'>
-
+          <h2>News of Competition</h2>
         </div>
         <div className='guest-competition'>
-
+          <h2>Competition</h2>
         </div>
       
     </div>

@@ -30,7 +30,7 @@ const SignUp = () => {
             <Input size="middle" placeholder="aaAA@12345" />
             <div className="checkbox">
               <Checkbox>By signing up, I agree with the</Checkbox>{" "}
-              <Link>Terms of Use & Privacy Policy</Link>
+              <Link>Terms of Service & Privacy Policy</Link>
             </div>
             <div className="button_hightline">
               <Button className="button">Register</Button>

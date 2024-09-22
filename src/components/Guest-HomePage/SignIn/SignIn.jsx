@@ -23,7 +23,7 @@ const SignIn = () => {
           </div>
           <div className="return">
             <p>
-              no account? <Link to={"/sign-up"}>Sign up</Link>
+              No account? <Link to={"/sign-up"}>Sign up</Link>
             </p>
           </div>
         </form>
