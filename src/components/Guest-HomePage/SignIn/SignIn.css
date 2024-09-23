@@ -27,6 +27,10 @@ form>p {
     margin-bottom: 10px;
 }
 
+.page-background {
+    position: relative;
+}
+
 .card_detail {
     background-image: url('../../../assets/Header_BG.svg');
     background-size: cover;
@@ -35,8 +39,4 @@ form>p {
     min-height: 100vh;
     min-width: 100vw;
     position: absolute;
-}
-
-.page-background {
-    position: relative;
 }
