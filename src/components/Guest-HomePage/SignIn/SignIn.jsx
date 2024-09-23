@@ -10,7 +10,7 @@ const SignIn = () => {
   };
   return (
     <div className="page-background">
-      <div className="background">
+      <div className="card_detail">
         <Card className="card_signin">
           <div className="title">
             <p>Sign in</p>

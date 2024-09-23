@@ -1,12 +1,12 @@
-.card {
+.card_info {
+    margin-top: 90px;
     margin-left: 70px;
-    margin-bottom: 20px;
+    margin-bottom: 90px;
     width: 500px;
     height: 480px;
     background-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
     border-radius: 40px;
-    position: relative;
 }
 
 
@@ -67,9 +67,15 @@
 }
 
 .page-background {
+    position: relative;
+}
+
+.card-detail {
     background-image: url('../../../assets/Header_BG.svg');
     background-size: cover;
     background-position: top left;
     background-repeat: no-repeat;
     min-height: 100vh;
+    min-width: 100vw;
+    position: absolute;
 }
