@@ -1,10 +1,65 @@
-import { Button, Card, Checkbox, Col, Form, Input, Row } from "antd";
-import React from "react";
+import {
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  notification,
+  Row,
+} from "antd";
+import React, { useEffect, useState } from "react";
 import "./SignUp.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+
 const SignUp = () => {
-  const onFinish = (msg) => {
-    console.log(JSON.stringify(msg));
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+  const api = axios.create({
+    baseURL: "https://66f4f6749aa4891f2a2349a0.mockapi.io/api/example/user", //đường dẫn đến mockApi demo
+  });
+
+  useEffect(() => {
+    api.get("/").then((user) => setUsers(user.data)); //lấy api 1 lần duy nhất khi load trang
+  }, []);
+
+  const checkDuplicateName = (username) => {
+    return users.some((user) => user.username === username); //check username exit or not
+  };
+  const checkDuplicateEmail = (email) => {
+    return users.find((user) => user.email === email); //check email
+  };
+
+  const onFinish = async (info) => {
+    if (checkDuplicateName(info.username)) {
+      //notification if exit
+      notification.error({
+        message: "Register Failed",
+        description: "User Name is exit",
+      });
+      return Promise.reject();
+    }
+    if (checkDuplicateEmail(info.email)) {
+      notification.error({
+        message: "Register Failed",
+        description: "email is exit",
+      });
+      return Promise.reject();
+    }
+    try {
+      //if not exit email and password add new user
+      await api.post("/", {
+        phone: info.phone,
+        fullName: info.fullname,
+        email: info.email,
+        username: info.username,
+        password: info.password,
+      });
+      navigate("/sign-in"); //dispatch to sign in page
+    } catch (error) {
+      console.log("Register not success " + error);
+    }
   };
 
   return (
@@ -63,7 +118,7 @@ const SignUp = () => {
                 <Col span={12} style={{ paddingRight: "5px" }}>
                   <Form.Item
                     label="Email"
-                    name="emai"
+                    name="email"
                     style={{ marginBottom: "1px" }}
                     rules={[
                       {
@@ -88,6 +143,16 @@ const SignUp = () => {
                       {
                         required: true,
                         message: "Please input your username",
+                      },
+                      {
+                        validator: (_, value) => {
+                          if (value && value.includes(" ")) {
+                            return Promise.reject(
+                              new Error("Username cannot contain spaces!")
+                            );
+                          }
+                          return Promise.resolve();
+                        },
                       },
                     ]}
                   >

@@ -1,13 +1,43 @@
-import { Button, Card,  Form, Input } from "antd";
+import { Button, Card, Form, Input, notification } from "antd";
 import "./SignIn.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 const SignIn = () => {
+  const [users, setUsers] = useState({});
+  const navigate = useNavigate();
+  const api = axios.create({
+    baseURL: "https://66f4f6749aa4891f2a2349a0.mockapi.io/api/example/user", //đường dẫn đến mockApi demo
+  });
+
+  useEffect(() => {
+    api.get("/").then((user) => setUsers(user.data)); //lấy api 1 lần duy nhất khi load trang
+  }, []);
+
   const onFinish = (inforSuccess) => {
-    console.log("success:" + JSON.stringify(inforSuccess));
+    //tìm kiếm email và password
+    try {
+      const user = users.find(
+        (user) =>
+          user.email === inforSuccess.email &&
+          user.password === inforSuccess.password
+      );
+
+      if (user) {
+        navigate("/"); //tìm thấy chuyển qua trang home
+      } else {
+        //thông báo lỗi nếu không tìm thấy
+        notification.error({
+          message: "Login Failed",
+          description: "email or password is wrong",
+        });
+      }
+    } catch (error) {
+      console.log("fail to login" + error);
+    }
   };
-  const onFinishFailed = (inforError) => {
-    console.log("fail:" + JSON.stringify(inforError));
-  };
+
   return (
     <div className="page-background">
       <div className="card_detail">
@@ -16,7 +46,7 @@ const SignIn = () => {
             <p>Sign in</p>
             <span className="hightline"></span>
           </div>
-          <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
+          <Form onFinish={onFinish}>
             <p>Email</p>
             <Form.Item
               name="email"
