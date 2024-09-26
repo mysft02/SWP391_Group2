@@ -1,42 +1,10 @@
 import { Button, Card, Form, Input, notification } from "antd";
 import "./SignIn.css";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 
 const SignIn = () => {
-  const [users, setUsers] = useState({});
-  const navigate = useNavigate();
-  const api = axios.create({
-    baseURL: "https://66f4f6749aa4891f2a2349a0.mockapi.io/api/example/user", //đường dẫn đến mockApi demo
-  });
-
-  useEffect(() => {
-    api.get("/").then((user) => setUsers(user.data)); //lấy api 1 lần duy nhất khi load trang
-  }, []);
-
-  const onFinish = (inforSuccess) => {
-    //tìm kiếm email và password
-    try {
-      const user = users.find(
-        (user) =>
-          user.email === inforSuccess.email &&
-          user.password === inforSuccess.password
-      );
-
-      if (user) {
-        navigate("/"); //tìm thấy chuyển qua trang home
-      } else {
-        //thông báo lỗi nếu không tìm thấy
-        notification.error({
-          message: "Login Failed",
-          description: "email or password is wrong",
-        });
-      }
-    } catch (error) {
-      console.log("fail to login" + error);
-    }
-  };
+ 
 
   return (
     <div className="page-background">
