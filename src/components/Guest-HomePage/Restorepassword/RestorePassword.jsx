@@ -6,15 +6,11 @@ import { Link } from "react-router-dom";
 
 const RestorePassword = () => {
   return (
-    <div className="page-background">
-      <div className="card-detail">
-        <Card className="card_restore">
-          <Form
-            labelCol={{
-              span: 24,
-            }}
-          >
-            <div className="title">
+    <div className="restore-page-background">
+      <div className="restore-card-detail">
+        <Card className="restore-card">
+          <Form labelCol={{ span: 24 }}>
+            <div className="restore-title">
               <p>
                 <span>
                   <Link to={"/sign-in"}>
@@ -23,39 +19,37 @@ const RestorePassword = () => {
                 </span>
                 Restore Password
               </p>
-              <span className="hightline"></span>
+              <span className="restore-hightline"></span>
             </div>
-            <div className="form_restore">
-              <form>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please input email need restore password",
-                    },
-                    {
-                      type: "email",
-                      message: "The input is not valid email",
-                    },
-                  ]}
-                >
-                  <Input size="large" placeholder="example@gmail.com" />
-                </Form.Item>
-              </form>
-            </div>
-            <div className="button_hightline">
-              <Form.Item>
-                <Button className="button" htmlType="submit">
-                  Send Reset Link
-                </Button>
-                <span className="hightline_v2"></span>
+            <div className="restore-form">
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input email need restore password",
+                  },
+                  {
+                    type: "email",
+                    message: "The input is not valid email",
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="example@gmail.com" />
               </Form.Item>
             </div>
-            <div className="return_login">
+            <div className="restore-button-hightline">
+              <Form.Item>
+                <Button className="restore-button" htmlType="submit">
+                  Send Reset Link
+                </Button>
+                <span className="restore-hightline-v2"></span>
+              </Form.Item>
+            </div>
+            <div className="restore-return-login">
               <p>
-                no account? <Link to={"/sign-up"}>Sign up</Link>
+                No account? <Link to={"/sign-up"}>Sign up</Link>
               </p>
             </div>
           </Form>

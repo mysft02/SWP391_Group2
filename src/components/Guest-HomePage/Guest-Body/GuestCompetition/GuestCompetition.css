@@ -1,0 +1,58 @@
+.news-competition {
+    text-align: center; /* Căn giữa nội dung bên trong */
+    display: flex; /* Sử dụng flexbox cho toàn bộ container */
+    flex-wrap: wrap; /* Cho phép các thẻ Card xuống dòng khi không đủ không gian */
+    justify-content: center; /* Căn giữa các thẻ Card */
+  }
+  
+  .news-competition h2 {
+    margin-bottom: 24px; /* Khoảng cách dưới tiêu đề */
+    width: 100%; /* Đặt chiều rộng tiêu đề chiếm toàn bộ chiều rộng */
+  }
+  
+  .news-competition .ant-card {
+    display: flex;
+    flex-direction: column; /* Đặt chiều dọc cho nội dung bên trong thẻ Card */
+    background-color: #000; /* Đặt màu nền của Card thành màu đen */
+    color: #fff; /* Đặt màu chữ trong Card thành màu trắng để dễ đọc */
+    border: none; /* Loại bỏ viền của Card */
+    width: 600px; /* Đặt chiều rộng của Card */
+    margin: 16px; /* Thêm khoảng cách giữa các thẻ Card */
+    filter: drop-shadow(0px 0px 12px #000);
+  }
+  
+  .news-competition .news-content {
+    display: flex; /* Sử dụng flexbox để bố trí theo hàng */
+    align-items: center; /* Căn giữa theo chiều dọc */
+  }
+  
+  .news-competition .info {
+    flex: 1; /* Chiếm không gian còn lại */
+    text-align: left; /* Căn trái nội dung */
+  }
+  
+  .news-competition .competition-image {
+    width: 350px; /* Chiều rộng của hình ảnh */
+    height: auto; /* Giữ tỉ lệ hình ảnh */
+    margin-left: 16px; /* Khoảng cách giữa thông tin và hình ảnh */
+    border-radius: 10%;
+  }
+  
+  .news-competition .competition-image:hover {
+    transition: all 2s ease-in-out;
+    border-radius: 40%;
+  }
+  
+  .news-competition .view-button {
+    margin-top: 16px; /* Khoảng cách trên nút */
+    background-color: #FFD700 !important; /* Đặt màu nền cho nút */
+    color: #000 !important; /* Đặt màu chữ cho nút */
+    border: none !important; /* Loại bỏ viền của nút */
+    width: 100%; /* Chiều rộng 100% để nút trải dài */
+    text-align: center; /* Căn giữa nội dung nút */
+  }
+  
+  .news-competition .view-button:hover {
+    box-shadow: 0px 0px 10px #fff ;
+  }
+  

@@ -1,5 +1,6 @@
 import React from 'react'
 import GuestBanner from '../GuestBanner/GuestBanner'
+import GuestCompetition from '../GuestCompetition/GuestCompetition'
 
 function GuestBody() {
   return (
@@ -8,7 +9,7 @@ function GuestBody() {
             <GuestBanner/>
         </div>
         <div className='guest-news'>
-          <h2>News of Competition</h2>
+          <GuestCompetition/>
         </div>
         <div className='guest-competition'>
           <h2>Competition</h2>

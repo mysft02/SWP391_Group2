@@ -11,22 +11,20 @@ import React from "react";
 import "./SignUp.css";
 import { Link } from "react-router-dom";
 
-
 const SignUp = () => {
- 
   const onFinish = async (info) => {
-    
+    // Xử lý khi form được gửi
   };
 
   return (
-    <div className="page-background">
-      <div className="card-detail">
-        <Card className="card_info">
-          <div className="title">
+    <div className="register-page-background">
+      <div className="register-card-detail">
+        <Card className="register-card-info">
+          <div className="register-title">
             <p>Create your account</p>
-            <span className="hightline"></span>
+            <span className="register-hightline"></span>
           </div>
-          <div className="form-signin">
+          <div className="register-form-signin">
             <Form
               labelCol={{
                 span: 24,
@@ -47,7 +45,7 @@ const SignUp = () => {
                       },
                     ]}
                   >
-                    <Input size="middle" placeholder="Nguyen Van  A" />
+                    <Input size="middle" placeholder="Nguyen Van A" />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
@@ -160,7 +158,7 @@ const SignUp = () => {
                 </Col>
               </Row>
 
-              <div className="checkbox">
+              <div className="register-checkbox">
                 <Form.Item
                   name="agreement"
                   valuePropName="checked"
@@ -183,15 +181,15 @@ const SignUp = () => {
                   </Checkbox>
                 </Form.Item>
               </div>
-              <div className="button_hightline">
+              <div className="register-button-hightline">
                 <Form.Item>
-                  <Button className="button" htmlType="submit">
+                  <Button className="register-button" htmlType="submit">
                     Register
                   </Button>
-                  <span className="hightline_v2"></span>
+                  <span className="register-hightline-v2"></span>
                 </Form.Item>
               </div>
-              <div className="return">
+              <div className="register-return">
                 <p>
                   Returning user? <Link to={"/sign-in"}>Log in here</Link>
                 </p>
