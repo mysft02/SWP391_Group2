@@ -4,8 +4,8 @@
   align-items: center;
   position: sticky; 
   top: 0; 
-  padding: 10px 30px; 
-  background-color: rgb(254, 248, 248); 
+  padding: 0px 15px; 
+  background-color: rgba(254, 248, 248, 0.255); 
   z-index: 1000; 
 }
 
@@ -16,7 +16,7 @@
 .link ul {
   list-style: none; /* Loại bỏ dấu đầu dòng */
   display: flex; /* Hiển thị các phần tử theo hàng ngang */
-  gap: 20px; /* Khoảng cách giữa các phần tử */
+  gap: 5px; /* Khoảng cách giữa các phần tử */
 }
 
 .ul_1 > li,

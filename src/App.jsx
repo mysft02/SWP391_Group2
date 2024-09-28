@@ -5,6 +5,7 @@ import SignIn from "./components/Guest-HomePage/SignIn/SignIn";
 import SignUp from "./components/Guest-HomePage/SignUp/SignUp";
 import RestorePassword from "./components/Guest-HomePage/Restorepassword/RestorePassword";
 import GuestHomePage from './page/GuestHomePage';
+import Contact from './components/Guest-HomePage/Guest-Header/contact/Contact';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LayoutHome />}>
           <Route index element = {<GuestHomePage/>}/>
+          <Route path="contact" element={<Contact/>} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<RestorePassword/>} />

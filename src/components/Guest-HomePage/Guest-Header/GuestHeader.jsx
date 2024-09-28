@@ -10,6 +10,7 @@ import {
   UserOutlined,
   UserAddOutlined,
 } from "@ant-design/icons";
+import ToggleTheme from "./ToggleTheme/ToggleTheme";
 
 const GuestHeader = () => {
   return (
@@ -68,6 +69,7 @@ const GuestHeader = () => {
                 </Button>
               </Link>
             </li>
+            <ToggleTheme/>
           </ul>
         </ul>
       </div>
