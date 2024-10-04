@@ -2,6 +2,7 @@
 using Microsoft.Identity.Client;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
 using System.Text.Json.Serialization;
 
 namespace KoiBet.Entities;

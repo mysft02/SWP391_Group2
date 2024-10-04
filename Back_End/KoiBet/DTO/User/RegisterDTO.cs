@@ -4,6 +4,8 @@ namespace KoiBet.DTO.User
 {
     public class RegisterDTO
     {
+        private Guid user_id { get; set; } = Guid.NewGuid();
+
         [Required(ErrorMessage = "Username is required.")]
         public string Username { get; set; }
 

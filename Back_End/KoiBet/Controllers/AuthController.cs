@@ -19,6 +19,8 @@ namespace KoiBet.Controllers
             _context = context;
         }
 
+
+        //Sử dụng JWT để chuỗi = token và sử dung token lưu localStorage và Cookie
         // POST: auth/login
         [AllowAnonymous]
         [HttpPost("login")]
@@ -76,7 +78,7 @@ namespace KoiBet.Controllers
     public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
     {
         var lastUser = await _context.Users.OrderByDescending(u => u.user_id).FirstOrDefaultAsync();
-        var newUserId = lastUser == null ? "U1" : "U" + (int.Parse(lastUser.user_id.Substring(1)) + 1).ToString();
+            var newUserId = Guid.NewGuid().ToString();
 
         // Check if the role exists
         var roleExists = await _context.Roles.AnyAsync(r => r.role_id == "R1");
@@ -92,13 +94,13 @@ namespace KoiBet.Controllers
             await _context.SaveChangesAsync();
         }
 
-        var newUser = new Users
-        {
-            user_id = newUserId,
-            Username = registerDTO.Username,
-            Password = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password),
-            role_id = "R1" // Set default role_id to R1
-        };
+            var newUser = new Users
+            {
+                user_id = newUserId,
+                Username = registerDTO.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password),
+                role_id = "R1" // Set default role_id to R1
+            };
 
         // Add user to the database
         _context.Users.Add(newUser);

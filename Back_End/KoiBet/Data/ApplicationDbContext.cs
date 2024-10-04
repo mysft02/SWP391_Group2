@@ -20,7 +20,5 @@ namespace KoiBet.Data
                 .HasForeignKey(u => u.role_id)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-
-
     }
 }
