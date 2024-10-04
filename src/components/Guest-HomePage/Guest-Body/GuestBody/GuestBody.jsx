@@ -1,6 +1,7 @@
 import React from 'react'
 import GuestBanner from '../GuestBanner/GuestBanner'
 import GuestNewsCompetition from '../GuestNewsCompetition/GuestNewsCompetition'
+import GuestCompetition from '../GuestCompetition/GuestCompetion'
 
 function GuestBody() {
   return (
@@ -12,7 +13,7 @@ function GuestBody() {
           <GuestNewsCompetition/>
         </div>
         <div className='guest-competition'>
-          <h2>Competition</h2>
+          <GuestCompetition/>
         </div>
       
     </div>

@@ -17,25 +17,29 @@
   background-color: #000; /* Nền đen */
   color: #fff; /* Chữ trắng */
   border: none; /* Loại bỏ viền */
-  width: 100%; /* Phù hợp mọi màn hình */
-  max-width: 500px; /* Chiều rộng tối đa */
+  width:  300px; /* Đặt chiều rộng cố định */
+  height: 400px; /* Đặt chiều cao cố định */
   margin: 16px; /* Khoảng cách giữa các thẻ */
   filter: drop-shadow(0px 0px 12px #000); /* Đổ bóng */
+
 }
 
 .news-competition .news-content {
   display: flex; /* Bố trí theo hàng */
   align-items: center; /* Căn giữa theo chiều dọc */
+  height: 300px; /* Giữ chiều cao cố định cho nội dung bên trong */
+  
+
 }
 
-.news-competition .info {
+.news-competition .news-info {
   flex: 1; /* Chiếm không gian còn lại */
   text-align: left; /* Căn trái nội dung */
 }
 
 .news-competition .competition-image {
-  width: 120px; /* Chiều rộng nhỏ hơn */
-  height: auto; /* Giữ tỉ lệ hình ảnh */
+  width: 150px; /* Chiều rộng nhỏ hơn */
+  height: 125px; /* Giữ tỉ lệ hình ảnh */
   margin-left: 16px; /* Khoảng cách giữa thông tin và hình ảnh */
   border-radius: 10%; /* Góc bo nhẹ */
   transition: all 0.3s ease-in-out; /* Hiệu ứng hover */

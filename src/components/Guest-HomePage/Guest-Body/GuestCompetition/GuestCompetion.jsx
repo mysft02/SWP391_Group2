@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Card, Row, Col, Pagination } from 'antd';
 import { TrophyOutlined } from '@ant-design/icons';
-import './GuestNewsCompetition.css';
+import './GuestCompetition.css';
 
-function GuestNewsCompetition() {
+function GuestCompetition() {
   // Dữ liệu giả lập cho cuộc thi
   const competitions = [
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
     { title: 'Cuộc thi thiết kế đồ họa 2024', start: '15/10/2024', end: '15/11/2024', imageUrl: 'https://betterpet.com/wp-content/uploads/2023/06/maine-coon-cat-with-fluffy-tail.jpeg' },
     { title: 'Cuộc thi ẩm thực 2024', start: '20/10/2024', end: '20/11/2024', imageUrl: 'https://betterpet.com/wp-content/uploads/2023/06/maine-coon-cat-with-fluffy-tail.jpeg' },
+    // Thêm các cuộc thi khác...
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
-    { title: 'Cuộc thi thiết kế đồ họa 2024', start: '15/10/2024', end: '15/11/2024', imageUrl: 'https://betterpet.com/wp-content/uploads/2023/06/maine-coon-cat-with-fluffy-tail.jpeg' },
-   
-    // Thêm nhiều cuộc thi khác ở đây...
+    { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
+    { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
   ];
 
   // State để điều khiển phân trang
@@ -30,33 +30,33 @@ function GuestNewsCompetition() {
   };
 
   return (
-    <div className='news-competition'>
+    <div className='Guest-Competition'>
       <h2>
         <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
-        News of Competition
+          Competition
       </h2>
 
-      <Row gutter={[16, 16]} justify="space-around">
+      <Row gutter={[16, 16]} justify="center">
         {currentCompetitions.map((competition, index) => (
           <Col key={index} xs={24} sm={12} md={8}>
             <Card className='competition-card'>
-              <div className='news-content'>
-                <div className='news-info'>
+              <div className='competition-content'>
+                <div className='competition-info'>
                   <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
                   <h3>{competition.title}</h3>
-                  <p>Time Start: {competition.start}</p>
-                  <p>Time End: {competition.end}</p>
+                  <p>Thời gian bắt đầu: {competition.start}</p>
+                  <p>Thời gian kết thúc: {competition.end}</p>
                 </div>
                 <img alt="Competition" src={competition.imageUrl} className='competition-image' />
               </div>
-              <Button className='view-button'>View</Button>
+              <Button className='view-button'>Join in </Button>
             </Card>
           </Col>
         ))}
-      </Row> 
+      </Row>
 
       <Pagination
-        className='news-pagination'
+        className='competition-pagination'
         current={currentPage}
         pageSize={pageSize}
         total={competitions.length}
@@ -67,4 +67,4 @@ function GuestNewsCompetition() {
   );
 }
 
-export default GuestNewsCompetition;
+export default GuestCompetition;
