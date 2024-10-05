@@ -6,14 +6,44 @@ import {
   Form,
   Input,
   Row,
+  message,
 } from "antd";
+// Trong SignUp.jsx
+import { api } from '../../../config/AxiosConfig'; // Thay đổi từ: import api from '../../../config/AxiosConfig' sang import { api } from '../../../config/AxiosConfig';
 import React from "react";
 import "./SignUp.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+
   const onFinish = async (info) => {
-    // Xử lý khi form được gửi
+    try {
+      const response = await api.post("/api/User/create", {
+        fullName: info.fullName,
+        phone: info.phone,
+        email: info.email,
+        username: info.username,
+        password: info.password,
+      });
+      console.log(info);
+      // Check the response status or message as needed
+      if (response.status === 200) { // Assuming 201 indicates success
+        message.success("Account created successfully!");
+        navigate("/sign-in"); // Redirect to sign-in after successful registration
+      } else {
+        message.error(response.data.message || "Failed to create account. Please try again."); // Handle specific server error messages
+      }
+    } catch (error) {
+      
+      console.error("Failed to create account:", error);
+      // Check if error response exists
+      if (error.response && error.response.data) {
+        message.error(error.response.data.message || "Failed to create account. Please try again.");
+      } else {
+        message.error("Failed to create account. Please try again.");
+      }
+    }
   };
 
   return (
@@ -26,9 +56,7 @@ const SignUp = () => {
           </div>
           <div className="register-form-signin">
             <Form
-              labelCol={{
-                span: 24,
-              }}
+              labelCol={{ span: 24 }}
               style={{ marginTop: "-20px" }}
               onFinish={onFinish}
             >
@@ -36,14 +64,9 @@ const SignUp = () => {
                 <Col span={12} style={{ paddingRight: "5px" }}>
                   <Form.Item
                     label="Full Name"
-                    name="fullname"
+                    name="fullName"
                     style={{ marginBottom: "1px" }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your full name",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Please input your full name" }]}
                   >
                     <Input size="middle" placeholder="Nguyen Van A" />
                   </Form.Item>
@@ -54,14 +77,8 @@ const SignUp = () => {
                     name="phone"
                     style={{ marginBottom: "1px" }}
                     rules={[
-                      {
-                        required: true,
-                        message: "please input your phone",
-                      },
-                      {
-                        pattern: new RegExp(/^[0-9]{10}$/), // Validate số điện thoại
-                        message: "Phone number must be 10 digits",
-                      },
+                      { required: true, message: "Please input your phone" },
+                      { pattern: /^[0-9]{10}$/, message: "Phone number must be 10 digits" },
                     ]}
                   >
                     <Input size="middle" placeholder="0xxxxxxxxx" />
@@ -75,14 +92,8 @@ const SignUp = () => {
                     name="email"
                     style={{ marginBottom: "1px" }}
                     rules={[
-                      {
-                        required: true,
-                        message: "Please input your email",
-                      },
-                      {
-                        type: "email",
-                        message: "The input is not valid email",
-                      },
+                      { required: true, message: "Please input your email" },
+                      { type: "email", message: "The input is not valid email" },
                     ]}
                   >
                     <Input size="middle" placeholder="example@gmail.com" />
@@ -94,20 +105,8 @@ const SignUp = () => {
                     name="username"
                     style={{ marginBottom: "1px" }}
                     rules={[
-                      {
-                        required: true,
-                        message: "Please input your username",
-                      },
-                      {
-                        validator: (_, value) => {
-                          if (value && value.includes(" ")) {
-                            return Promise.reject(
-                              new Error("Username cannot contain spaces!")
-                            );
-                          }
-                          return Promise.resolve();
-                        },
-                      },
+                      { required: true, message: "Please input your username" },
+                      { validator: (_, value) => (value && value.includes(" ")) ? Promise.reject(new Error("Username cannot contain spaces!")) : Promise.resolve() },
                     ]}
                   >
                     <Input size="middle" placeholder="Name1234@@@" />
@@ -120,12 +119,7 @@ const SignUp = () => {
                     label="Password"
                     name="password"
                     style={{ marginBottom: "1px" }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input your password",
-                      },
-                    ]}
+                    rules={[{ required: true, message: "Please input your password" }]}
                   >
                     <Input.Password size="middle" placeholder="aaAA@12345" />
                   </Form.Item>
@@ -137,18 +131,12 @@ const SignUp = () => {
                     name="password2"
                     style={{ marginBottom: "1px" }}
                     rules={[
-                      {
-                        required: true,
-                        message: "Please input confirm your password",
-                      },
+                      { required: true, message: "Please confirm your password" },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue("password") === value) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(
-                            new Error("Passwords do not match!")
-                          );
+                          return !value || getFieldValue("password") === value
+                            ? Promise.resolve()
+                            : Promise.reject(new Error("Passwords do not match!"));
                         },
                       }),
                     ]}
@@ -167,17 +155,13 @@ const SignUp = () => {
                   rules={[
                     {
                       validator: (_, value) =>
-                        value
-                          ? Promise.resolve()
-                          : Promise.reject(
-                              new Error("You must accept the terms")
-                            ),
+                        value ? Promise.resolve() : Promise.reject(new Error("You must accept the terms")),
                     },
                   ]}
                 >
                   <Checkbox>
                     By signing up, I agree with the{" "}
-                    <Link>Terms of Use & Privacy Policy</Link>
+                    <Link to="/terms">Terms of Use & Privacy Policy</Link>
                   </Checkbox>
                 </Form.Item>
               </div>
@@ -191,7 +175,7 @@ const SignUp = () => {
               </div>
               <div className="register-return">
                 <p>
-                  Returning user? <Link to={"/sign-in"}>Log in here</Link>
+                  Returning user? <Link to="/sign-in">Log in here</Link>
                 </p>
               </div>
             </Form>

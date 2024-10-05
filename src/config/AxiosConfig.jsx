@@ -1,10 +1,10 @@
-// src/config/AxiosConfig.js
+// src/config/AxiosConfig.jsx
 import React, { createContext, useContext } from 'react';
 import axios from 'axios';
 
 // Tạo cấu hình Axios
 const config = {
-    baseURL: "https://localhost:44361/",
+    baseURL: "https://localhost:58441",
     headers: {
         "Content-Type": "application/json",
     },
@@ -30,15 +30,5 @@ export const useAxios = () => {
     return useContext(AxiosContext);
 };
 
-// Component để hiển thị thông tin cấu hình Axios (có thể tùy chọn)
-const AxiosConfig = () => {
-    return (
-        <div>
-            <h2>Axios Configuration</h2>
-            <p>Base URL: {config.baseURL}</p>
-        </div>
-    );
-};
-
-// Xuất Axios instance và component AxiosConfig
-export { AxiosConfig, api };
+// Xuất Axios instance và các component cần thiết
+export { api }; // Xuất khẩu api
