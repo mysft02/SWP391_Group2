@@ -5,7 +5,7 @@ namespace KoiBet.Entities
     public class KoiStandard
     {
         [Key]
-        public string? standard_id {  get; set; }
+        public string? standard_id { get; set; }
 
         public string? color_koi { get; set; }
 

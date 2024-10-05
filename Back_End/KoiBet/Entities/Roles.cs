@@ -6,7 +6,7 @@ namespace KoiBet.Entities
     public class Roles
     {
         [Key]
-        public string role_id {  get; set; }
+        public string role_id { get; set; }
 
         public string role_name { get; set; }
 

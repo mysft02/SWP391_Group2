@@ -1,10 +1,10 @@
 ﻿using KoiBet.Data;
 using KoiBet.DTO.User;
 using KoiBet.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace KoiBet.Controllers
 {
@@ -20,23 +20,33 @@ namespace KoiBet.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateUser([FromBody] UpdateUserDTO _userDTO)
+        [Authorize(Roles = "admin,staff")] // Chỉ cho phép admin và staff truy cập
+        public async Task<IActionResult> CreateUser([FromBody] ManagerDTO _accountDTO)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            // Kiểm tra xem role_id có hợp lệ không
+            var roleExists = await _context.Roles.AnyAsync(r => r.role_id == _accountDTO.role_id);
+            if (!roleExists)
+            {
+                return BadRequest(new { message = "Role does not exist" });
+            }
+
+            // Tạo đối tượng người dùng mới
             var newUser = new Users
             {
-                user_id = Guid.NewGuid().ToString(),
-                full_name = _userDTO.full_name,
-                Email = _userDTO.email,
-                Phone = _userDTO.phone,
-                role_id = _userDTO.role_id,
-                Balance = 0
+                user_id = Guid.NewGuid().ToString(), // Tạo ID mới cho người dùng
+                full_name = _accountDTO.full_name,
+                Email = _accountDTO.email,
+                Phone = _accountDTO.phone,
+                role_id = _accountDTO.role_id, // Chỉnh sửa role_id từ input
+                Balance = 0 // Khởi tạo balance là 0
             };
 
+            // Thêm người dùng vào cơ sở dữ liệu
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
 
@@ -44,9 +54,15 @@ namespace KoiBet.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(Guid id)
+        public async Task<IActionResult> GetUser(string id)
         {
-            var user = await _context.Users.FindAsync(id);
+            if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var userIdGuid))
+            {
+                return BadRequest(new { message = "Invalid ID format" });
+            }
+
+            // So sánh trực tiếp với user_id kiểu chuỗi
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
 
             if (user == null)
             {
@@ -56,26 +72,33 @@ namespace KoiBet.Controllers
             return Ok(user);
         }
 
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserDTO updateUserDTO)
+        [HttpPut("update-profile")]
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserDTO updateUserDTO)
         {
+            var userId = User.FindFirst("user_id")?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized(new { message = "User not authenticated" });
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _context.Users.FindAsync(id);
+            // Tìm kiếm người dùng
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userId);
 
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
             }
 
-            // Cập nhật thông tin
+            // Cập nhật thông tin người dùng
             user.full_name = updateUserDTO.full_name ?? user.full_name;
             user.Email = updateUserDTO.email ?? user.Email;
             user.Phone = updateUserDTO.phone ?? user.Phone;
-            user.role_id = updateUserDTO.role_id ?? user.role_id;
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
@@ -86,15 +109,20 @@ namespace KoiBet.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            // Tìm người dùng dựa trên user_id
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == id);
+            if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var userIdGuid))
+            {
+                return BadRequest(new { message = "Invalid ID format" });
+            }
+
+            // Tìm người dùng
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
 
             if (user == null)
             {
                 return NotFound(new { message = "User not found." });
             }
 
-            // Xóa người dùng khỏi cơ sở dữ liệu
+            // Xóa người dùng
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using BCrypt.Net;
 
 namespace KoiBet.Controllers
 {
@@ -24,88 +25,69 @@ namespace KoiBet.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
         {
-            // Kiểm tra username có hợp lệ không
-            if (string.IsNullOrEmpty(loginDTO.Username))
-            {
-                return BadRequest(new { message = "Username needs to be filled" });
-            } //else if(string.IsNullOrEmpty(LoginDTO.e))
-
-            // Kiểm tra password có hợp lệ không
-            if (string.IsNullOrEmpty(loginDTO.Password))
-            {
-                return BadRequest(new { message = "Password needs to be entered" });
-            }
-
-           
-
-            // Tìm người dùng trong cơ sở dữ liệu
+            // Kiểm tra xem người dùng có tồn tại không
             var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == loginDTO.Username);
+                .Include(u => u.Role) // Bao gồm thông tin vai trò
+                .FirstOrDefaultAsync(u => u.Username == loginDTO.Username); // Chỉ tìm tên người dùng
 
-            // Kiểm tra người dùng có tồn tại không
-            if (user == null)
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.Password))
             {
-                return BadRequest(new { message = "User not found" });
+                return Unauthorized("Invalid username or password");
             }
 
-            // Kiểm tra password có hợp lệ không
-            if (string.IsNullOrEmpty(user.Password) || !BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.Password))
-            {
-                return BadRequest(new { message = "Invalid password" });
-            }
-
-            // Nếu tất cả đều hợp lệ, tạo phản hồi cho người dùng
-            var userResponse = new
+            // Lấy thông tin người dùng cùng với tên vai trò
+            var userInfo = new
             {
                 user.user_id,
                 user.Username,
-                user.role_id
+                user.full_name,
+                user.Email,
+                user.Phone,
+                RoleId = user.Role.role_id,
+                RoleName = user.Role.role_name
             };
 
-            return Ok(userResponse);
+            return Ok(userInfo);
         }
 
-
-
-
-
-
-    // POST: auth/register
-    [AllowAnonymous]
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
-    {
-        var lastUser = await _context.Users.OrderByDescending(u => u.user_id).FirstOrDefaultAsync();
-        var newUserId = lastUser == null ? "U1" : "U" + (int.Parse(lastUser.user_id.Substring(1)) + 1).ToString();
-
-        // Check if the role exists
-        var roleExists = await _context.Roles.AnyAsync(r => r.role_id == "R1");
-        if (!roleExists)
+        // POST: auth/register
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
         {
-            // Insert the default role if it does not exist
-            var defaultRole = new Roles
+            // Kiểm tra xem vai trò đã tồn tại chưa
+            var roleExists = await _context.Roles.AnyAsync(r => r.role_id == "R1");
+            if (!roleExists)
             {
-                role_id = "R1",
-                role_name = "customer" // Set the role name is customer
+                // Thêm vai trò mặc định nếu chưa tồn tại
+                var defaultRole = new Roles
+                {
+                    role_id = "R1",
+                    role_name = "customer" // Đặt tên vai trò là customer
+                };
+                _context.Roles.Add(defaultRole);
+                await _context.SaveChangesAsync();
+            }
+
+            var newUserId = Guid.NewGuid().ToString();
+            var hashedUserId = BCrypt.Net.BCrypt.HashPassword(newUserId).Substring(0, 50);
+
+            // Tạo người dùng mới
+            var newUser = new Users
+            {
+                user_id = hashedUserId, // Lưu hashed user_id vào cơ sở dữ liệu
+                Username = registerDTO.Username,
+                Password = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password), // Hash password
+                role_id = "R1"
             };
-            _context.Roles.Add(defaultRole);
+
+            // Thêm người dùng vào cơ sở dữ liệu
+            _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
+
+            // Trả về thông tin người dùng mới đã đăng ký
+            return Ok(newUser);
         }
 
-        var newUser = new Users
-        {
-            user_id = newUserId,
-            Username = registerDTO.Username,
-            Password = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password),
-            role_id = "R1" // Set default role_id to R1
-        };
-
-        // Add user to the database
-        _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
-
-        return Ok(newUser);
-        }
     }
-
 }

@@ -1,29 +1,29 @@
 using KoiBet.Data;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Thêm dịch vụ cho Controllers
 builder.Services.AddControllers();
 
-// Thêm chuỗi kết nối vào ApplicationDbContext
+// Thêm DbContext sử dụng SQL Server
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 
-//builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Thêm hỗ trợ cho Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Cấu hình pipeline HTTP request
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "KoiBet API V1");
+    });
 }
 
 app.UseHttpsRedirection();
