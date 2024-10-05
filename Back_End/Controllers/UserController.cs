@@ -72,6 +72,7 @@ namespace KoiBet.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpPut("update-profile")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserDTO updateUserDTO)
         {

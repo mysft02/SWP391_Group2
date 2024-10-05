@@ -21,6 +21,6 @@ namespace KoiBet.DTO.User
         public string email { get; set; }
 
         [Required(ErrorMessage = "Phone is required.")]
-        public string phone {  get; set; }
+        public string phone { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
+using Service.JwtService;
 
 namespace KoiBet.Controllers
 {
@@ -14,10 +16,14 @@ namespace KoiBet.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _config;
+        private readonly JwtService _jwtService;
 
-        public AuthController(ApplicationDbContext context)
+        public AuthController(ApplicationDbContext context, IConfiguration config, JwtService jwtService)
         {
             _context = context;
+            _config = config;
+            _jwtService = jwtService;
         }
 
         // POST: auth/login
@@ -88,7 +94,8 @@ namespace KoiBet.Controllers
                 full_name = registerDTO.fullName,
                 Email = registerDTO.email,
                 Phone = registerDTO.phone,
-                role_id = "R1"
+                role_id = "R1",
+                Balance = 0,
             };
 
             // Thêm người dùng vào cơ sở dữ liệu
@@ -99,5 +106,12 @@ namespace KoiBet.Controllers
             return Ok(newUser);
         }
 
+        [HttpGet]
+        public string GetRandomToken()
+        {
+            var jwt = new JwtService(_config);
+            var token = jwt.GenerateSecurityToken("fake@email.com");
+            return token;
+        }
     }
 }
