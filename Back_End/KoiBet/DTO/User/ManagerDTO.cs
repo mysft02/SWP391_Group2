@@ -4,7 +4,7 @@ namespace KoiBet.DTO.User
 {
     public class ManagerDTO
     {
-        public string? user_id { get; set; }
+        public Guid user_id { get; set; }
 
         public string? user_name { get; set; }
 
