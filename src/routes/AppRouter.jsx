@@ -8,6 +8,7 @@ import SignUp from '../components/Guest-HomePage/SignUp/SignUp'
 import RestorePassword from '../components/Guest-HomePage/Restorepassword/RestorePassword'
 import PrivateRoutes from './PrivateRoutes'
 import MemberRouter from './MemberRouter'
+import NewsPage from '../page/NewsPage/NewsPage'
 
 
 function AppRouter() {
@@ -18,6 +19,7 @@ function AppRouter() {
           <Route path="/" element={<LayoutHome />}>
             {/* Các trang không yêu cầu phân quyền */}
             <Route index element={<GuestHomePage />} />
+            <Route path="news" element={<NewsPage/>} />
             <Route path="contact" element={<Contact />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />

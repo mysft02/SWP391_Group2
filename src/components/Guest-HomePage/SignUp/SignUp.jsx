@@ -8,8 +8,7 @@ import {
   Row,
   message,
 } from "antd";
-// Trong SignUp.jsx
-import { api } from '../../../config/AxiosConfig'; // Thay đổi từ: import api from '../../../config/AxiosConfig' sang import { api } from '../../../config/AxiosConfig';
+import { api } from '../../../config/AxiosConfig';
 import React from "react";
 import "./SignUp.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,27 +16,26 @@ import { Link, useNavigate } from "react-router-dom";
 const SignUp = () => {
   const navigate = useNavigate();
 
-  const onFinish = async (info) => {
+  const onFinish = async (values) => {
     try {
-      const response = await api.post("/api/User/create", {
-        fullName: info.fullName,
-        phone: info.phone,
-        email: info.email,
-        username: info.username,
-        password: info.password,
+      const response = await api.post("/api/Auth/register", {
+        fullName: values.fullName,
+        phone: values.phone,
+        email: values.email,
+        confirmPassword: values.confirmPassword,
+        username: values.username,
+        password: values.password,
       });
-      console.log(info);
-      // Check the response status or message as needed
-      if (response.status === 200) { // Assuming 201 indicates success
+      console.log(values);
+
+      if (response.status === 200) {
         message.success("Account created successfully!");
-        navigate("/sign-in"); // Redirect to sign-in after successful registration
+        navigate("/sign-in");
       } else {
-        message.error(response.data.message || "Failed to create account. Please try again."); // Handle specific server error messages
+        message.error(response.data.message || "Failed to create account. Please try again.");
       }
     } catch (error) {
-      
       console.error("Failed to create account:", error);
-      // Check if error response exists
       if (error.response && error.response.data) {
         message.error(error.response.data.message || "Failed to create account. Please try again.");
       } else {
@@ -64,10 +62,9 @@ const SignUp = () => {
                 <Col span={12} style={{ paddingRight: "5px" }}>
                   <Form.Item
                     label="Full Name"
-                    name="fullName"
+                    name="fullName" // Đã sửa ở đây
                     style={{ marginBottom: "1px" }}
-                    rules={[{ required: true, message: "Please input your full name" }]}
-                  >
+                    rules={[{ required: true, message: "Please input your full name" }]}>
                     <Input size="middle" placeholder="Nguyen Van A" />
                   </Form.Item>
                 </Col>
@@ -79,8 +76,7 @@ const SignUp = () => {
                     rules={[
                       { required: true, message: "Please input your phone" },
                       { pattern: /^[0-9]{10}$/, message: "Phone number must be 10 digits" },
-                    ]}
-                  >
+                    ]}>
                     <Input size="middle" placeholder="0xxxxxxxxx" />
                   </Form.Item>
                 </Col>
@@ -94,21 +90,19 @@ const SignUp = () => {
                     rules={[
                       { required: true, message: "Please input your email" },
                       { type: "email", message: "The input is not valid email" },
-                    ]}
-                  >
+                    ]}>
                     <Input size="middle" placeholder="example@gmail.com" />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
                   <Form.Item
                     label="Username"
-                    name="username"
+                    name="username" // Đã sửa ở đây
                     style={{ marginBottom: "1px" }}
                     rules={[
                       { required: true, message: "Please input your username" },
                       { validator: (_, value) => (value && value.includes(" ")) ? Promise.reject(new Error("Username cannot contain spaces!")) : Promise.resolve() },
-                    ]}
-                  >
+                    ]}>
                     <Input size="middle" placeholder="Name1234@@@" />
                   </Form.Item>
                 </Col>
@@ -119,8 +113,7 @@ const SignUp = () => {
                     label="Password"
                     name="password"
                     style={{ marginBottom: "1px" }}
-                    rules={[{ required: true, message: "Please input your password" }]}
-                  >
+                    rules={[{ required: true, message: "Please input your password" }]}>
                     <Input.Password size="middle" placeholder="aaAA@12345" />
                   </Form.Item>
                 </Col>
@@ -128,7 +121,7 @@ const SignUp = () => {
                   <Form.Item
                     label="Confirm Password"
                     dependencies={["password"]}
-                    name="password2"
+                    name="confirmPassword" // Đã sửa ở đây
                     style={{ marginBottom: "1px" }}
                     rules={[
                       { required: true, message: "Please confirm your password" },
@@ -139,8 +132,7 @@ const SignUp = () => {
                             : Promise.reject(new Error("Passwords do not match!"));
                         },
                       }),
-                    ]}
-                  >
+                    ]}>
                     <Input.Password size="middle" placeholder="aaAA@12345" />
                   </Form.Item>
                 </Col>
@@ -157,8 +149,7 @@ const SignUp = () => {
                       validator: (_, value) =>
                         value ? Promise.resolve() : Promise.reject(new Error("You must accept the terms")),
                     },
-                  ]}
-                >
+                  ]}>
                   <Checkbox>
                     By signing up, I agree with the{" "}
                     <Link to="/terms">Terms of Use & Privacy Policy</Link>

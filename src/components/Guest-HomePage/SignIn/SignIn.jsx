@@ -19,7 +19,6 @@ const SignIn = () => {
       if (user) {
         // Lưu thông tin người dùng vào localStorage
         localStorage.setItem('user', JSON.stringify(user));
-  
         notification.success({
           message: "Login Success",
           description: `Welcome back, ${user.username}!`,
