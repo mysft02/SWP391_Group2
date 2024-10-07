@@ -31,7 +31,7 @@ function AppRouter() {
             <Route path="/member/*" element={<MemberRouter />} />
           </Route>
           
-          <Route element={<PrivateRoutes requiredRoles={['admin']} />}>
+          <Route element={<PrivateRoutes requiredRoles={['R5']} />}>
             {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
           </Route>
 

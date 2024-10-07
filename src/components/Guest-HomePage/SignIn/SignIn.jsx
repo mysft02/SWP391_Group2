@@ -1,36 +1,51 @@
+import React from "react";
 import { Button, Card, Form, Input, notification } from "antd";
-import "./SignIn.css";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from '../../../config/AxiosConfig'; // Ensure this points to your Axios configuration
-  // import useUsers from "../../../data/UserContext"; // Make sure this import is correct
+import { useUser } from "../../../data/UserContext"; // Sử dụng hook từ context của bạn
+import { api } from '../../../config/AxiosConfig';
+import "./SignIn.css";
 
 const SignIn = () => {
-  const navigate = useNavigate(); // Initialize the navigate hook
+  const { setUser } = useUser(); // Lấy setUser từ context để cập nhật thông tin người dùng
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     try {
       const response = await api.post('/api/Auth/login', {
-        emailOrUsername: values.emailOrUsername,
+        username: values.username,
         password: values.password,
       });
   
       const user = response.data;
-  
+      console.log("User from API:", user);
       if (user) {
-        // Lưu thông tin người dùng vào localStorage
+        setUser(user);
         localStorage.setItem('user', JSON.stringify(user));
+        console.log("User saved in session and context:", user);
+  
         notification.success({
           message: "Login Success",
           description: `Welcome back, ${user.username}!`,
         });
   
-        navigate("/member");
+        // Kiểm tra và điều hướng theo roleId
+        if (user.roleId === 'R5') {
+          navigate("/admin-dashboard");
+        } else if (user.roleId === 'R1') {
+          navigate("/member");
+        } else {
+          // Thông báo nếu role không hợp lệ
+          notification.error({
+            message: "Role Not Found",
+            description: "Your role is not recognized, please contact support.",
+          });
+        }
       }
     } catch (error) {
       console.error("Login error:", error);
       notification.error({
         message: "Login Failed",
-        description: "Invalid email/username or password.",
+        description: "Invalid username or password.",
       });
     }
   };
@@ -55,7 +70,7 @@ const SignIn = () => {
           <Form onFinish={onFinish} onFinishFailed={onFinishFailed}>
             <p>Email or Username</p>
             <Form.Item
-              name="emailOrUsername"
+              name="username"
               rules={[{ required: true, message: "Please input your email or username" }]}
             >
               <Input size="large" placeholder="example@gmail.com or username" />

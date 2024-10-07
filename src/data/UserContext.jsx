@@ -1,25 +1,35 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
 
-// Provider để bọc toàn bộ ứng dụng và cung cấp thông tin user cho các component con
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Khởi tạo user với giá trị null
+    const [user, setUser] = useState(null);
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          console.log("Stored user:", parsedUser); // Kiểm tra xem dữ liệu từ session có đúng không
+          if (parsedUser && parsedUser.roleId) {
+            setUser(parsedUser); // Cập nhật user vào context
+          }
+        }
+    }, []);
+    
+      
+
+    return (
+        <UserContext.Provider value={{ user, setUser }}>
+            {children}
+        </UserContext.Provider>
+    );
 };
 
-// Hook để sử dụng thông tin user từ bất kỳ component nào
-export const useUser = () => {
-  const context = useContext(UserContext);
-  
-  if (!context) {
-    throw new Error('useUser must be used within a UserProvider');
-  }
-
-  return context;
-};
+export const useUser = () => useContext(UserContext);
+// const handleLogout = () => {
+//   // Xóa thông tin user khỏi context
+//   setUser(null);
+//   // Xóa thông tin khỏi Local Storage
+//   localStorage.removeItem('user');
+//   navigate("/sign-in");
+// };
