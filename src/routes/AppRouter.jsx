@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import LayoutHome from '../template/LayoutHome/LayoutHome'
 import GuestHomePage from '../page/GuestHomePage'
 import Contact from '../components/Guest-HomePage/Guest-Header/contact/Contact'
@@ -9,39 +9,31 @@ import RestorePassword from '../components/Guest-HomePage/Restorepassword/Restor
 import PrivateRoutes from './PrivateRoutes'
 import MemberRouter from './MemberRouter'
 import NewsPage from '../page/NewsPage/NewsPage'
+import { useUser } from '../data/UserContext'
 
 
 function AppRouter() {
+  const { user } = useUser(); // Lấy thông tin user từ context
+
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LayoutHome />}>
-            {/* Các trang không yêu cầu phân quyền */}
-            <Route index element={<GuestHomePage />} />
-            <Route path="news" element={<NewsPage/>} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/forgot-password" element={<RestorePassword />} />
-          </Route>
-          
-          {/* Các trang yêu cầu phân quyền */}
-          <Route element={<PrivateRoutes requiredRoles={['R1']} />}> 
-            <Route path="/member/*" element={<MemberRouter />} />
-          </Route>
-          
-          <Route element={<PrivateRoutes requiredRoles={['R5']} />}>
-            {/* <Route path="/admin-dashboard" element={<AdminDashboard />} /> */}
-          </Route>
-
-          <Route element={<PrivateRoutes requiredRoles={['staff']} />}>
-            {/* <Route path="/staff-dashboard" element={<StaffDashboard />} /> */}
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LayoutHome />}>
+          {/* Kiểm tra trạng thái đăng nhập */}
+          <Route index element={user ? <Navigate to="/member" /> : <GuestHomePage />} />
+          <Route path="news" element={<NewsPage />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgot-password" element={<RestorePassword />} />
+        </Route>
+        {/* Các route yêu cầu phân quyền */}
+        <Route element={<PrivateRoutes requiredRoles={['R1']} />}>
+          <Route path="/member/*" element={<MemberRouter />} />
+        </Route>
+        {/* Các route khác */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
 export default AppRouter;

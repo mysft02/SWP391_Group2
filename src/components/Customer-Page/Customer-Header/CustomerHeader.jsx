@@ -52,7 +52,7 @@ const CustomerHeader = () => {
             </Link>
           </li>
           <li>
-            <Link to={"/news"}>
+            <Link to={"/member/news"}>
               <Button type="primary" icon={<FileTextOutlined />}>
                 News
               </Button>
@@ -66,7 +66,7 @@ const CustomerHeader = () => {
             </Link>
           </li>
           <li>
-            <Link to={"/contact"}>
+            <Link to={"/member/contact"}>
               <Button type="primary" icon={<PhoneOutlined />}>
                 Contact
               </Button>
