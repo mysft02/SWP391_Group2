@@ -1,5 +1,5 @@
 import React from 'react';
-import NewsContent from '../../components/NewsContent/NewsContent';
+import NewsContent from '../../components/NewsContent/NewsContent/NewsContent';
 import { TrophyOutlined} from '@ant-design/icons';
 // import './NewsPage.css'; // Import file CSS
 
@@ -12,7 +12,9 @@ function NewsPage() {
           News of Competition
         </h2>
       </div>
+        <div className='filter-news'>
 
+        </div>
         <div className='news'>
           <NewsContent />
         </div>

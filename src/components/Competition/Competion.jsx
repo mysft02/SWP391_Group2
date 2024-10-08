@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Row, Col, Pagination, Slider, Checkbox, Select } from 'antd';
 import { TrophyOutlined } from '@ant-design/icons';
-import FilterKoi from '../Filter/FilterKoi/FilterKoi';
+import FilterKoi from './FilterKoi';
 
 const { Option } = Select;
 

@@ -1,0 +1,39 @@
+{
+    "news": [
+      {
+        "id": 1,
+        "topic": "Fish Koi FALL 2024 - A",
+        "created_at": "2024-10-08T10:30:00",
+        "content": "Our latest product has just been launched, offering innovative features and a sleek design that caters to all your needs.",
+        "requirement": "Pre-order is available starting today. The first 100 customers will receive a 10% discount.",
+        "rank" : "A",
+        "image": "https://example.com/images/product-launch.jpg",
+        "slot"  :"100",
+        "award": "10.000.000 Vnd"
+      },
+      {
+        "id": 2,
+        "topic": "Fish Koi FALL 2024 - B ",
+        "created_at": "2024-09-25T14:00:00",
+        "content": "The annual meeting will be held virtually this year, with insights from key leaders on the company's future direction.",
+        "requirement": "RSVP by October 1st. The meeting will be held via Zoom.",
+        "rank" : "B",
+        "image": "https://example.com/images/annual-meeting.jpg",
+        "slot"  :"100",
+        "award": "5.000.000 Vnd"
+      },
+      {
+        "id": 3,
+        "topic": "Competition Fish Koi Strongly FALL Event - C",
+        "created_at": "2024-09-15T09:00:00",
+        "content": "Join us for a day of giving back to the community. All proceeds will go towards supporting local schools.",
+        "requirement": "Volunteers are needed. Please sign up on our website.",
+        "rank" : "C",
+        "image": "https://example.com/images/charity-event.jpg",
+        "slot"  :"100",
+        "award": "1.000.000 Vnd"
+
+      }
+    ]
+  }
+  

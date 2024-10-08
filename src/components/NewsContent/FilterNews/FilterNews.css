@@ -1,0 +1,45 @@
+/* FilterNews.css */
+
+.filter-container {
+    width: 250px; /* Chiều rộng của sidebar */
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    background-color: #312f2f; /* Màu nền nhẹ nhàng */
+    border-radius: 5px; /* Góc bo tròn */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+  }
+  
+  .filter-container h3 {
+    font-size: 1.5em; /* Kích thước font tiêu đề */
+    margin-bottom: 15px; /* Khoảng cách dưới tiêu đề */
+    color: #ede2e2; /* Màu chữ */
+  }
+  
+  .filter-container div {
+    margin-bottom: 15px; /* Khoảng cách giữa các bộ lọc */
+  }
+  
+  .filter-container label {
+    display: block; /* Hiển thị label dưới dạng block */
+    margin-bottom: 5px; /* Khoảng cách dưới label */
+    font-weight: bold; /* Đậm */
+    color: #555; /* Màu chữ */
+  }
+  
+  .filter-container select,
+  .filter-container input {
+    width: 100%; /* Chiều rộng 100% */
+    padding: 8px; /* Padding cho input và select */
+    border: 1px solid #ccc; /* Viền nhẹ */
+    border-radius: 4px; /* Góc bo tròn */
+    font-size: 1em; /* Kích thước font */
+    box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+  }
+  
+  .filter-container select:focus,
+  .filter-container input:focus {
+    outline: none; /* Bỏ outline mặc định */
+    border-color: #007bff; /* Màu viền khi focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Đổ bóng khi focus */
+  }
+  
