@@ -37,7 +37,7 @@ namespace KoiBet.Service
 
             var newUser = new Users
             {
-                user_id = Guid.NewGuid(), // Sử dụng Guid
+                user_id = Guid.NewGuid().ToString(), // Sử dụng Guid
                 Username = managerDTO.user_name,
                 full_name = managerDTO.full_name,
                 Password = BCrypt.Net.BCrypt.HashPassword(managerDTO.password), // Hash mật khẩu
@@ -82,7 +82,7 @@ namespace KoiBet.Service
                 return BadRequest("Invalid user ID");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
 
             if (user == null)
             {
@@ -107,7 +107,7 @@ namespace KoiBet.Service
 
             if (!string.IsNullOrEmpty(user_id) && Guid.TryParse(user_id, out var userIdGuid))
             {
-                user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid);
+                user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
             }
             else if (!string.IsNullOrEmpty(user_name))
             {

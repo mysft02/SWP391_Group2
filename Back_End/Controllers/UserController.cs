@@ -1,10 +1,10 @@
 using KoiBet.Data;
 using KoiBet.DTO.User;
 using KoiBet.Entities;
+using KoiBet.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Service.UserService;
 
 namespace KoiBet.Controllers
 {
@@ -65,7 +65,8 @@ namespace KoiBet.Controllers
                 return BadRequest(ModelState);
             }
 
-            updateUserDTO.user_id = userId; // Thêm user_id vào DTO
+            Guid userIdGuid = Guid.NewGuid();
+            string userIdString = userIdGuid.ToString();
             return await _userService.HandleUpdate(updateUserDTO);
         }
 
