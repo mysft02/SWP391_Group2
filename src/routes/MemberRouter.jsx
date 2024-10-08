@@ -4,6 +4,7 @@ import MemberLayout from '../template/LayoutHome/MemeberLayout'; // Kiểm tra t
 import MemberPage from '../page/MemberPage';
 import Contact from '../components/Customer-Page/Customer-Header/contact/Contact';
 import NewsPage from '../page/NewsPage/NewsPage';
+import CompetitionPage from '../page/CompetitionPage/CompetitionPage';
 
 function MemberRouter() {
   return (
@@ -12,6 +13,7 @@ function MemberRouter() {
         {/* Các trang không yêu cầu phân quyền */}
         <Route index element={<MemberPage />} />
         <Route path="/news" element={<NewsPage/>} />
+        <Route path="competition" element={<CompetitionPage/>} />
         <Route path="/contact" element={<Contact />} />
       </Route>
     </Routes>

@@ -10,6 +10,7 @@ import PrivateRoutes from './PrivateRoutes'
 import MemberRouter from './MemberRouter'
 import NewsPage from '../page/NewsPage/NewsPage'
 import { useUser } from '../data/UserContext'
+import CompetitionPage from '../page/CompetitionPage/CompetitionPage'
 
 
 function AppRouter() {
@@ -22,6 +23,8 @@ function AppRouter() {
           {/* Kiểm tra trạng thái đăng nhập */}
           <Route index element={user ? <Navigate to="/member" /> : <GuestHomePage />} />
           <Route path="news" element={<NewsPage />} />
+          <Route path="competition" element={<CompetitionPage/>} />
+
           <Route path="contact" element={<Contact />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />

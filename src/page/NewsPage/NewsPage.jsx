@@ -1,6 +1,5 @@
 import React from 'react';
-import NewsContent from '../../components/Guest-HomePage/Guest-Body/NewsContent/NewsContent';
-import FilterNews from '../../components/Guest-HomePage/Guest-Body/FilterNews/FilterNews';
+import NewsContent from '../../components/NewsContent/NewsContent';
 import { TrophyOutlined} from '@ant-design/icons';
 // import './NewsPage.css'; // Import file CSS
 

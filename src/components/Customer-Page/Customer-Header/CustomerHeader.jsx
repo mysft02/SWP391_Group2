@@ -59,7 +59,7 @@ const CustomerHeader = () => {
             </Link>
           </li>
           <li>
-            <Link to={"/competition"}>
+            <Link to={"/member/competition"}>
               <Button type="primary" icon={<TrophyOutlined />}>
                 Competition
               </Button>
