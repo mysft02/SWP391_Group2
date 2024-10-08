@@ -27,7 +27,7 @@ const CustomerHeader = () => {
   const menuItems = [
     {
       key: "dashboard",
-      label: <Link to="/member-dashboard">Dashboard</Link>,
+      label: <Link to="/member/dashboard">Dashboard</Link>,
     },
     {
       key: "logout",

@@ -3,7 +3,7 @@ body {
 }
 
 body.light-theme {
-  background-color: white;
+  background-color: rgba(235, 202, 202, 0.805);
   color: black;
 }
 

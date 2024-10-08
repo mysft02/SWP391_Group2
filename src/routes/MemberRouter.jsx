@@ -5,6 +5,7 @@ import MemberPage from '../page/MemberPage';
 import Contact from '../components/Customer-Page/Customer-Header/contact/Contact';
 import NewsPage from '../page/NewsPage/NewsPage';
 import CompetitionPage from '../page/CompetitionPage/CompetitionPage';
+import DashBoardPage from '../page/DashBoardPage/DashBoardPage';
 
 function MemberRouter() {
   return (
@@ -15,6 +16,8 @@ function MemberRouter() {
         <Route path="/news" element={<NewsPage/>} />
         <Route path="competition" element={<CompetitionPage/>} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/dashboard" element={<DashBoardPage/>} />
+
       </Route>
     </Routes>
   );
