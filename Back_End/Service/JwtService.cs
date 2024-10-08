@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Service.Payload;
+using System.Collections.Generic;
+using System.Linq;
 
 public class JwtService
 {
@@ -66,4 +68,18 @@ public class JwtService
 
     //    return payload;
     //}
+
+    public string CreateNewGuid()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var random = new System.Random(); // Define the random instance here
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < 20; i++)
+        {
+            result.Append(chars[random.Next(chars.Length)]);
+        }
+
+        return result.ToString();
+    }
 }

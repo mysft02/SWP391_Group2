@@ -32,8 +32,12 @@ public class Users
     [Column("role_id")]
     public string role_id { get; set; } = string.Empty;
 
+    [Column("balance")]
     public decimal Balance { get; set; } = 0;
 
     [JsonIgnore]
     public virtual Roles Role { get; set; }
+
+    [JsonIgnore]
+    public virtual List<FishKoi> FishKoi { get; set; }
 }
