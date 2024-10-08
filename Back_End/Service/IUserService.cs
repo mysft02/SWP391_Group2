@@ -1,115 +1,133 @@
-﻿using KoiBet.Data;
+using KoiBet.Data;
 using KoiBet.DTO.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 using KoiBet.Entities;
+using System;
+using System.Threading.Tasks;
 
 namespace KoiBet.Service
 {
     public interface IUserService
     {
-        //CRUD for User ( - Role Admin + Staff can check)
-        public Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
-        public Task<IActionResult> HandleUpdate(ManagerDTO managerDTO);
-        public Task<IActionResult> HandleDelete(ManagerDTO managerDTO);
-        public Task<IActionResult> HandlePost(ManagerDTO managerDTO);
+        Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
+        Task<IActionResult> HandleUpdate(ManagerDTO managerDTO);
+        Task<IActionResult> HandleDeleteByID(string user_id);
+        Task<IActionResult> HandleGetUser(string user_id, string user_name);
     }
 
-    public class UserSerive : ControllerBase, IUserService
+    public class UserService : ControllerBase, IUserService
     {
         private readonly ApplicationDbContext _context;
-        public UserSerive(ApplicationDbContext context) 
+
+        public UserService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<IActionResult> HandleCreate(ManagerDTO _managerDTO)
+        // Tạo user mới
+        public async Task<IActionResult> HandleCreate(ManagerDTO managerDTO)
         {
-          //Check role exsit
-          var roleExsits = await _context.Roles.AnyAsync(r => r.role_id == _managerDTO.role_id);
+            var roleExists = await _context.Roles.AnyAsync(r => r.role_id == managerDTO.role_id);
 
-            if (!roleExsits)
+            if (!roleExists)
             {
-                throw new ArgumentException("User is not Exsit");
+                return BadRequest("Role does not exist");
             }
 
             var newUser = new Users
             {
-                user_id = Guid.NewGuid().ToString(),
-                Username = _managerDTO.user_name,
-                full_name = _managerDTO.full_name,
-                Password = _managerDTO.password,
-                Email = _managerDTO.email,
-                Phone = _managerDTO.phone,
-                role_id = _managerDTO.role_id,
+                user_id = Guid.NewGuid(), // Sử dụng Guid
+                Username = managerDTO.user_name,
+                full_name = managerDTO.full_name,
+                Password = BCrypt.Net.BCrypt.HashPassword(managerDTO.password), // Hash mật khẩu
+                Email = managerDTO.email,
+                Phone = managerDTO.phone,
+                role_id = managerDTO.role_id,
                 Balance = 0
             };
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
             return Ok(newUser);
         }
 
-        public async Task<IActionResult> HandleDeleteByID(string user_id, ManagerDTO managerDTO)
+        // Cập nhật user
+        public async Task<IActionResult> HandleUpdate(ManagerDTO managerDTO)
         {
-            if (string.IsNullOrEmpty(user_id) || !Guid.TryParse(user_id, out var userIdGuid)) {
-                throw new ArgumentException("Invaild ID or ID doesn't exsit");
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == managerDTO.user_id.ToString());
+
+            if (user == null)
+            {
+                return NotFound("User not found");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
+            // Cập nhật thông tin
+            user.full_name = managerDTO.full_name;
+            user.Email = managerDTO.email;
+            user.Phone = managerDTO.phone;
 
-            if (user == null) 
+            // Lưu thay đổi
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+        // Xóa user theo ID
+        public async Task<IActionResult> HandleDeleteByID(string user_id)
+        {
+            if (string.IsNullOrEmpty(user_id) || !Guid.TryParse(user_id, out var userIdGuid))
             {
-                throw new KeyNotFoundException(user_id.ToString());   
+                return BadRequest("Invalid user ID");
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
             }
 
             _context.Users.Remove(user);
-            return Ok("Delete user succcessfully");
+            await _context.SaveChangesAsync();
 
+            return Ok("User deleted successfully");
         }
 
-        public async Task<IActionResult> HandleGetUser(string user_id, string user_name, ManagerDTO managerDTO)
+        // Lấy thông tin user theo ID hoặc Username
+        public async Task<IActionResult> HandleGetUser(string user_id, string user_name)
         {
-            if (string.IsNullOrEmpty(user_id) || string.IsNullOrEmpty(user_name)){
-                throw new ArgumentException("ID or Username doesn't exsit");
+            if (string.IsNullOrEmpty(user_id) && string.IsNullOrEmpty(user_name))
+            {
+                return BadRequest("ID or Username must be provided");
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == user_name);
+            Users user = null;
+
+            if (!string.IsNullOrEmpty(user_id) && Guid.TryParse(user_id, out var userIdGuid))
+            {
+                user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid);
+            }
+            else if (!string.IsNullOrEmpty(user_name))
+            {
+                user = await _context.Users.FirstOrDefaultAsync(u => u.Username == user_name);
+            }
+
             if (user == null)
             {
-                throw new ArgumentException("Username not founded");
-            }
-
-            var ValidId = BCrypt.Net.BCrypt.Verify(user_id, user.user_id);
-
-            if (!ValidId)
-            {
-                return BadRequest(new { message = "ID doesn't match" });
+                return NotFound("User not found");
             }
 
             return Ok(new
             {
-                message = "User Found",
-                user = new
-                {
-                    Username = user.Username,
-                    FullName = user.full_name,
-                    Email = user.Email,
-                    Phone = user.Phone,
-                    RoleId = user.role_id,
-                    RoleName = user.role_name,
-                }
-            }
-
-
-
-
-
-            
-        }
-
-        public Task<IActionResult> HandleUpdate(ManagerDTO managerDTO)
-        {
-
+                Username = user.Username,
+                FullName = user.full_name,
+                Email = user.Email,
+                Phone = user.Phone,
+                RoleId = user.role_id,
+                Balance = user.Balance
+            });
         }
     }
-
 }
