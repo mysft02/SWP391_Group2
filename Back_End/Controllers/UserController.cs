@@ -1,4 +1,4 @@
-﻿using KoiBet.Data;
+using KoiBet.Data;
 using KoiBet.DTO.User;
 using KoiBet.Entities;
 using Microsoft.AspNetCore.Authorization;
