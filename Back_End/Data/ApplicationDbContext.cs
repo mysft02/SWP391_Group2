@@ -12,6 +12,8 @@ namespace KoiBet.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<FishKoi> FishKoi { get; set; }
+        public DbSet<KoiStandard> KoiStandards { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
