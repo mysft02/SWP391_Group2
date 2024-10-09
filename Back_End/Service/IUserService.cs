@@ -11,7 +11,7 @@ namespace KoiBet.Service
     public interface IUserService
     {
         Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
-        Task<IActionResult> HandleUpdate(ManagerDTO managerDTO);
+        Task<IActionResult> HandleUpdateByUsername(string username, UpdateUserDTO _updateDTO);
         Task<IActionResult> HandleDeleteByID(string user_id);
         Task<IActionResult> HandleGetUser(string user_id, string user_name);
     }
@@ -54,21 +54,33 @@ namespace KoiBet.Service
         }
 
         // Cập nhật user
-        public async Task<IActionResult> HandleUpdate(ManagerDTO managerDTO)
+        public async Task<IActionResult> HandleUpdateByUsername(string username, UpdateUserDTO updateDTO)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == managerDTO.user_id.ToString());
+            // Find the user by username
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
             {
                 return NotFound("User not found");
             }
 
-            // Cập nhật thông tin
-            user.full_name = managerDTO.full_name;
-            user.Email = managerDTO.email;
-            user.Phone = managerDTO.phone;
+            // Update user information only if the new value is provided
+            if (!string.IsNullOrWhiteSpace(updateDTO.full_name))
+            {
+                user.full_name = updateDTO.full_name;
+            }
 
-            // Lưu thay đổi
+            if (!string.IsNullOrWhiteSpace(updateDTO.email))
+            {
+                user.Email = updateDTO.email;
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateDTO.phone))
+            {
+                user.Phone = updateDTO.phone;
+            }
+
+            // Save changes to the database
             await _context.SaveChangesAsync();
 
             return Ok(user);

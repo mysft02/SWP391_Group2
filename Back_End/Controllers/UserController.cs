@@ -51,11 +51,11 @@ namespace KoiBet.Controllers
         // PUT: user/update-profile
         [Authorize]
         [HttpPut("update-profile")]
-        public async Task<IActionResult> UpdateUserProfile([FromBody] ManagerDTO updateUserDTO)
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserDTO _updateUserDTO)
         {
-            var userId = User.FindFirst("user_id")?.Value;
+            var userName = User.FindFirst("Username")?.Value;
 
-            if (userId == null)
+            if (userName == null)
             {
                 return Unauthorized(new { message = "User not authenticated" });
             }
@@ -63,11 +63,8 @@ namespace KoiBet.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            Guid userIdGuid = Guid.NewGuid();
-            string userIdString = userIdGuid.ToString();
-            return await _userService.HandleUpdate(updateUserDTO);
+            };
+            return await _userService.HandleUpdateByUsername(userName, _updateUserDTO);
         }
 
         // DELETE: user/{id}

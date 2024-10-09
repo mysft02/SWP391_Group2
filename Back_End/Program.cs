@@ -6,6 +6,7 @@ using Microsoft.OpenApi.Models;
 using Service.JwtService;
 using Service.AuthService;
 using Service.KoiFishService;
+using Middleware.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+
+builder.Services.AddTokenAuthentication(builder.Configuration);
 
 // Thêm hỗ trợ cho Swagger
 builder.Services.AddEndpointsApiExplorer();
