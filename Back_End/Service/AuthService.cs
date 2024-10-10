@@ -97,7 +97,7 @@ public class AuthService : ControllerBase, IAuthService
                 Email = registerDTO.email,
                 Phone = registerDTO.phone,
                 role_id = "R1",
-                Balance = 0,
+                Balance = registerDTO.Balance,
             };
 
             // Thêm người dùng vào cơ sở dữ liệu
