@@ -29,6 +29,13 @@ namespace KoiBet.Controllers
             return await _koiFishService.HandleGetAllKoiFishes(userId);
         }
 
+        // POST: auth/login
+        [HttpPost("Get Koi Fish By Id")]
+        public async Task<IActionResult> GetKoiFishById([FromBody] string searchValue)
+        {
+            return await _koiFishService.HandleGetKoiFishById(searchValue);
+        }
+
         [HttpPost("Create New Koi Fish")]
         public async Task<IActionResult> CreateNewKoiFish([FromBody] CreateKoiFishDTO createKoiFishDto)
         {

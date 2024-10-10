@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace KoiBet.Entities
 {
@@ -18,19 +19,35 @@ namespace KoiBet.Entities
 
         public string status_competition {  get; set; }
 
+        [Required]
+        [Column("category_id")]
+        public string category_id { get; set; }
+
+        [Required]
+        [Column("koi_id")]
+        public string koi_id { get; set; }
+
+        [Required]
+        [Column("referee_id")]
+        public string referee_id { get; set; }
+
+        [Required]
+        [Column("award_id")]
+        public string award_id { get; set; }
+
         public string round {  get; set; }
 
-        [ForeignKey(nameof(KoiCategory))]
-        public virtual KoiCategory category_id { get; set; }
+        [JsonIgnore]
+        public virtual KoiCategory Category { get; set; }
 
-        [ForeignKey(nameof(FishKoi))]
-        public virtual FishKoi koi_id { get; set; }
+        [JsonIgnore]
+        public virtual FishKoi Koi { get; set; }
 
-        [ForeignKey(nameof(Referee))]
-        public virtual Referee referee_id { get; set; }
+        [JsonIgnore]
+        public virtual Referee Referee { get; set; }
         
-        [ForeignKey(nameof(Award))]
-        public virtual Award award_id { get; set; }
+        [JsonIgnore]
+        public virtual Award Award { get; set; }
 
     }
 }

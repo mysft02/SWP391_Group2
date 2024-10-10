@@ -5,69 +5,70 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Configuration;
 using Service.Payload;
 using System.Collections.Generic;
 using System.Linq;
+using KoiBet.DTO.User;
 
 public class JwtService
 {
-    private readonly string _secret;
-    private readonly string _expDate;
+    private readonly string DEFAULT_SECRET = "PDv7DrqznYL6nv7DrqzjnQYO9JxIsWdcjnQYL6nu0f";
     private readonly byte[] _key;
     private readonly JwtSecurityTokenHandler _handler;
 
-    public JwtService(IConfiguration config)
+    public JwtService()
     {
-        _secret = config.GetSection("JwtConfig").GetSection("secret").Value;
-        _expDate = config.GetSection("JwtConfig").GetSection("expirationInMinutes").Value;
+        var SecretKey = Environment.GetEnvironmentVariable("JWT_SECRET") ?? DEFAULT_SECRET;
+        _key = Encoding.ASCII.GetBytes(SecretKey);
+        _handler = new JwtSecurityTokenHandler();
     }
 
-    public string GenerateSecurityToken(string email, Guid userId, bool isAdmin)
+    public string GenerateSecurityToken(PayloadDTO payloadDTO)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_secret);
+        var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET") ?? DEFAULT_SECRET);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new Claim[]
              {
-                new ("email", email),
-                new ("isAdmin", isAdmin.ToString()),
-                 }),
-            Expires = DateTime.UtcNow.AddMinutes(double.Parse(_expDate)),
+                 new ("userID", payloadDTO.UserID),
+                 new ("email", payloadDTO.Email),
+                 new ("isAdmin", payloadDTO.IsAdmin.ToString()),
+             }),
+            Expires = DateTime.UtcNow.AddMinutes(30),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Issuer = "Koibet",
+            Issuer = payloadDTO.UserID,
         };
 
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var token = _handler.CreateToken(tokenDescriptor);
 
-        return tokenHandler.WriteToken(token);
+        return _handler.WriteToken(token);
 
     }
 
-    //public Payload? ValidateToken(string token)
-    //{
+    public Payload? ValidateToken(string token)
+    {
 
-    //    _handler.ValidateToken(token, new TokenValidationParameters
-    //    {
-    //        ValidateIssuerSigningKey = true,
-    //        IssuerSigningKey = new SymmetricSecurityKey(_key),
-    //        ValidateIssuer = false,
-    //        ValidateAudience = false,
-    //        // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-    //        ClockSkew = TimeSpan.Zero
-    //    }, out SecurityToken validatedToken);
+        _handler.ValidateToken(token, new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(_key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+            ClockSkew = TimeSpan.Zero
+        }, out SecurityToken validatedToken);
 
-    //    var result = (JwtSecurityToken)validatedToken;
+        var result = (JwtSecurityToken)validatedToken;
 
-    //    var payload = new Payload()
-    //    {
-    //        UserId = Guid.Parse(result.Issuer),
-    //        IsSuperAdmin = bool.Parse(result.Claims.First(x => x.Type == "isSuperAdmin").Value)
-    //    };
+        var payload = new Payload()
+        {
+            UserId = result.Issuer,
+            Email = result.Claims.First(x => x.Type == "email").Value,
+            IsAdmin = bool.Parse(result.Claims.First(x => x.Type == "isAdmin").Value)
+        };
 
-    //    return payload;
-    //}
+        return payload;
+    }
 
     public string CreateNewGuid()
     {

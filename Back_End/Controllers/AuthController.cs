@@ -9,6 +9,9 @@ using BCrypt.Net;
 using Microsoft.Extensions.Configuration;
 using Service.JwtService;
 using Service.AuthService;
+using Service.Payload;
+using Microsoft.AspNetCore.Identity;
+using KoiBet.Middleware;
 
 namespace KoiBet.Controllers
 {
@@ -45,12 +48,17 @@ namespace KoiBet.Controllers
             return await _authService.HandleRegister(registerDTO);
         }
 
-        //[HttpGet]
-        //public string GetRandomToken()
-        //{
-        //    var jwt = new JwtService(_config);
-        //    var token = jwt.GenerateSecurityToken("fake@email.com");
-        //    return token;
-        //}
+        [HttpGet("Get Token")]
+        public async Task<IActionResult> GetRandomToken([FromQuery] PayloadDTO payloadDTO)
+        {
+            return await _authService.HandleGetToken(payloadDTO);
+        }
+
+        [Protected]
+        [HttpGet("Check Token")]
+        public async Task<IActionResult> CheckToken([FromQuery] string token)
+        {
+            return await _authService.HandleCheckToken(token);
+        }
     }
 }

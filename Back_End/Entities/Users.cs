@@ -39,5 +39,8 @@ public class Users
     public virtual Roles Role { get; set; }
 
     [JsonIgnore]
+    public virtual List<BetKoi> BetKoi { get; set; }
+
+    [JsonIgnore]
     public virtual List<FishKoi> FishKoi { get; set; }
 }

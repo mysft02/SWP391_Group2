@@ -17,15 +17,19 @@ public interface IAuthService
 {
     public Task<IActionResult> HandleLogin(LoginDTO loginDto);
     public Task<IActionResult> HandleRegister(RegisterDTO registerDto);
+    public Task<IActionResult> HandleGetToken(PayloadDTO payloadDTO);
+    public Task<IActionResult> HandleCheckToken(string token);
 }
 
 public class AuthService : ControllerBase, IAuthService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IConfiguration _config;
 
-    public AuthService(ApplicationDbContext context) 
+    public AuthService(ApplicationDbContext context, IConfiguration config) 
     {
         _context = context;
+        _config = config;
     }
 
     public async Task<IActionResult> HandleLogin(LoginDTO loginDto)
@@ -106,6 +110,32 @@ public class AuthService : ControllerBase, IAuthService
 
             // Trả về thông tin người dùng mới đã đăng ký
             return Ok(newUser);
+        }
+        catch (Exception ex) { return BadRequest(ex.Message); }
+    }
+
+    public async Task<IActionResult> HandleGetToken(PayloadDTO payloadDTO)
+    {
+        try
+        {
+            var jwt = new JwtService();
+
+            var token = jwt.GenerateSecurityToken(payloadDTO);
+
+            return Ok(token);
+        }
+        catch (Exception ex) { return BadRequest(ex.Message); }
+    }
+
+    public async Task<IActionResult> HandleCheckToken(string token)
+    {
+        try
+        {
+            var jwt = new JwtService();
+
+            var payload = jwt.ValidateToken(token);
+
+            return Ok(payload);
         }
         catch (Exception ex) { return BadRequest(ex.Message); }
     }

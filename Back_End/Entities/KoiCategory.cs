@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace KoiBet.Entities
 {
@@ -10,7 +11,11 @@ namespace KoiBet.Entities
 
         public string category_name { get; set; }
 
-        [ForeignKey("standard_id")]
+        [Required]
+        [Column("standard_id")]
+        public string standard_id { get; set; }
+
+        [JsonIgnore]
         public virtual KoiStandard koi_standard { get; set; }
     }
 }
