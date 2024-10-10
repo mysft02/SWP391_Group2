@@ -16,11 +16,9 @@
 }
 
 .introduce h4 {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.6;
 }
-
-
 
 .introduce-video {
   width: 50%;
@@ -52,18 +50,25 @@
 .h4-animation {
   animation: fadeIn 1.2s ease-out;
 }
-.news-link-animation {
+.news-link-animationNews {
+  text-align: start;
   display: block;
   margin-top: 20px;
-  font-size: 16px;
   text-decoration: none;
   animation: fadeIn 1.2s ease-out;
+  color: #533636 !important; /* Màu chữ mặc định */
+  background-color: #2a5781 !important;
+  padding: 5px 20px; /* Tạo khoảng cách bên trong link */
+  border-radius: 8px; /* Tạo góc bo tròn cho link */
+  font-weight: bold; /* Làm cho chữ đậm hơn */
+  text-transform: uppercase; /* Chuyển văn bản thành chữ hoa */
+  letter-spacing: 1px; /* Tăng khoảng cách giữa các chữ */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng khi hover */
 
 }
 
-.news-link-animation:hover {
+.news-link-animationNews :hover {
   color: #ffae42; /* Màu vàng đậm khi hover */
   text-decoration: underline;
-
 }
 

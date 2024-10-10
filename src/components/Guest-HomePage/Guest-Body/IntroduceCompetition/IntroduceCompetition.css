@@ -1,0 +1,76 @@
+.introduce-Competition {
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Đảm bảo tiêu đề ở trên, nội dung ở dưới */
+  }
+  
+  .title-animation {
+    display: flex;
+    justify-content: center; /* Căn trái tiêu đề */
+    align-items: center;
+    animation: fadeIn 1s ease-out;
+    margin-bottom: 20px; /* Tạo khoảng cách giữa tiêu đề và phần nội dung */
+  }
+  
+  .content-introduce {
+    display: flex;
+    justify-content:space-between; /* Chia đều khoảng cách giữa hai phần */
+    flex-direction: row-reverse;
+    align-items: flex-start; /* Căn nội dung về phía trên */
+  }
+  
+  .competition {
+    width: 50%; /* Chiếm 50% diện tích cho phần giới thiệu */
+    margin-top: 100px;
+  }
+  
+  .competition-card {
+    width: 45%; /* Chiếm 45% diện tích cho phần thẻ */
+  }
+  
+  .competition h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease-out;
+  }
+  
+  .competition h4 {
+    font-size: 16px;
+    line-height: 1.6;
+    animation: fadeIn 1.2s ease-out;
+  }
+  
+  .news-link-animationCompetition {
+    text-align: start;
+    display: block;
+    margin-top: 20px;
+    text-decoration: 'none';
+    animation: fadeIn 1.2s ease-out;
+    color: #533636 !important; /* Màu chữ mặc định */
+    background-color: #2a5781 !important;
+    padding: 5px 20px; /* Tạo khoảng cách bên trong link */
+    border-radius: 8px; /* Tạo góc bo tròn cho link */
+    font-weight: bold; /* Làm cho chữ đậm hơn */
+    text-transform: uppercase; /* Chuyển văn bản thành chữ hoa */
+    letter-spacing: 1px; /* Tăng khoảng cách giữa các chữ */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Hiệu ứng khi hover */
+}
+
+.news-link-animationCompetition :hover {
+    /* color: #ffae42; Màu vàng đậm khi hover */
+    color: #ffae42; /* Đổi màu nền khi hover */
+    text-decoration: underline;
+}
+
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-500px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

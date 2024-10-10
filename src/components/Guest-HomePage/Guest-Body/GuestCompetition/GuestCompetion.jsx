@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Card, Row, Col, Pagination } from 'antd';
-import { TrophyOutlined } from '@ant-design/icons';
+import { Button, Card, Row, Col } from 'antd';
+import { TrophyOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './GuestCompetition.css';
 
 function GuestCompetition() {
@@ -9,32 +9,41 @@ function GuestCompetition() {
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
     { title: 'Cuộc thi thiết kế đồ họa 2024', start: '15/10/2024', end: '15/11/2024', imageUrl: 'https://betterpet.com/wp-content/uploads/2023/06/maine-coon-cat-with-fluffy-tail.jpeg' },
     { title: 'Cuộc thi ẩm thực 2024', start: '20/10/2024', end: '20/11/2024', imageUrl: 'https://betterpet.com/wp-content/uploads/2023/06/maine-coon-cat-with-fluffy-tail.jpeg' },
-    // Thêm các cuộc thi khác...
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
     { title: 'Cuộc thi lập trình 2024', start: '10/10/2024', end: '10/11/2024', imageUrl: 'https://th.bing.com/th/id/OIP.jgHaCFOKji2ApdgjoMu6CQHaE8?rs=1&pid=ImgDetMain' },
   ];
 
-  // State để điều khiển phân trang
-  const [currentPage, setCurrentPage] = useState(1);
+  // State để điều khiển vị trí card đang hiển thị
+  const [currentIndex, setCurrentIndex] = useState(0);
   const pageSize = 3; // Số lượng card hiển thị mỗi trang
 
-  // Tính toán vị trí của các card hiển thị trong trang hiện tại
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentCompetitions = competitions.slice(startIndex, endIndex);
+  // Tính toán các card hiện tại
+  const currentCompetitions = competitions.slice(currentIndex, currentIndex + pageSize);
 
-  // Hàm xử lý sự kiện phân trang
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  // Hàm xử lý di chuyển card
+  const handlePrevClick = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const handleNextClick = () => {
+    if (currentIndex + pageSize < competitions.length) {
+      setCurrentIndex(currentIndex + 1);
+    }
   };
 
   return (
     <div className='Guest-Competition'>
-      <h2>
-        <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
-          Competition
-      </h2>
+      <Button 
+        className='nav-button prev-button'
+        onClick={handlePrevClick}
+        icon={<LeftOutlined />}
+        disabled={currentIndex === 0} // Vô hiệu hóa khi đang ở trang đầu
+      >
+        Previous
+      </Button>
 
       <Row gutter={[16, 16]} justify="center">
         {currentCompetitions.map((competition, index) => (
@@ -55,14 +64,14 @@ function GuestCompetition() {
         ))}
       </Row>
 
-      <Pagination
-        className='competition-pagination'
-        current={currentPage}
-        pageSize={pageSize}
-        total={competitions.length}
-        onChange={handlePageChange}
-        style={{ marginTop: '20px', textAlign: 'center' }}
-      />
+      <Button 
+        className='nav-button next-button'
+        onClick={handleNextClick}
+        icon={<RightOutlined />}
+        disabled={currentIndex + pageSize >= competitions.length} // Vô hiệu hóa khi đang ở trang cuối
+      >
+        Next
+      </Button>
     </div>
   );
 }

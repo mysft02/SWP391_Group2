@@ -3,6 +3,7 @@ import GuestBanner from '../GuestBanner/GuestBanner'
 import GuestNewsCompetition from '../GuestNewsCompetition/GuestNewsCompetition'
 import GuestCompetition from '../GuestCompetition/GuestCompetion'
 import Introduction from '../Introduction/Introduction'
+import IntroduceCompetition from '../IntroduceCompetition/IntroduceCompetition'
 
 function GuestBody() {
   return (
@@ -14,7 +15,7 @@ function GuestBody() {
           <Introduction/>
         </div>
         <div className='guest-competition'>
-          <GuestCompetition/>
+          <IntroduceCompetition/>
         </div>
       
     </div>

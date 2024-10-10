@@ -11,7 +11,7 @@ function CustomeProfile() {
     password: '',
     email: '',
     phone: '',
-    balance: 10, // Cập nhật sau khi lấy từ API
+    balance: '', // Cập nhật sau khi lấy từ API
   });
 
   // Cập nhật formData từ dữ liệu user trong context
@@ -23,7 +23,7 @@ function CustomeProfile() {
         password: '', // Không hiển thị mật khẩu
         email: user.email || '',
         phone: user.phone || '',
-        balance: 0 , // Hiển thị balance từ user context
+        balance: user.balance , // Hiển thị balance từ user context
       });
     }
   }, [user]);
