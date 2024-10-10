@@ -22,5 +22,7 @@ namespace KoiBet.DTO.User
 
         [Required(ErrorMessage = "Phone is required.")]
         public string phone { get; set; }
+
+        public double Balance { get; set; } = 0.0;
     }
 }
