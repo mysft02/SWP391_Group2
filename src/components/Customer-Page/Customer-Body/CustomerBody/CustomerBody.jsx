@@ -1,7 +1,7 @@
 import React from 'react'
 import CustomerBanner from '../CustomerBanner/CustomerBanner'
-import CustomerNewsCompetition from '../CustomerNewsCompetition/CustomerNewsCompetition'
 import CustomerCompetition from '../CustomerCompetition/CustomerCompetion'
+import Introduction from '../../../Guest-HomePage/Guest-Body/Introduction/Introduction'
 
 function CustomerBody() {
   return (
@@ -9,8 +9,8 @@ function CustomerBody() {
         <div className='Customer-banner'>
             <CustomerBanner/>
         </div>
-        <div className='Customer-news'>
-          <CustomerNewsCompetition/>
+        <div className = 'customer-introduce'>
+          <Introduction/>
         </div>
         <div className='Customer-competition'>
           <CustomerCompetition/>
