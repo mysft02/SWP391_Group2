@@ -29,7 +29,7 @@ namespace Service.KoiStandardService
         {
             try
             {
-                var koiStandards = await _context.KoiStandards
+                var koiStandards = await _context.KoiStandard
                     .Select(standard => new KoiStandardDTO
                     {
                         standard_id = standard.standard_id,
@@ -61,9 +61,26 @@ namespace Service.KoiStandardService
         {
             try
             {
+                var lastKoiStandard = await _context.KoiStandard
+                    .OrderByDescending(k => k.standard_id)
+                    .FirstOrDefaultAsync();
+
+                int newIdNumber = 1; //Mặc định là 1 khi ko có bản dữ liệu
+
+                if (lastKoiStandard != null)
+                {
+                    var lastId = lastKoiStandard.standard_id;
+                    if (lastId.StartsWith("KST_"))
+                    {
+                        int.TryParse(lastId.Substring(4), out newIdNumber); //lấy phần tử phía sau thằng KST_X ( x là number tự tăng )
+                        newIdNumber++;
+                    }
+                }
+
+
                 var newKoiStandard = new KoiStandard
                 {
-                    standard_id = Guid.NewGuid().ToString(),
+                    standard_id = $"KST_{newIdNumber}",
                     color_koi = createKoiStandardDto.color_koi,
                     pattern_koi = createKoiStandardDto.pattern_koi,
                     size_koi = createKoiStandardDto.size_koi,
@@ -74,7 +91,7 @@ namespace Service.KoiStandardService
                     gender = createKoiStandardDto.gender
                 };
 
-                _context.KoiStandards.Add(newKoiStandard);
+                _context.KoiStandard.Add(newKoiStandard);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -94,7 +111,7 @@ namespace Service.KoiStandardService
         {
             try
             {
-                var koiStandard = await _context.KoiStandards
+                var koiStandard = await _context.KoiStandard
                     .FirstOrDefaultAsync(r => r.standard_id == updateKoiStandardDto.standard_id);
 
                 if (koiStandard == null)
@@ -111,7 +128,7 @@ namespace Service.KoiStandardService
                 koiStandard.standard_name = updateKoiStandardDto.standard_name;
                 koiStandard.gender = updateKoiStandardDto.gender;
 
-                _context.KoiStandards.Update(koiStandard);
+                _context.KoiStandard.Update(koiStandard);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -131,7 +148,7 @@ namespace Service.KoiStandardService
         {
             try
             {
-                var koiStandard = await _context.KoiStandards
+                var koiStandard = await _context.KoiStandard
                     .FirstOrDefaultAsync(r => r.standard_id == standardId);
 
                 if (koiStandard == null)
@@ -139,7 +156,7 @@ namespace Service.KoiStandardService
                     return BadRequest("Koi standard not found!");
                 }
 
-                _context.KoiStandards.Remove(koiStandard);
+                _context.KoiStandard.Remove(koiStandard);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -159,7 +176,7 @@ namespace Service.KoiStandardService
         {
             try
             {
-                var koiStandard = await _context.KoiStandards
+                var koiStandard = await _context.KoiStandard
                     .Select(standard => new KoiStandardDTO
                     {
                         standard_id = standard.standard_id,

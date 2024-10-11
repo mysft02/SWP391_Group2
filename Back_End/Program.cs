@@ -7,6 +7,7 @@ using Service.JwtService;
 using Service.AuthService;
 using Service.KoiFishService;
 using Middleware.Authentication;
+using Service.KoiStandardService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IKoiFishService, KoiFishService>();
+builder.Services.AddScoped<IKoiStandardService, KoiStandardService>();
 
 var app = builder.Build();
 

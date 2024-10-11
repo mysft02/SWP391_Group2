@@ -11,7 +11,7 @@ namespace KoiBet.Entities
 
         public string? pattern_koi { get; set; }
 
-        public string? size_koi { get; set; }
+        public decimal? size_koi { get; set; }
 
         public int? age_koi { get; set; }
 

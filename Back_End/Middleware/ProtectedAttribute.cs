@@ -1,5 +1,4 @@
-﻿namespace KoiBet.Middleware;
-
+﻿
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Service.JwtService;
@@ -14,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using BCrypt.Net;
 
+namespace KoiBet.Middleware;
 // Middleware to protect routes
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 public class ProtectedAttribute : Attribute, IAuthorizationFilter

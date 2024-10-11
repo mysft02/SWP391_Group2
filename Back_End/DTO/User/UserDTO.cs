@@ -16,6 +16,6 @@ namespace KoiBet.DTO.User
 
         public string? role_id { get; set; }
 
-        public decimal? balance { get; set; }
+        public decimal? balance { get; set; } = 0.0M;
     }
 }

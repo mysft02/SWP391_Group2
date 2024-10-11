@@ -33,7 +33,7 @@ public class Users
     public string role_id { get; set; } = string.Empty;
 
     [Column("balance")]
-    public double Balance { get; set; } = 0.0;
+    public decimal? Balance { get; set; } = 0.0M;
 
     [JsonIgnore]
     public virtual Roles Role { get; set; }

@@ -15,20 +15,20 @@ namespace KoiBet.Controllers
             _koiStandardService = koiStandardService;
         }
 
-        [HttpGet]
+        [HttpGet("Get All KoiStandard")]
         public async Task<IActionResult> GetAllKoiStandards()
         {
             return await _koiStandardService.HandleGetAllKoiStandards();
         }
 
-        [HttpGet("{standardId}")]
+        [HttpGet("Get KoiStandard")]
         public async Task<IActionResult> GetKoiStandard(string standardId)
         {
             return await _koiStandardService.HandleGetKoiStandard(standardId);
         }
 
 
-        [HttpPut("{standardId}")]
+        [HttpPut("Update KoiStandard")]
         public async Task<IActionResult> UpdateKoiStandard(string standardId, [FromBody] UpdateKoiStandardDTO updateKoiStandardDto)
         {
             if (standardId != updateKoiStandardDto.standard_id)
@@ -39,10 +39,16 @@ namespace KoiBet.Controllers
             return await _koiStandardService.HandleUpdateKoiStandard(updateKoiStandardDto);
         }
 
-        [HttpDelete("{standardId}")]
+        [HttpDelete("Delete KoiStandard")]
         public async Task<IActionResult> DeleteKoiStandard(string standardId)
         {
             return await _koiStandardService.HandleDeleteKoiStandard(standardId);
+        }
+
+        [HttpPost("CreateKoiStandard")]
+        public async Task<IActionResult> CreateKoiStandard([FromBody] CreateKoiStandardDTO _createKoiStandardDTO)
+        {
+            return await _koiStandardService.HandleCreateNewKoiStandard(_createKoiStandardDTO);
         }
     }
 }

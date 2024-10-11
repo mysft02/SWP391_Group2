@@ -5,7 +5,7 @@
         public string? standard_id { get; set; }
         public string? color_koi { get; set; }
         public string? pattern_koi { get; set; }
-        public string? size_koi { get; set; }
+        public decimal? size_koi { get; set; }
         public int? age_koi { get; set; } = 0;
         public string? bodyshape_koi { get; set; }
         public string? variety_koi { get; set; }
