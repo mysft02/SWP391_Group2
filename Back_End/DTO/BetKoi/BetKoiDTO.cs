@@ -7,6 +7,5 @@ namespace KoiBet.DTO.BetKoi
         public string bet_id { get; set; }
 
         public UserDTO? user_id { get; set; }
-
     }
 }
