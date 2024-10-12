@@ -3,6 +3,7 @@ using KoiBet.Data;
 using KoiBet.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using KoiBet.DTO.Competition;
 
 namespace Service.ICompetitionService
 {
@@ -29,21 +30,21 @@ namespace Service.ICompetitionService
         {
             try
             {
-                var competitions = await _context.Competitions
+                var competitions = await _context.Competition
                     .Select(competition => new CompetitionDTO
                     {
-                        CompetitionId = competition.CompetitionId,
-                        CompetitionName = competition.CompetitionName,
-                        CompetitionDescription = competition.CompetitionDescription,
-                        StartTime = competition.StartTime,
-                        EndTime = competition.EndTime,
-                        StatusCompetition = competition.StatusCompetition,
-                        Round = competition.Round,
-                        KoiCategoryId = competition.KoiCategoryId,
-                        KoiFishId = competition.KoiFishId,
-                        RefereeId = competition.RefereeId,
-                        AwardId = competition.AwardId,
-                        CompetitionImg = competition.CompetitionImg
+                        CompetitionId = competition.competition_id,
+                        CompetitionName = competition.competition_name,
+                        CompetitionDescription = competition.competition_description,
+                        StartTime = competition.start_time,
+                        EndTime = competition.end_time,
+                        StatusCompetition = competition.status_competition,
+                        Round = competition.round,
+                        category_id = competition.category_id,
+                        koi_id = competition.koi_id,
+                        referee_id = competition.referee_id,
+                        award_id = competition.award_id,
+                        CompetitionImg = competition.competition_img,
                     })
                     .ToListAsync();
 
@@ -56,7 +57,7 @@ namespace Service.ICompetitionService
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error retrieving competitions: {ex.Message}");
             }
         }
 
@@ -65,15 +66,15 @@ namespace Service.ICompetitionService
         {
             try
             {
-                var lastCompetition = await _context.Competitions
-                    .OrderByDescending(c => c.CompetitionId)
+                var lastCompetition = await _context.Competition
+                    .OrderByDescending(c => c.competition_id)
                     .FirstOrDefaultAsync();
 
                 int newIdNumber = 1; // Default ID starts at 1 if no records exist
 
                 if (lastCompetition != null)
                 {
-                    var lastId = lastCompetition.CompetitionId;
+                    var lastId = lastCompetition.competition_id;
                     if (lastId.StartsWith("CPT_"))
                     {
                         int.TryParse(lastId.Substring(4), out newIdNumber); // Increment the ID number after 'CPT_'
@@ -81,23 +82,23 @@ namespace Service.ICompetitionService
                     }
                 }
 
-                var newCompetition = new Competition
+                var newCompetition = new CompetitionKoi
                 {
-                    CompetitionId = $"CPT_{newIdNumber}",
-                    CompetitionName = createCompetitionDto.CompetitionName,
-                    CompetitionDescription = createCompetitionDto.CompetitionDescription,
-                    StartTime = createCompetitionDto.StartTime,
-                    EndTime = createCompetitionDto.EndTime,
-                    StatusCompetition = createCompetitionDto.StatusCompetition,
-                    Round = createCompetitionDto.Round,
-                    KoiCategoryId = createCompetitionDto.KoiCategoryId,
-                    KoiFishId = createCompetitionDto.KoiFishId,
-                    RefereeId = createCompetitionDto.RefereeId,
-                    AwardId = createCompetitionDto.AwardId,
-                    CompetitionImg = createCompetitionDto.CompetitionImg
+                    competition_id = $"CPT_{newIdNumber}",
+                    competition_name = createCompetitionDto.competition_name,
+                    competition_description = createCompetitionDto.competition_description,
+                    start_time = createCompetitionDto.start_time,
+                    end_time = createCompetitionDto.end_time,
+                    status_competition = createCompetitionDto.status_competition.ToString(),
+                    round = createCompetitionDto.round,
+                    category_id = createCompetitionDto.category_id,
+                    koi_id = createCompetitionDto.koi_id,
+                    referee_id = createCompetitionDto.referee_id,
+                    award_id = createCompetitionDto.award_id,
+                    competition_img = createCompetitionDto.competition_img
                 };
 
-                _context.Competitions.Add(newCompetition);
+                _context.Competition.Add(newCompetition);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -109,7 +110,7 @@ namespace Service.ICompetitionService
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error creating competition: {ex.Message}");
             }
         }
 
@@ -118,27 +119,27 @@ namespace Service.ICompetitionService
         {
             try
             {
-                var competition = await _context.Competitions
-                    .FirstOrDefaultAsync(c => c.CompetitionId == updateCompetitionDto.CompetitionId);
+                var competition = await _context.Competition
+                    .FirstOrDefaultAsync(c => c.competition_id == updateCompetitionDto.CompetitionId);
 
                 if (competition == null)
                 {
                     return NotFound("Competition not found!");
                 }
 
-                competition.CompetitionName = updateCompetitionDto.CompetitionName;
-                competition.CompetitionDescription = updateCompetitionDto.CompetitionDescription;
-                competition.StartTime = updateCompetitionDto.StartTime;
-                competition.EndTime = updateCompetitionDto.EndTime;
-                competition.StatusCompetition = updateCompetitionDto.StatusCompetition;
-                competition.Round = updateCompetitionDto.Round;
-                competition.KoiCategoryId = updateCompetitionDto.KoiCategoryId;
-                competition.KoiFishId = updateCompetitionDto.KoiFishId;
-                competition.RefereeId = updateCompetitionDto.RefereeId;
-                competition.AwardId = updateCompetitionDto.AwardId;
-                competition.CompetitionImg = updateCompetitionDto.CompetitionImg;
+                competition.competition_name = updateCompetitionDto.CompetitionName;
+                competition.competition_description = updateCompetitionDto.CompetitionDescription;
+                DateTime startTime = competition.start_time;
+                DateTime endTime = competition.end_time;
+                competition.status_competition = updateCompetitionDto.StatusCompetition.ToString();
+                competition.round = updateCompetitionDto.Round;
+                competition.category_id = updateCompetitionDto.KoiCategoryId;
+                competition.koi_id = updateCompetitionDto.KoiFishId;
+                competition.referee_id = updateCompetitionDto.RefereeId;
+                competition.award_id = updateCompetitionDto.AwardId;
+                competition.competition_img = updateCompetitionDto.CompetitionImg;
 
-                _context.Competitions.Update(competition);
+                _context.Competition.Update(competition);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -150,7 +151,7 @@ namespace Service.ICompetitionService
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error updating competition: {ex.Message}");
             }
         }
 
@@ -159,15 +160,15 @@ namespace Service.ICompetitionService
         {
             try
             {
-                var competition = await _context.Competitions
-                    .FirstOrDefaultAsync(c => c.CompetitionId == competitionId);
+                var competition = await _context.Competition
+                    .FirstOrDefaultAsync(c => c.competition_id == competitionId);
 
                 if (competition == null)
                 {
                     return NotFound("Competition not found!");
                 }
 
-                _context.Competitions.Remove(competition);
+                _context.Competition.Remove(competition);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -179,7 +180,7 @@ namespace Service.ICompetitionService
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error deleting competition: {ex.Message}");
             }
         }
 
@@ -188,21 +189,21 @@ namespace Service.ICompetitionService
         {
             try
             {
-                var competition = await _context.Competitions
+                var competition = await _context.Competition
                     .Select(c => new CompetitionDTO
                     {
-                        CompetitionId = c.CompetitionId,
-                        CompetitionName = c.CompetitionName,
-                        CompetitionDescription = c.CompetitionDescription,
-                        StartTime = c.StartTime,
-                        EndTime = c.EndTime,
-                        StatusCompetition = c.StatusCompetition,
-                        Round = c.Round,
-                        KoiCategoryId = c.KoiCategoryId,
-                        KoiFishId = c.KoiFishId,
-                        RefereeId = c.RefereeId,
-                        AwardId = c.AwardId,
-                        CompetitionImg = c.CompetitionImg
+                        CompetitionId = c.competition_id,
+                        CompetitionName = c.competition_name,
+                        CompetitionDescription = c.competition_description,
+                        StartTime = c.start_time,
+                        EndTime = c.end_time,
+                        StatusCompetition = c.status_competition,
+                        Round = c.round,
+                        category_id = c.category_id,
+                        koi_id = c.koi_id,
+                        referee_id = c.referee_id,
+                        award_id = c.award_id,
+                        CompetitionImg = c.competition_img
                     })
                     .FirstOrDefaultAsync(c => c.CompetitionId == competitionId);
 
@@ -215,7 +216,7 @@ namespace Service.ICompetitionService
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error retrieving competition: {ex.Message}");
             }
         }
     }

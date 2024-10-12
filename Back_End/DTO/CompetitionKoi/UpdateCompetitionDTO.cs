@@ -2,6 +2,7 @@ namespace KoiBet.DTO.Competition
 {
     public class UpdateCompetitionDTO
     {
+        public string? CompetitionId { get; set; }
         public string? CompetitionName { get; init; }
 
         public string? CompetitionDescription { get; init; }

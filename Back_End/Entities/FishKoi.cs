@@ -27,6 +27,9 @@ namespace KoiBet.Entities
         public string users_id { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public virtual Users user { get; set; }
+        public virtual Users User { get; set; }
+        public virtual ICollection<CompetitionKoi> Competitions { get; set; } = new List<CompetitionKoi>();
+        public virtual ICollection<KoiScore> Scores { get; set; } = new List<KoiScore>();
+        public virtual ICollection<KoiRegistration> KoiRegistrations { get; set; } = new List<KoiRegistration>();
     }
 }

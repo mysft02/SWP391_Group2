@@ -15,10 +15,11 @@ namespace KoiBet.Entities
 
         [Column("competition_id")]
         [MaxLength(50)]
-        public string CompetitionId { get; set; } = string.Empty;
+        public string competition_id { get; set; }
 
         // Navigation property
-        [ForeignKey("CompetitionId")]
-        public virtual CompetitionKoi CompetitionKoi { get; set; }
+        [ForeignKey("competition_id")]
+        public virtual CompetitionKoi CompetitionKoi { get; set;}
+        public virtual ICollection<CompetitionMatch> Matches { get; set; } = new List<CompetitionMatch>();
     }
 }

@@ -23,12 +23,8 @@ namespace KoiBet.Entities
         public string competition_id { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public virtual Users user { get; set; }
-
-        [JsonIgnore]
-        public virtual KoiRegistration koiRegistration { get; set; }
-
-        [JsonIgnore]
-        public virtual CompetitionKoi competitionKoi { get; set; }
+        public virtual Users User { get; set; }
+        public virtual KoiRegistration KoiRegistration { get; set; }
+        public virtual CompetitionKoi Competition { get; set; }
     }
 }

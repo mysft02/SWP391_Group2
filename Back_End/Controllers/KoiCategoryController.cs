@@ -19,7 +19,7 @@ namespace KoiBet.Controllers
         [HttpGet("Get all KoiCategory")]
         public async Task<IActionResult> GetAllKoiCategory()
         {
-            return await _KoiCategoryService.HandleGetAllKoiCategorys();
+            return await _KoiCategoryService.HandleGetAllKoiCategories();
         }
 
         [HttpGet("Get KoiCategory")]
@@ -33,7 +33,7 @@ namespace KoiBet.Controllers
         [HttpPost("Get KoiCategory")]
         public async Task<IActionResult> CreateKoiCategory([FromBody] CreateKoiCategoryDTO _createKoiCategory)
         {
-            return await _KoiCategoryService.HandleCreateNewKoiCategory(_createKoiCategory);
+            return await _KoiCategoryService.HandleCreateKoiCategory(_createKoiCategory);
         }
 
         [HttpPut("Update KoiCategory")]

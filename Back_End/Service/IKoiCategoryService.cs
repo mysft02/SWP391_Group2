@@ -4,6 +4,8 @@ using KoiBet.Entities;
 using KoiBet.DTO.KoiCategory;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using KoiBet.DTO.KoiStandard;
+using DTO.KoiFish;
 
 namespace Service.IKoiCategoryService
 {
@@ -33,17 +35,15 @@ namespace Service.IKoiCategoryService
                 var categories = await _context.KoiCategories
                     .Select(category => new KoiCategoryDTO
                     {
-                        category_id = category.CategoryId,
-                        category_name = category.CategoryName,
-                        standard_id = category.StandardId,
-                        koi_id = category.KoiId,
+                        category_id = category.category_id,
+                        category_name = category.category_name,
+                        standard_id = category.standard_id,
+                        koi_id = category.koi_id,
                         Standard = new KoiStandardDTO
                         {
-                            // Assuming you want to include standard details
                         },
                         Koi = new KoiFishDTO
                         {
-                            // Assuming you want to include koi fish details
                         }
                     })
                     .ToListAsync();
@@ -68,9 +68,9 @@ namespace Service.IKoiCategoryService
             {
                 var newCategory = new KoiCategory
                 {
-                    CategoryName = createKoiCategoryDto.category_name,
-                    StandardId = createKoiCategoryDto.standard_id,
-                    KoiId = createKoiCategoryDto.koi_id
+                    category_name = createKoiCategoryDto.category_name,
+                    standard_id = createKoiCategoryDto.standard_id,
+                    koi_id = createKoiCategoryDto.koi_id
                 };
 
                 _context.KoiCategories.Add(newCategory);
@@ -95,7 +95,7 @@ namespace Service.IKoiCategoryService
             try
             {
                 var category = await _context.KoiCategories
-                    .FirstOrDefaultAsync(c => c.CategoryId == updateKoiCategoryDto.category_id);
+                    .FirstOrDefaultAsync(c => c.category_id == updateKoiCategoryDto.category_id);
 
                 if (category == null)
                 {
@@ -104,15 +104,15 @@ namespace Service.IKoiCategoryService
 
                 if (!string.IsNullOrEmpty(updateKoiCategoryDto.category_name))
                 {
-                    category.CategoryName = updateKoiCategoryDto.category_name;
+                    category.category_name = updateKoiCategoryDto.category_name;
                 }
                 if (!string.IsNullOrEmpty(updateKoiCategoryDto.standard_id))
                 {
-                    category.StandardId = updateKoiCategoryDto.standard_id;
+                    category.standard_id = updateKoiCategoryDto.standard_id;
                 }
                 if (!string.IsNullOrEmpty(updateKoiCategoryDto.koi_id))
                 {
-                    category.KoiId = updateKoiCategoryDto.koi_id;
+                    category.koi_id = updateKoiCategoryDto.koi_id;
                 }
 
                 _context.KoiCategories.Update(category);
@@ -137,7 +137,7 @@ namespace Service.IKoiCategoryService
             try
             {
                 var category = await _context.KoiCategories
-                    .FirstOrDefaultAsync(c => c.CategoryId == categoryId);
+                    .FirstOrDefaultAsync(c => c.category_id == categoryId);
 
                 if (category == null)
                 {
@@ -168,10 +168,10 @@ namespace Service.IKoiCategoryService
                 var category = await _context.KoiCategories
                     .Select(c => new KoiCategoryDTO
                     {
-                        category_id = c.CategoryId,
-                        category_name = c.CategoryName,
-                        standard_id = c.StandardId,
-                        koi_id = c.KoiId,
+                        category_id = c.category_id,
+                        category_name = c.category_name,
+                        standard_id = c.standard_id,
+                        koi_id = c.koi_id,
                         Standard = new KoiStandardDTO
                         {
                             // Assuming you want to include standard details
@@ -181,7 +181,7 @@ namespace Service.IKoiCategoryService
                             // Assuming you want to include koi fish details
                         }
                     })
-                    .FirstOrDefaultAsync(c => c.CategoryId == categoryId);
+                    .FirstOrDefaultAsync(c => c.category_id == categoryId);
 
                 if (category == null)
                 {

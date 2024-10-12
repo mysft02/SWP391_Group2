@@ -2,26 +2,16 @@ namespace KoiBet.DTO.Competition
 {
     public class CreateCompetitionDTO
     {
-        public string CompetitionName { get; init; }
-
-        public string? CompetitionDescription { get; init; }
-
-        public DateTime StartTime { get; init; }
-
-        public DateTime EndTime { get; init; }
-
-        public bool StatusCompetition { get; init; } 
-
-        public string? Round { get; init; }
-
-        public string KoiCategoryId { get; init; }
-
-        public string KoiFishId { get; init; }
-
-        public string RefereeId { get; init; }
-
-        public string AwardId { get; init; }
-
-        public string? CompetitionImg { get; init; }
+        public string competition_name { get; set; }
+        public string competition_description { get; set; }
+        public DateTime start_time { get; set; }
+        public DateTime end_time { get; set; }
+        public string status_competition { get; set; }
+        public string category_id { get; set; }
+        public string koi_id { get; set; }
+        public string referee_id { get; set; }
+        public string award_id { get; set; }
+        public string round { get; set; }
+        public string competition_img { get; set; }
     }
 }
