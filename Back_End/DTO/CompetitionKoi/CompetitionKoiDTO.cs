@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KoiBet.DTO.Competition
 {
-    public class CompetitionDTO
+    public class CompetitionKoiDTO
     {
         [Key]
         public string CompetitionId { get; init; }
@@ -19,7 +19,7 @@ namespace KoiBet.DTO.Competition
 
         public DateTime? EndTime { get; init; }
 
-        public string? StatusCompetition { get; init; } 
+        public bool? StatusCompetition { get; init; } 
 
         public string? Round { get; init; }
         public string? category_id { get; set; }

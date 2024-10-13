@@ -17,7 +17,7 @@ namespace KoiBet.Entities
 
         public DateTime end_time { get; set; }
 
-        public string? status_competition { get; set; }
+        public bool? status_competition { get; set; }
 
         [Required]
         [Column("category_id")]
@@ -35,9 +35,9 @@ namespace KoiBet.Entities
         [Column("award_id")]
         public string award_id { get; set; }
 
-        public string round { get; set; }
+        public string rounds { get; set; }
 
-        public string competition_img { get; set; }  // Added CompetitionImg property
+        public string competition_img { get; set; }
 
         [JsonIgnore]
         public virtual KoiCategory Category { get; set; }
@@ -53,7 +53,6 @@ namespace KoiBet.Entities
 
         public virtual ICollection<KoiRegistration> KoiRegistrations { get; set; }
         public virtual ICollection<BetKoi> Bets { get; set; }
-
         public virtual ICollection<CompetitionRound> Rounds { get; set; } = new List<CompetitionRound>();
     }
 }

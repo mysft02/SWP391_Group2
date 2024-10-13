@@ -30,7 +30,7 @@ namespace KoiBet.Controllers
 
 
 
-        [HttpPost("Get KoiCategory")]
+        [HttpPost("Create KoiCategory")]
         public async Task<IActionResult> CreateKoiCategory([FromBody] CreateKoiCategoryDTO _createKoiCategory)
         {
             return await _KoiCategoryService.HandleCreateKoiCategory(_createKoiCategory);

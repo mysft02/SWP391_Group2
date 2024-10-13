@@ -13,9 +13,5 @@ namespace KoiBet.DTO.KoiCategory
         public string? standard_id { get; set; }
 
         public KoiStandardDTO Standard { get; set; }
-
-        public string? koi_id { get; set; }
-        public KoiFishDTO Koi { get; set; }
-
     }
 }

@@ -32,19 +32,15 @@ namespace Service.IKoiCategoryService
         {
             try
             {
-                var categories = await _context.KoiCategories
+                var categories = await _context.KoiCategory
                     .Select(category => new KoiCategoryDTO
                     {
                         category_id = category.category_id,
                         category_name = category.category_name,
                         standard_id = category.standard_id,
-                        koi_id = category.koi_id,
                         Standard = new KoiStandardDTO
                         {
                         },
-                        Koi = new KoiFishDTO
-                        {
-                        }
                     })
                     .ToListAsync();
 
@@ -64,29 +60,56 @@ namespace Service.IKoiCategoryService
         // Create a new Koi Category
         public async Task<IActionResult> HandleCreateKoiCategory(CreateKoiCategoryDTO createKoiCategoryDto)
         {
-            try
+            if (ModelState.IsValid)
             {
+                // Lấy số hiện tại lớn nhất từ CategoryId
+                var lastCategory = _context.KoiCategory
+                    .OrderByDescending(c => c.category_id)
+                    .FirstOrDefault();
+
+                int nextNumber = 1;
+
+                if (lastCategory != null)
+                {
+                    var lastCategoryId = lastCategory.category_id;
+
+                    // Kiểm tra nếu category_id bắt đầu bằng "Cate_"
+                    if (lastCategoryId.StartsWith("Cate_"))
+                    {
+                        var lastNumberString = lastCategoryId.Substring(5); // Lấy phần sau "Cate_"
+
+                        // Kiểm tra nếu phần sau "Cate_" là số hợp lệ
+                        if (int.TryParse(lastNumberString, out int lastNumber))
+                        {
+                            nextNumber = lastNumber + 1;
+                        }
+                    }
+                }
+
+                // Tạo ID mới dạng Cate_x
+                string newCategoryId = $"Cate_{nextNumber}";
+
                 var newCategory = new KoiCategory
                 {
+                    category_id = newCategoryId,
                     category_name = createKoiCategoryDto.category_name,
-                    standard_id = createKoiCategoryDto.standard_id,
-                    koi_id = createKoiCategoryDto.koi_id
+                    standard_id = createKoiCategoryDto.standard_id
                 };
 
-                _context.KoiCategories.Add(newCategory);
-                var result = await _context.SaveChangesAsync();
+                //if(newCategory.Competitions == null)
+                //{
+                //    newCategory.Competitions = new List<CompetitionKoi>();
+                //}
 
-                if (result != 1)
-                {
-                    return BadRequest("Failed to create new koi category!");
-                }
+
+                _context.KoiCategory.Add(newCategory);
+                await _context.SaveChangesAsync();
 
                 return Ok(newCategory);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return BadRequest(ModelState);
+
         }
 
         // Update an existing Koi Category
@@ -94,7 +117,7 @@ namespace Service.IKoiCategoryService
         {
             try
             {
-                var category = await _context.KoiCategories
+                var category = await _context.KoiCategory
                     .FirstOrDefaultAsync(c => c.category_id == updateKoiCategoryDto.category_id);
 
                 if (category == null)
@@ -110,12 +133,8 @@ namespace Service.IKoiCategoryService
                 {
                     category.standard_id = updateKoiCategoryDto.standard_id;
                 }
-                if (!string.IsNullOrEmpty(updateKoiCategoryDto.koi_id))
-                {
-                    category.koi_id = updateKoiCategoryDto.koi_id;
-                }
 
-                _context.KoiCategories.Update(category);
+                _context.KoiCategory.Update(category);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -136,7 +155,7 @@ namespace Service.IKoiCategoryService
         {
             try
             {
-                var category = await _context.KoiCategories
+                var category = await _context.KoiCategory
                     .FirstOrDefaultAsync(c => c.category_id == categoryId);
 
                 if (category == null)
@@ -144,7 +163,7 @@ namespace Service.IKoiCategoryService
                     return NotFound("Koi category not found!");
                 }
 
-                _context.KoiCategories.Remove(category);
+                _context.KoiCategory.Remove(category);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -165,21 +184,15 @@ namespace Service.IKoiCategoryService
         {
             try
             {
-                var category = await _context.KoiCategories
+                var category = await _context.KoiCategory
                     .Select(c => new KoiCategoryDTO
                     {
                         category_id = c.category_id,
                         category_name = c.category_name,
                         standard_id = c.standard_id,
-                        koi_id = c.koi_id,
                         Standard = new KoiStandardDTO
                         {
-                            // Assuming you want to include standard details
                         },
-                        Koi = new KoiFishDTO
-                        {
-                            // Assuming you want to include koi fish details
-                        }
                     })
                     .FirstOrDefaultAsync(c => c.category_id == categoryId);
 

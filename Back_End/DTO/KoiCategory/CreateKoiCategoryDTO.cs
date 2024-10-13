@@ -1,11 +1,12 @@
+using KoiBet.DTO.Competition;
+
 namespace KoiBet.DTO.KoiCategory
 {
     public class CreateKoiCategoryDTO
     {
-        public string? category_name { get; set; } // Required: Name of the category
+        public string? category_id { get; set; }
+        public string? category_name { get; set; }
 
-        public string? standard_id { get; set; } // Required: Linked Koi Standard ID
-
-        public string? koi_id { get; set; } // Required: Linked Koi Fish ID
+        public string? standard_id { get; set; }
     }
 }

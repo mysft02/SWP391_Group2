@@ -13,10 +13,10 @@ namespace KoiBet.Data
         public DbSet<Transactions> Transactions { get; set; }
         public DbSet<Referee> Referees { get; set; }
         public DbSet<FishKoi> FishKoi { get; set; }
-        public DbSet<KoiStandard> KoiStandards { get; set; }
-        public DbSet<KoiCategory> KoiCategories { get; set; }
+        public DbSet<KoiStandard> KoiStandard { get; set; }
+        public DbSet<KoiCategory> KoiCategory { get; set; }
         public DbSet<Award> Awards { get; set; }
-        public DbSet<CompetitionKoi> Competition { get; set; }
+        public DbSet<CompetitionKoi> CompetitionKoi { get; set; }
         public DbSet<KoiRegistration> KoiRegistrations { get; set; }
         public DbSet<CompetitionRound> CompetitionRounds { get; set; }
         public DbSet<CompetitionMatch> CompetitionMatches { get; set; }

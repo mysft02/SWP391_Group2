@@ -8,6 +8,9 @@ using Service.AuthService;
 using Service.KoiFishService;
 using Middleware.Authentication;
 using Service.KoiStandardService;
+using Service.IKoiCategoryService;
+using Service.ICompetitionService;
+using KoiBet.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +64,8 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IKoiFishService, KoiFishService>();
 builder.Services.AddScoped<IKoiStandardService, KoiStandardService>();
+builder.Services.AddScoped<IKoiCategoryService, KoiCategoryService>();
+builder.Services.AddScoped<ICompetitionService, CompetitionService>();
 
 var app = builder.Build();
 

@@ -30,7 +30,7 @@ namespace KoiBet.Controllers
 
 
 
-        [HttpPost("Get CompetitionKoi")]
+        [HttpPost("Create CompetitionKoi")]
         public async Task<IActionResult> CreateCompetition([FromBody] CreateCompetitionDTO _createCompetition)
         {
             return await _competitionService.HandleCreateNewCompetition(_createCompetition);
