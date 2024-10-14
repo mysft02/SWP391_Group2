@@ -10,5 +10,7 @@ namespace KoiBet.Entities
         public string award_name {get; set; }
 
         public int quantity {get; set; }
+
+        public ICollection<CompetitionKoi> Competitions { get; set; }
     }
 }

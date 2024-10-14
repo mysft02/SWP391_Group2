@@ -40,7 +40,7 @@ public class KoiFishService : ControllerBase, IKoiFishService
         {
             var koiFish = _context.FishKoi
                 .Where(r => r.users_id == userId)
-                .Include(e => e.user);// Bao gồm thông tin người sở hữu
+                .Include(e => e.User);// Bao gồm thông tin người sở hữu
 
             var koiFishes = koiFish
                 .Select(koiFish => new KoiFishDTO
@@ -53,12 +53,12 @@ public class KoiFishService : ControllerBase, IKoiFishService
                     users_id = new UserDTO
                     {
                         user_id = userId,
-                        user_name = koiFish.user.Username,
-                        full_name = koiFish.user.full_name,
-                        email = koiFish.user.Email,
-                        phone = koiFish.user.Phone,
-                        role_id = koiFish.user.role_id,
-                        balance = koiFish.user.Balance,
+                        user_name = koiFish.User.Username,
+                        full_name = koiFish.User.full_name,
+                        email = koiFish.User.Email,
+                        phone = koiFish.User.Phone,
+                        role_id = koiFish.User.role_id,
+                        balance = koiFish.User.Balance,
                     },
                 })
                 .OrderByDescending(koiFish => koiFish.koi_id)
@@ -81,7 +81,7 @@ public class KoiFishService : ControllerBase, IKoiFishService
         {
             var koiFish = _context.FishKoi
                 .Where(r => r.koi_id.Contains(searchValue))
-                .Include(e => e.user);// Bao gồm thông tin người sở hữu
+                .Include(e => e.User);// Bao gồm thông tin người sở hữu
 
             //Nếu list null trả về badrequest
             if (koiFish == null)

@@ -10,17 +10,15 @@ namespace KoiBet.Entities
         public int transactions_id { get; set; }
 
         [Required]
-        public int users_id { get; set; }
+        [ForeignKey("users_id")]
+        public string? users_id { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(10,2)")]
         public decimal Amount { get; set; }
 
         [Required]
-        public DateTime transactions_time { get; set; }
-
-        // Foreign key to the User table
-        [ForeignKey("users_id")]
+        public DateTime transactions_time { get; set; }  
         public virtual Users User { get; set; }
 
     }

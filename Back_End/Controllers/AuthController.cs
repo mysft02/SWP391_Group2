@@ -1,5 +1,4 @@
-﻿using KoiBet.Data;
-using KoiBet.DTO.User;
+﻿using KoiBet.DTO.User;
 using KoiBet.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ using Service.AuthService;
 using Service.Payload;
 using Microsoft.AspNetCore.Identity;
 using KoiBet.Middleware;
+using KoiBet.Data;
 
 namespace KoiBet.Controllers
 {

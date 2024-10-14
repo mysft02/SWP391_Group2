@@ -3,11 +3,13 @@ using DTO.KoiFish;
 using KoiBet.DTO.Referee;
 using KoiBet.DTO.Award;
 using DTO.KoiFish;
+using System.ComponentModel.DataAnnotations;
 
 namespace KoiBet.DTO.Competition
 {
-    public class CompetitionDTO
+    public class CompetitionKoiDTO
     {
+        [Key]
         public string CompetitionId { get; init; }
 
         public string CompetitionName { get; init; }
@@ -21,14 +23,10 @@ namespace KoiBet.DTO.Competition
         public bool? StatusCompetition { get; init; } 
 
         public string? Round { get; init; }
-
-        public string? KoiCategoryId { get; init; }
-
-        public string? KoiFishId { get; init; }
-
-        public string? RefereeId { get; init; }
-
-        public string? AwardId { get; init; }
+        public string? category_id { get; set; }
+        public string? koi_id { get; set; }
+        public string? referee_id { get; set; }
+        public string? award_id { get; set; }
 
         public KoiCategoryDTO? KoiCategory { get; init; }
 

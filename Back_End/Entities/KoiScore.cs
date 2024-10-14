@@ -12,15 +12,15 @@ namespace KoiBet.Entities
 
         [Column("koi_id")]
         [MaxLength(50)]
-        public string KoiId { get; set; } = string.Empty;
+        public string koi_id { get; set; } = string.Empty;
 
         [Column("referee_id")]
         [MaxLength(50)]
-        public string RefereeId { get; set; } = string.Empty;
+        public string referee_id { get; set; } = string.Empty;
 
         [Column("match_id")]
         [MaxLength(50)]
-        public string MatchId { get; set; } = string.Empty;
+        public string match_id { get; set; } = string.Empty;
 
         [Column("score_koi")]
         [DataType(DataType.Currency)]
@@ -35,5 +35,6 @@ namespace KoiBet.Entities
 
         [ForeignKey("MatchId")]
         public virtual CompetitionMatch CompetitionMatch { get; set; }
+
     }
 }

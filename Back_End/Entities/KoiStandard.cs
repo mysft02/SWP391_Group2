@@ -22,5 +22,7 @@ namespace KoiBet.Entities
         public string? standard_name { get; set; }
 
         public string? gender { get; set; }
+
+        public ICollection<KoiCategory> KoiCategories { get; set; }
     }
 }

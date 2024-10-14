@@ -17,12 +17,13 @@ namespace KoiBet.Entities
 
         [Required]
         [Column("users_id")]
+        [ForeignKey(nameof(users_id))]
         public string users_id { get; set; } = string.Empty;
 
-        [ForeignKey(nameof(users_id))]
         [JsonIgnore]
-        public virtual Users user { get; set; }
+        public virtual Users User { get; set; }
 
-
+        public ICollection<CompetitionKoi> Competitions { get; set; } = new List<CompetitionKoi>();
+        public virtual ICollection<KoiScore> Scores { get; set; } = new List<KoiScore>();
     }
 }

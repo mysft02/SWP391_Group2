@@ -12,16 +12,16 @@ namespace KoiBet.Entities
 
         [Column("koi_id")]
         [MaxLength(50)]
-        public string KoiId { get; set; } = string.Empty;
+        public string koi_id { get; set; } = string.Empty;
 
         [Column("competition_id")]
         [MaxLength(50)]
-        public string CompetitionId { get; set; } = string.Empty;
+        public string competition_id { get; set; } = string.Empty;
 
         [Column("status_registration")]
         public bool StatusRegistration { get; set; }
 
-        [Column("category_id")]
+        [Column("category_id")] 
         [MaxLength(50)]
         public string CategoryId { get; set; } = string.Empty;
 
@@ -46,5 +46,7 @@ namespace KoiBet.Entities
 
         [ForeignKey("CategoryId")]
         public virtual KoiCategory KoiCategory { get; set; }
+
+        public virtual ICollection<BetKoi> Bets { get; set; } = new List<BetKoi>();
     }
 }
