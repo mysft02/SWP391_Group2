@@ -1,5 +1,5 @@
 ﻿using KoiBet.DTO.KoiCategory;
-using KoiBet.DTO.KoiFish;
+using DTO.KoiFish;
 using KoiBet.DTO.Referee;
 using KoiBet.DTO.Award;
 using DTO.KoiFish;

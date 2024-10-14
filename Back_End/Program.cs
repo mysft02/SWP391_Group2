@@ -8,6 +8,7 @@ using Service.AuthService;
 using Service.KoiFishService;
 using Middleware.Authentication;
 using Service.KoiStandardService;
+using Service.VNPayService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddTokenAuthentication(builder.Configuration);
+
 
 // Thêm hỗ trợ cho Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -61,6 +63,7 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IKoiFishService, KoiFishService>();
 builder.Services.AddScoped<IKoiStandardService, KoiStandardService>();
+builder.Services.AddScoped<IVNPayService, VnPayService>();
 
 var app = builder.Build();
 
