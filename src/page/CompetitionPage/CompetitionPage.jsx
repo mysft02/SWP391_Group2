@@ -1,6 +1,6 @@
 import React from 'react'
 import { TrophyOutlined} from '@ant-design/icons';
-import Competition from '../../components/Competition/Competion';
+import Competition from '../../components/Competition/Competition/Competition';
 
 function CompetitionPage() {
   return (
@@ -8,7 +8,7 @@ function CompetitionPage() {
         <div className='title-competition'>
             <h2>
             <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
-            Competition
+              Competition
             </h2>
         </div>
         <div className='competition'>

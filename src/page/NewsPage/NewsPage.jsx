@@ -12,9 +12,6 @@ function NewsPage() {
           News of Competition
         </h2>
       </div>
-        <div className='filter-news'>
-
-        </div>
         <div className='news'>
           <NewsContent />
         </div>

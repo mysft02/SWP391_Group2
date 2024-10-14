@@ -1,7 +1,7 @@
 import React from 'react'
 import CustomerBanner from '../CustomerBanner/CustomerBanner'
-import CustomerCompetition from '../CustomerCompetition/CustomerCompetion'
 import Introduction from '../../../Guest-HomePage/Guest-Body/Introduction/Introduction'
+import IntroduceCompetition from '../../../Guest-HomePage/Guest-Body/IntroduceCompetition/IntroduceCompetition'
 
 function CustomerBody() {
   return (
@@ -13,7 +13,7 @@ function CustomerBody() {
           <Introduction/>
         </div>
         <div className='Customer-competition'>
-          <CustomerCompetition/>
+          <IntroduceCompetition/>
         </div>
       
     </div>

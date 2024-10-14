@@ -1,7 +1,11 @@
+.Guestcompetition-container {
+  width: 200px; /* Thay đổi kích thước này cho phù hợp với thiết kế */
+}
 .Guest-Competition {
+  width: 500px;
   position: relative;
-  padding: 20px;
   overflow: hidden; /* Đảm bảo khi di chuyển các card không bị overflow */
+  
 }
 
 .nav-button {
@@ -66,7 +70,7 @@
 }
 
 .view-button {
-  margin-top: 10px;
+  margin-top: px;
   background-color: #FFD700;
   color: #333;
   border: none;

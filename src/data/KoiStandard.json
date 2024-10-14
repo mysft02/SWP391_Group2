@@ -1,0 +1,26 @@
+{
+    "koistandard":[
+        {
+            "standard_id": 1,
+            "color_koi": "Red",
+            "pattern_koi": "Pattern1",
+            "size_koi": "Small",
+            "age_koi": 2,
+            "bodyshape_koi": "Oval",
+            "variety_koi": "Variety1",
+            "standard_name": "Standard1",
+            "gender": "Male"
+        },
+        {
+            "standard_id": 2,
+            "color_koi": "Blue",
+            "pattern_koi": "Pattern2",
+            "size_koi": "Medium",
+            "age_koi": 3,
+            "bodyshape_koi": "Round",
+            "variety_koi": "Variety2",
+            "standard_name": "Standard2",
+            "gender": "Female"
+        }
+    ]
+}

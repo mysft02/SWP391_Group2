@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { api } from '../../config/AxiosConfig';
-import { useUser } from '../../data/UserContext'; // Sử dụng UserContext
+import { api } from '../../../config/AxiosConfig';
+import { useUser } from '../../../data/UserContext'; // Sử dụng UserContext
 
 function CustomeProfile() {
   const { user } = useUser(); // Lấy dữ liệu người dùng từ UserContext

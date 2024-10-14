@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import video1 from '../../assets/video/video1.mp4';
 import { UserOutlined, GoldOutlined, DollarOutlined } from '@ant-design/icons';
-import CustomeProfile from '../../components/Profile/CustomeProfile';
+
 import './DashBoard.css';
+import PaymentCustomer from '../../components/Profile/Payment/paymentCustomer';
+import CustomeProfile from '../../components/Profile/CustomeProfile/CustomeProfile';
 
 const { Sider, Content } = Layout;
 
@@ -19,7 +21,7 @@ function DashBoardPage() {
       case 'fishKoi':
         return <div>My Fish Koi Component</div>;
       case 'payment':
-        return <div>My Payment Component</div>;
+        return <div><PaymentCustomer/></div>;
       default:
         return <CustomeProfile />;
     }
