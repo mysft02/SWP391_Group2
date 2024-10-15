@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Tag } from "antd";
+import { Button, Card, Tag } from "antd";
 import {
   CalendarOutlined,
   InfoCircleOutlined,
@@ -15,6 +15,11 @@ import {
 } from "@ant-design/icons";
 import './CompetitionDisplay.css'
 function CompetitionDisplay({ filteredCompetitions }) {
+  const handleJoin = (competitionId) => {
+    // Xử lý tham gia vào cuộc thi
+    console.log(`Joining competition with ID: ${competitionId}`);
+    // Thực hiện thêm hành động tại đây, ví dụ: gửi yêu cầu API
+  };
   return (
     <div className="competition-container">
       {filteredCompetitions.length > 0 ? (
@@ -71,6 +76,7 @@ function CompetitionDisplay({ filteredCompetitions }) {
                 )}{" "}
                 Gender: {comp.gender}
               </p>
+              <Button type="primary" onClick={() => handleJoin(comp.competition_id)}>Join In</Button>
             </Card>
           ))}
         </div>

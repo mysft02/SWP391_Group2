@@ -1,25 +1,44 @@
-import React from 'react';
-import { Form, Input, Button, DatePicker, message } from 'antd';
+import React, { useEffect } from 'react';
+import { Form, Input, Button, DatePicker, message as antdMessage } from 'antd'; // Đổi tên message thành antdMessage để tránh xung đột
 import { api } from '../../../config/AxiosConfig';
+import moment from 'moment'; // Nhập moment để xử lý thời gian
 
 const PaymentCustomer = () => {
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    // Lấy thời gian thực và đặt vào trường Create Date
+    const currentDate = moment(); // Thời gian hiện tại
+    form.setFieldsValue({ createDate: currentDate }); // Thiết lập giá trị cho trường Create Date
+  }, [form]);
+
   // Hàm xử lý gửi form
   const handleSubmit = async (values) => {
     try {
+      // Gửi yêu cầu tạo URL thanh toán
       const response = await api.post('/api/VNPay/Get-Payment-Url', values);
-      
-      // Kiểm tra xem response có dữ liệu cần thiết không
-      if (response.data && response.data.paymentUrl) {
+
+      // Chỉ chuyển hướng nếu URL thanh toán được tạo thành công
+      if (response.data && response.data.url) {
         // Chuyển hướng đến URL thanh toán
-        window.location.href = response.data.paymentUrl;
+        window.location.href = response.data.url;
+
+        // Gửi yêu cầu lấy thông báo (message) từ API
+        const messageResponse = await api.get('/api/VNPay', values);
+        
+        // Kiểm tra phản hồi từ messageResponse
+        if (messageResponse.data && messageResponse.data.success) {
+          console.log("Data:", messageResponse.data);
+          antdMessage.success('Payment was successful!');
+        } else {
+          antdMessage.error('Payment was unsuccessful. Please try again.');
+        }
       } else {
-        message.error('Payment URL not found. Please try again.');
+        antdMessage.error('Payment URL not found. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting payment:', error);
-      message.error('Failed to submit payment. Please try again.');
+      antdMessage.error('Failed to submit payment. Please try again.');
     }
   };
 
@@ -49,14 +68,6 @@ const PaymentCustomer = () => {
           rules={[{ required: true, message: 'Please input the amount!' }]}
         >
           <Input type="number" />
-        </Form.Item>
-
-        <Form.Item
-          label="Create Date"
-          name="createDate"
-          rules={[{ required: true, message: 'Please select a date!' }]}
-        >
-          <DatePicker style={{ width: '100%' }} />
         </Form.Item>
 
         <Form.Item

@@ -11,15 +11,14 @@
 .competition-row {
     display: flex; /* Sử dụng flexbox để quản lý các card */
     flex-wrap: wrap; /* Không cho phép card xuống hàng trừ khi không đủ không gian */
-    justify-content: space-between; /* Căn giữa các card trong hàng */
-    width: 300%; /* Chiếm toàn bộ chiều rộng của container */
+    width: 250%; /* Chiếm toàn bộ chiều rộng của container */
     max-width: 1200px; /* Đặt chiều rộng tối đa cho hàng card */
     margin: 0 auto; /* Căn giữa hàng card trong container */
     gap: 20px; /* Khoảng cách giữa các card */
 }
 
 .competition-card {
-    flex: 0 1 calc(25% - 20px); /* Đặt chiều rộng cho mỗi card (3 card trên 1 hàng) */
+    flex: 1 1 calc(33.3% - 20px); /* Đặt chiều rộng cho mỗi card (3 card trên 1 hàng) */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 16px; /* Thêm một chút padding bên trong card */
     margin-bottom: 20px; /* Khoảng cách dưới card */
