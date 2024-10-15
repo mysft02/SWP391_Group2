@@ -14,6 +14,7 @@
   
   .content-introduce {
     display: flex;
+    justify-content:space-between; /* Chia đều khoảng cách giữa hai phần */
     flex-direction: row-reverse;
     align-items: flex-start; /* Căn nội dung về phía trên */
   }
@@ -23,9 +24,8 @@
     margin-top: 100px;
   }
   
-  .competition-card {
-    width: 100%; /* Chiếm 45% diện tích cho phần thẻ */
-    margin-right: 150px;
+  .IntroCompetition-card {
+    width: 45%; /* Chiếm 45% diện tích cho phần thẻ */
   }
   
   .competition h2 {

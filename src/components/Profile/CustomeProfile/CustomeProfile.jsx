@@ -8,22 +8,19 @@ function CustomeProfile() {
   const [formData, setFormData] = useState({
     user_name: '',
     full_name: '',
-    password: '',
     email: '',
     phone: '',
-    balance: '', // Cập nhật sau khi lấy từ API
   });
 
   // Cập nhật formData từ dữ liệu user trong context
   useEffect(() => {
     if (user) {
       setFormData({
-        user_name: user.user_name || '',
+        user_name: user.username || '',
         full_name: user.full_name || '',
-        password: '', // Không hiển thị mật khẩu
         email: user.email || '',
         phone: user.phone || '',
-        balance: user.balance , // Hiển thị balance từ user context
+
       });
     }
   }, [user]);
@@ -39,14 +36,13 @@ function CustomeProfile() {
     const payload = {
       user_name: formData.user_name,
       full_name: formData.full_name,
-      password: formData.password,
       email: formData.email,
       phone: formData.phone,
-      balance: 0, // Không thay đổi giá trị balance
+
     };
 
     try {
-      await api.post('/api/User/update-profile', payload);
+      await api.put('/api/User/update-profile', payload);
       message.success('Thông tin đã được cập nhật thành công!');
     } catch (error) {
       message.error('Đã xảy ra lỗi khi cập nhật thông tin.');
@@ -63,7 +59,7 @@ function CustomeProfile() {
           required
         >
           <Input
-            name="user_name"
+            name="username"
             value={formData.user_name}
             onChange={handleInputChange}
             placeholder="Enter your username"
@@ -84,18 +80,6 @@ function CustomeProfile() {
           />
         </Form.Item>
 
-        <Form.Item
-          label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Password</span>}
-          required
-        >
-          <Input.Password
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            placeholder="Enter your password"
-            style={{ color: '#003366' }}
-          />
-        </Form.Item>
 
         <Form.Item
           label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Email</span>}
@@ -119,18 +103,6 @@ function CustomeProfile() {
             value={formData.phone}
             onChange={handleInputChange}
             placeholder="Enter your phone number"
-            style={{ color: '#003366' }}
-          />
-        </Form.Item>
-
-        {/* Hiển thị balance chỉ đọc */}
-        <Form.Item
-          label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Balance</span>}
-        >
-          <Input
-            name="balance"
-            value={formData.balance}
-            readOnly
             style={{ color: '#003366' }}
           />
         </Form.Item>

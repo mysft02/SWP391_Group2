@@ -24,7 +24,7 @@ function IntroduceCompetition() {
                 <h5>join in competititon and bet to get award! </h5>
             </Button>
         </div>
-        <div className='competition-card'>
+        <div className='IntroCompetition-card'>
             <GuestCompetition/>
         </div>
         </div>

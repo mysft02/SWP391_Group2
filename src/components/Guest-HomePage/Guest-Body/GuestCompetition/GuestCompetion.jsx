@@ -129,7 +129,7 @@ function GuestCompetition() {
   return (
     <div className='Guest-Competition'>
       <Button style={{
-        marginRight:"30px",
+        marginRight:"10px",
       }}
         className='nav-button prev-button'
         onClick={handlePrevClick}
@@ -142,11 +142,11 @@ function GuestCompetition() {
       <Row gutter={[16, 16]} justify="center">
         {currentCompetitions.map((competition, index) => (
           <Col className ="Guestcompetition-container" key={index} xs={24} sm={12} md={8}>
-            <Card className='competition-card'>
+            <Card className='Guestcompetition-card'>
               <div className='competition-content'>
                 <div className='competition-info'>
                   <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
-                  <h3>{competition.name}</h3>
+                  <h3>{competition.competition_name}</h3>
                   <p>Thời gian bắt đầu: {competition.start_time}</p>
                   <p>Thời gian kết thúc: {competition.end_time}</p>
                 </div>

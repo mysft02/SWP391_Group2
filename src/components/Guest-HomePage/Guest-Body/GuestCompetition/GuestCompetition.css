@@ -1,11 +1,7 @@
-.Guestcompetition-container {
-  width: 200px; /* Thay đổi kích thước này cho phù hợp với thiết kế */
-}
 .Guest-Competition {
-  width: 500px;
   position: relative;
+  padding: 20px;
   overflow: hidden; /* Đảm bảo khi di chuyển các card không bị overflow */
-  
 }
 
 .nav-button {
@@ -40,7 +36,7 @@
   right: 10px;
 }
 
-.competition-card {
+.Guestcompetition-card{
   overflow: hidden;
   border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -48,7 +44,7 @@
   color: #001529;
 }
 
-.competition-card:hover {
+.Guestcompetition-card:hover {
   transform: translateY(-10px); /* Nhảy lên khi hover */
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.463); /* Thêm hiệu ứng đổ bóng */
 }
@@ -70,7 +66,7 @@
 }
 
 .view-button {
-  margin-top: px;
+  margin-top: 10px;
   background-color: #FFD700;
   color: #333;
   border: none;

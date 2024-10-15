@@ -39,7 +39,7 @@ function FilterCompetitions({ competitions, onFilter }) {
       <h3><FilterOutlined /> Filter Competitions</h3>
 
       <Form layout="vertical">
-        <Form.Item label={<span><TagsOutlined /> Category</span>}>
+      <Form.Item label={<span style={{ color: '#FFD700' }}><TagsOutlined /> Category</span>}>
           <Select
             placeholder="Select Category"
             value={filters.category_name}
@@ -52,7 +52,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span><BgColorsOutlined /> Color Koi</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><BgColorsOutlined /> Color Koi</span>}>
           <Select
             placeholder="Select Color"
             value={filters.color_koi}
@@ -65,7 +65,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span><PictureOutlined /> Pattern Koi</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><PictureOutlined /> Pattern Koi</span>}>
           <Select
             placeholder="Select Pattern"
             value={filters.pattern_koi}
@@ -77,7 +77,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span><ColumnWidthOutlined /> Size Koi</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><ColumnWidthOutlined /> Size Koi</span>}>
           <Select
             placeholder="Select Size"
             value={filters.size_koi}
@@ -90,7 +90,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span><LineHeightOutlined /> Bodyshape Koi</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><LineHeightOutlined /> Bodyshape Koi</span>}>
           <Select
             placeholder="Select Bodyshape"
             value={filters.bodyshape_koi}
@@ -102,7 +102,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span><PictureOutlined /> Variety Koi</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><PictureOutlined /> Variety Koi</span>}>
           <Select
             placeholder="Select Variety"
             value={filters.variety_koi}
@@ -114,7 +114,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span>{filters.gender === "Male" ? <ManOutlined /> : <WomanOutlined />} Gender</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}>{filters.gender === "Male" ? <ManOutlined /> : <WomanOutlined />} Gender</span>}>
           <Select
             placeholder="Select Gender"
             value={filters.gender}
