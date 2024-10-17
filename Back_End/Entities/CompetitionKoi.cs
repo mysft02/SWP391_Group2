@@ -35,7 +35,7 @@
             [Column("award_id")]
             public string award_id { get; set; }
 
-            [JsonPropertyName("rounds_description")]
+            [JsonPropertyName("rounds")]
             public string rounds { get; set; }
 
             public string competition_img { get; set; }
@@ -54,6 +54,5 @@
 
             public virtual ICollection<KoiRegistration> KoiRegistrations { get; set; }
             public virtual ICollection<BetKoi> Bets { get; set; }
-            public virtual ICollection<CompetitionRound> Rounds { get; set; } = new List<CompetitionRound>();
         }
     }
