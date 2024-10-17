@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using KoiBet.Entities;
 using System;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace KoiBet.Service
 {
@@ -13,7 +14,7 @@ namespace KoiBet.Service
         Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
         Task<IActionResult> HandleUpdateByUsername(string username, UpdateUserDTO _updateDTO);
         Task<IActionResult> HandleDeleteByID(string user_id);
-        Task<IActionResult> HandleGetUser(string user_id, string user_name);
+        Task<IActionResult> HandleGetUser(string user_id, ClaimsPrincipal currentUser);
     }
 
     public class UserService : ControllerBase, IUserService
@@ -108,36 +109,46 @@ namespace KoiBet.Service
         }
 
         // Lấy thông tin user theo ID hoặc Username
-        public async Task<IActionResult> HandleGetUser(string user_id, string user_name)
+        public async Task<IActionResult> HandleGetUser(string user_id, ClaimsPrincipal currentUser)
         {
-            if (string.IsNullOrEmpty(user_id) && string.IsNullOrEmpty(user_name))
+            if (string.IsNullOrEmpty(user_id))
             {
-                return BadRequest("ID or Username must be provided");
+                return BadRequest("ID must be provided");
+            }
+
+            // Lấy thông tin người dùng hiện tại từ token
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Kiểm tra quyền truy cập
+            if (currentUserId != user_id && currentUserRole != "Admin")
+            {
+                return new ForbidResult("Bạn không có quyền truy cập thông tin này");
             }
 
             Users user = null;
 
-            if (!string.IsNullOrEmpty(user_id) && Guid.TryParse(user_id, out var userIdGuid))
+            if (Guid.TryParse(user_id, out var userIdGuid))
             {
-                user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
-            }
-            else if (!string.IsNullOrEmpty(user_name))
-            {
-                user = await _context.Users.FirstOrDefaultAsync(u => u.Username == user_name);
+                user = await _context.Users
+                    .Include(u => u.Role) // Thêm dòng này nếu bạn muốn lấy thông tin vai trò
+                    .FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
             }
 
             if (user == null)
             {
-                return NotFound("User not found");
+                return new NotFoundObjectResult("Không tìm thấy người dùng");
             }
 
-            return Ok(new
+            return new OkObjectResult(new
             {
+                UserId = user.user_id,
                 Username = user.Username,
                 FullName = user.full_name,
                 Email = user.Email,
                 Phone = user.Phone,
                 RoleId = user.role_id,
+                RoleName = user.Role?.role_name, // Thêm dòng này nếu bạn đã include Role
                 Balance = user.Balance
             });
         }

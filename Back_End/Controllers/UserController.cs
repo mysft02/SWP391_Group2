@@ -6,6 +6,7 @@ using KoiBet.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace KoiBet.Controllers
 {
@@ -38,6 +39,7 @@ namespace KoiBet.Controllers
         }
 
         // GET: user/{id}
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
@@ -46,7 +48,17 @@ namespace KoiBet.Controllers
                 return BadRequest(new { message = "Invalid ID format" });
             }
 
-            return await _userService.HandleGetUser(id, null);
+            var currentUser = HttpContext.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Ki?m tra quy?n truy c?p
+            if (currentUserId != id && currentUserRole != "Admin")
+            {
+                return BadRequest(new { message = "B?n không có quy?n truy c?p thông tin này" });
+            }
+
+            return await _userService.HandleGetUser(id, currentUser);
         }
 
         // PUT: user/update-profile

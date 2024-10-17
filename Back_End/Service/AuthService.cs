@@ -12,24 +12,32 @@ using BCrypt.Net;
 using Microsoft.Extensions.Configuration;
 using Service.JwtService;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
+using System.Security.Claims;
 
 public interface IAuthService
 {
     public Task<IActionResult> HandleLogin(LoginDTO loginDto);
     public Task<IActionResult> HandleRegister(RegisterDTO registerDto);
-    public Task<IActionResult> HandleGetToken(PayloadDTO payloadDTO);
-    public Task<IActionResult> HandleCheckToken(string token);
+    public Task<IActionResult> HandleRefreshToken();
+    public Task<IActionResult> HandleCheckToken();
 }
 
 public class AuthService : ControllerBase, IAuthService
 {
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _config;
+    private readonly JwtService _jwtService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IMemoryCache _cache;
 
-    public AuthService(ApplicationDbContext context, IConfiguration config) 
+    public AuthService(ApplicationDbContext context, IConfiguration config, JwtService jwtService, IHttpContextAccessor httpContextAccessor, IMemoryCache cache)
     {
         _context = context;
         _config = config;
+        _jwtService = jwtService;
+        _httpContextAccessor = httpContextAccessor;
+        _cache = cache;
     }
 
     public async Task<IActionResult> HandleLogin(LoginDTO loginDto)
@@ -46,6 +54,32 @@ public class AuthService : ControllerBase, IAuthService
                 return Unauthorized("Invalid username or password");
             }
 
+            // Tạo claims cho token
+            var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.user_id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Role, user.Role.role_name)
+        };
+
+            // Tạo access token
+            var accessToken = _jwtService.GenerateAccessToken(claims);
+
+            // Tạo refresh token
+            var refreshToken = _jwtService.GenerateRefreshToken();
+
+            // Lưu refresh token vào cache
+            _cache.Set($"RefreshToken_{user.user_id}", refreshToken, TimeSpan.FromDays(7));
+
+            // Đặt refresh token vào cookie
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
+
             // Lấy thông tin người dùng cùng với tên vai trò
             var userInfo = new
             {
@@ -55,7 +89,9 @@ public class AuthService : ControllerBase, IAuthService
                 user.Email,
                 user.Phone,
                 RoleId = user.Role.role_id,
-                RoleName = user.Role.role_name
+                RoleName = user.Role.role_name,
+                AccessToken = accessToken,
+                RefreshToken = refreshToken,
             };
 
             return Ok(userInfo);
@@ -114,29 +150,101 @@ public class AuthService : ControllerBase, IAuthService
         catch (Exception ex) { return BadRequest(ex.Message); }
     }
 
-    public async Task<IActionResult> HandleGetToken(PayloadDTO payloadDTO)
+    public async Task<IActionResult> HandleRefreshToken()
     {
         try
         {
-            var jwt = new JwtService();
+            var refreshToken = _httpContextAccessor.HttpContext.Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return new UnauthorizedObjectResult("Refresh token không được cung cấp");
+            }
 
-            var token = jwt.GenerateSecurityToken(payloadDTO);
+            ClaimsPrincipal principal;
+            try
+            {
+                principal = _jwtService.GetPrincipalFromExpiredToken(refreshToken);
+            }
+            catch (Exception ex)
+            {
+                return new UnauthorizedObjectResult($"Lỗi khi xác thực refresh token: {ex.Message}");
+            }
 
-            return Ok(token);
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+            {
+                return new UnauthorizedObjectResult("Không tìm thấy ID người dùng trong token");
+            }
+
+            if (!_cache.TryGetValue($"RefreshToken_{userId}", out string storedRefreshToken))
+            {
+                return new UnauthorizedObjectResult("Không tìm thấy refresh token trong cache");
+            }
+
+            if (storedRefreshToken != refreshToken)
+            {
+                return new UnauthorizedObjectResult("Refresh token không khớp với token đã lưu");
+            }
+
+            var newAccessToken = _jwtService.GenerateAccessToken(principal.Claims);
+            var newRefreshToken = _jwtService.GenerateRefreshToken();
+
+            // Cập nhật refresh token mới trong cache
+            _cache.Set($"RefreshToken_{userId}", newRefreshToken, TimeSpan.FromDays(7));
+
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken", newRefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(7)
+            });
+
+            return new OkObjectResult(new { accessToken = newAccessToken });
         }
-        catch (Exception ex) { return BadRequest(ex.Message); }
+        catch (Exception ex)
+        {
+            return new BadRequestObjectResult($"Lỗi không xác định khi làm mới token: {ex.Message}");
+        }
     }
 
-    public async Task<IActionResult> HandleCheckToken(string token)
+    public async Task<IActionResult> HandleCheckToken()
     {
-        try
+        var user = _httpContextAccessor.HttpContext.User;
+
+        if (!user.Identity.IsAuthenticated)
         {
-            var jwt = new JwtService();
-
-            var payload = jwt.ValidateToken(token);
-
-            return Ok(payload);
+            return new UnauthorizedObjectResult("Token không hợp lệ hoặc đã hết hạn");
         }
-        catch (Exception ex) { return BadRequest(ex.Message); }
+
+        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return new BadRequestObjectResult("Không tìm thấy thông tin người dùng trong token");
+        }
+
+        var dbUser = await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.user_id == userId);
+
+        if (dbUser == null)
+        {
+            return new NotFoundObjectResult("Không tìm thấy người dùng trong cơ sở dữ liệu");
+        }
+
+        var userInfo = new
+        {
+            UserId = dbUser.user_id,
+            Username = dbUser.Username,
+            FullName = dbUser.full_name,
+            Email = dbUser.Email,
+            Phone = dbUser.Phone,
+            RoleId = dbUser.role_id,
+            RoleName = dbUser.Role?.role_name,
+            Balance = dbUser.Balance
+        };
+
+        return new OkObjectResult(userInfo);
     }
 }

@@ -6,12 +6,14 @@ using Microsoft.OpenApi.Models;
 using Service.JwtService;
 using Service.AuthService;
 using Service.KoiFishService;
-using Middleware.Authentication;
 using Service.KoiStandardService;
 using Service.VNPayService;
 using Service.IKoiCategoryService;
 using Service.ICompetitionService;
 using KoiBet.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using KoiBet.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +25,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 
 builder.Services.AddControllers();
-builder.Services.AddAuthentication("Bearer").AddBearerToken();
 
 // Cấu hình CORS để cho phép tất cả nguồn gốc (không yêu cầu bảo mật chặt chẽ trong development)
 builder.Services.AddCors(options =>
@@ -36,13 +37,44 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddTokenAuthentication(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddScheme<JwtBearerOptions, CustomJwtBearerHandler>(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+builder.Services.AddScoped<CustomJwtBearerHandler>();
 
 // Thêm hỗ trợ cho Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Koi Bet", Version = "V1" });
+
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
 
     // Require the bearer token for all API operations
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -54,7 +86,10 @@ builder.Services.AddSwaggerGen(c =>
               {
                   Type = ReferenceType.SecurityScheme,
                   Id = "Bearer"
-              }
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
           },
           new string[] {}
       }
@@ -68,6 +103,7 @@ builder.Services.AddScoped<IKoiStandardService, KoiStandardService>();
 builder.Services.AddScoped<IKoiCategoryService, KoiCategoryService>();
 builder.Services.AddScoped<ICompetitionService, CompetitionService>();
 builder.Services.AddScoped<IVNPayService, VnPayService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
@@ -85,6 +121,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCustomJwtBearer();
 // Kích hoạt CORS (sử dụng chính sách đã cấu hình)
 app.UseCors("AllowAllOrigins");
 

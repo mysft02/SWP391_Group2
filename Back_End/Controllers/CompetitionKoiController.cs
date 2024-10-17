@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using KoiBet.DTO.Competition;
 using Service.ICompetitionService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace KoiBet.Controllers
 {
