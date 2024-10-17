@@ -53,7 +53,7 @@ public class KoiFishService : ControllerBase, IKoiFishService
                     users_id = new UserDTO
                     {
                         user_id = userId,
-                        user_name = koiFish.User.Username,
+                        Username = koiFish.User.Username,
                         full_name = koiFish.User.full_name,
                         email = koiFish.User.Email,
                         phone = koiFish.User.Phone,

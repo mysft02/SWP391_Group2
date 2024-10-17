@@ -6,7 +6,7 @@ namespace KoiBet.DTO.User
     {
         public string user_id { get; set; }
 
-        public string? user_name { get; set; }
+        public string? Username { get; set; }
 
         public string? full_name { get; set; }
 
