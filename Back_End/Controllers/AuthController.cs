@@ -10,7 +10,6 @@ using Service.JwtService;
 using Service.AuthService;
 using Service.Payload;
 using Microsoft.AspNetCore.Identity;
-using KoiBet.Middleware;
 using KoiBet.Data;
 
 namespace KoiBet.Controllers
@@ -48,17 +47,17 @@ namespace KoiBet.Controllers
             return await _authService.HandleRegister(registerDTO);
         }
 
-        [HttpGet("Get Token")]
-        public async Task<IActionResult> GetRandomToken([FromQuery] PayloadDTO payloadDTO)
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
         {
-            return await _authService.HandleGetToken(payloadDTO);
+            return await _authService.HandleRefreshToken();
         }
 
-        [Protected]
-        [HttpGet("Check Token")]
-        public async Task<IActionResult> CheckToken([FromQuery] string token)
+        [Authorize]
+        [HttpPost("check-token")]
+        public async Task<IActionResult> CheckToken()
         {
-            return await _authService.HandleCheckToken(token);
+            return await _authService.HandleCheckToken();
         }
     }
 }

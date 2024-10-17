@@ -1,7 +1,6 @@
 ﻿using DTO.VNPay;
 using KoiBet.Data;
 using KoiBet.DTO.User;
-using KoiBet.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.AuthService;
