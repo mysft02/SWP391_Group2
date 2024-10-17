@@ -12,9 +12,9 @@ namespace KoiBet.Service
     public interface IUserService
     {
         Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
-        Task<IActionResult> HandleUpdateByUsername(string username, UpdateUserDTO _updateDTO);
+        Task<IActionResult> HandleUpdateByUsername(ClaimsPrincipal currentUser, UpdateUserDTO _updateDTO);
         Task<IActionResult> HandleDeleteByID(string user_id);
-        Task<IActionResult> HandleGetUser(string user_id, ClaimsPrincipal currentUser);
+        Task<IActionResult> HandleGetUser(string user_id);
     }
 
     public class UserService : ControllerBase, IUserService
@@ -55,14 +55,16 @@ namespace KoiBet.Service
         }
 
         // Cập nhật user
-        public async Task<IActionResult> HandleUpdateByUsername(string username, UpdateUserDTO updateDTO)
+        public async Task<IActionResult> HandleUpdateByUsername(ClaimsPrincipal currentUser, UpdateUserDTO updateDTO)
         {
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             // Find the user by username
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == currentUserId);
 
             if (user == null)
             {
-                return NotFound("User not found");
+                return NotFound("User not found!");
             }
 
             // Update user information only if the new value is provided
@@ -109,31 +111,25 @@ namespace KoiBet.Service
         }
 
         // Lấy thông tin user theo ID hoặc Username
-        public async Task<IActionResult> HandleGetUser(string user_id, ClaimsPrincipal currentUser)
+        public async Task<IActionResult> HandleGetUser(string user_id)
         {
             if (string.IsNullOrEmpty(user_id))
             {
                 return BadRequest("ID must be provided");
             }
 
-            // Lấy thông tin người dùng hiện tại từ token
-            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+            //Users user = null;
 
-            // Kiểm tra quyền truy cập
-            if (currentUserId != user_id && currentUserRole != "Admin")
-            {
-                return new ForbidResult("Bạn không có quyền truy cập thông tin này");
-            }
+            //if (Guid.TryParse(user_id, out var userIdGuid))
+            //{
+            //    user = await _context.Users
+            //        .Include(u => u.Role) // Thêm dòng này nếu bạn muốn lấy thông tin vai trò
+            //        .FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
+            //}
 
-            Users user = null;
-
-            if (Guid.TryParse(user_id, out var userIdGuid))
-            {
-                user = await _context.Users
-                    .Include(u => u.Role) // Thêm dòng này nếu bạn muốn lấy thông tin vai trò
-                    .FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
-            }
+            var user = _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefault(u => u.user_id == user_id);
 
             if (user == null)
             {

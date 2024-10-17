@@ -40,25 +40,19 @@ namespace KoiBet.Controllers
 
         // GET: user/{id}
         [Authorize]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(string id)
+        [HttpGet]
+        public async Task<IActionResult> GetUser([FromQuery] string userId)
         {
-            if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var userIdGuid))
-            {
-                return BadRequest(new { message = "Invalid ID format" });
-            }
-
             var currentUser = HttpContext.User;
-            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
 
             // Ki?m tra quy?n truy c?p
-            if (currentUserId != id && currentUserRole != "Admin")
+            if (currentUserRole != "admin")
             {
-                return BadRequest(new { message = "B?n không có quy?n truy c?p thông tin này" });
+                return BadRequest(new { message = "Unauthorized!" });
             }
 
-            return await _userService.HandleGetUser(id, currentUser);
+            return await _userService.HandleGetUser(userId);
         }
 
         // PUT: user/update-profile
@@ -66,22 +60,17 @@ namespace KoiBet.Controllers
         [HttpPut("update-profile")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserDTO _updateUserDTO)
         {
-            var userName = User.FindFirst("Username")?.Value;
-
-            if (userName == null)
-            {
-                return Unauthorized(new { message = "User not authenticated" });
-            }
+            var currentUser = HttpContext.User;
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             };
-            return await _userService.HandleUpdateByUsername(userName, _updateUserDTO);
+            return await _userService.HandleUpdateByUsername(currentUser, _updateUserDTO);
         }
 
         // DELETE: user/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteUser(string id)
         {
             if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var userIdGuid))

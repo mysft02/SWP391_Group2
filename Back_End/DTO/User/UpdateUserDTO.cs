@@ -2,7 +2,6 @@
 {
     public class UpdateUserDTO
     {
-        public string? Username { get; set; } = string.Empty.ToString();
        public string? full_name { get; set; } = string.Empty.ToString();
 
        public string? email { get; set; } = string.Empty.ToString();
