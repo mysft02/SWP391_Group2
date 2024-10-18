@@ -1,31 +1,28 @@
 import React, { useEffect } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useUser } from '../data/UserContext'; // Dùng duy nhất useUser từ UserContext
 
-function PrivateRoute({ requiredRoles, children }) { // Nhận các role được phép truy cập từ props
-  const navigate = useNavigate();
+function PrivateRoute({ requiredRoles }) {
   const { user } = useUser(); // Lấy thông tin user từ context đã tích hợp cả auth
+  const location = useLocation(); // Lấy thông tin vị trí hiện tại
 
   useEffect(() => {
-    if (!user) {
-      // Nếu chưa đăng nhập thì điều hướng đến trang đăng nhập
-      navigate("/sign-in");
-    } else {
-      // Nếu role của user không nằm trong danh sách các role được phép, điều hướng đến trang không có quyền
-      if (!requiredRoles.includes(user.roleId)) {
-        navigate("/not-authorized");
-      }
-    }
-  }, [navigate, user, requiredRoles]);
+    // Lưu ý: Navigate không phải là cách lý tưởng để kiểm tra quyền truy cập ở đây
+    // vì nó có thể gây ra vòng lặp vô hạn. Cách tốt nhất là sử dụng trạng thái loading.
+  }, [user]);
 
-  // Kiểm tra nếu người dùng đăng nhập và có quyền hợp lệ
-  if (user && requiredRoles.includes(user.roleId)) {
-    return children ? children : <Outlet />; // Hiển thị nội dung con nếu có
+  // Kiểm tra nếu người dùng chưa đăng nhập
+  if (!user) {
+    return <Navigate to="/sign-in" state={{ from: location }} replace />;
   }
 
-  // Trường hợp không hợp lệ, điều hướng về trang đăng nhập hoặc trả về null
-  return null;
+  // Kiểm tra nếu role của user không nằm trong danh sách các role được phép
+  if (!requiredRoles.includes(user.roleId)) {
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+
+  // Nếu người dùng hợp lệ, hiển thị nội dung con hoặc Outlet
+  return <Outlet />;
 }
 
 export default PrivateRoute;

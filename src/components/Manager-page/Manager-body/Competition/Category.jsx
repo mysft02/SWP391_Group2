@@ -12,7 +12,12 @@ function Category() {
   const fetchCategories = async () => {
     try {
       const response = await api.get('/api/KoiCategory/GetAll');
-      setCategories(response.data);
+      // Chuyển đổi dữ liệu nếu cần thiết để khớp với cấu trúc
+      setCategories(response.data.map(category => ({
+        ...category,
+        standardName: category.standard ? category.standard.standard_name : 'N/A',
+        standardId: category.standard ? category.standard.standard_id : 'N/A'
+      })));
     } catch (error) {
       console.error('Error fetching categories:', error);
       notification.error({
@@ -31,7 +36,7 @@ function Category() {
     try {
       if (editingCategory) {
         // Cập nhật Koi Category
-        await api.put(`/api/KoiCategory/UpdateKoiCategory/${editingCategory.id}`, values);
+        await api.put(`/api/KoiCategory/UpdateKoiCategory/${editingCategory.category_id}`, values);
         notification.success({
           message: 'Update Success',
           description: 'Category updated successfully.',
@@ -59,7 +64,10 @@ function Category() {
   // Mở modal để thêm hoặc chỉnh sửa Koi Category
   const showModal = (category) => {
     setEditingCategory(category);
-    form.setFieldsValue(category || { name: '', description: '' }); // Đặt giá trị vào form
+    form.setFieldsValue({
+      category_name: category ? category.category_name : '',
+      description: category ? category.standard?.description : '',
+    });
     setIsModalVisible(true);
   };
 
@@ -89,19 +97,24 @@ function Category() {
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      title: 'Category ID',
+      dataIndex: 'category_id',
+      key: 'category_id',
     },
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Category Name',
+      dataIndex: 'category_name',
+      key: 'category_name',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Standard ID',
+      dataIndex: 'standardId',
+      key: 'standardId',
+    },
+    {
+      title: 'Standard Name',
+      dataIndex: 'standardName',
+      key: 'standardName',
     },
     {
       title: 'Action',
@@ -109,7 +122,7 @@ function Category() {
       render: (_, record) => (
         <>
           <Button type="link" onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id)}>Delete</Button>
+          <Button type="link" danger onClick={() => handleDelete(record.category_id)}>Delete</Button>
         </>
       ),
     },
@@ -121,7 +134,7 @@ function Category() {
       <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
         Add Koi Category
       </Button>
-      <Table dataSource={categories} columns={columns} rowKey="id" />
+      <Table dataSource={categories} columns={columns} rowKey="category_id" />
 
       <Modal
         title={editingCategory ? "Edit Koi Category" : "Add Koi Category"}
@@ -131,8 +144,8 @@ function Category() {
       >
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
-            name="name"
-            label="Name"
+            name="category_name"
+            label="Category Name"
             rules={[{ required: true, message: 'Please input the name of the Koi category!' }]}
           >
             <Input />

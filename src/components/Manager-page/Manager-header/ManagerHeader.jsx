@@ -40,35 +40,35 @@ const ManagerHeader = () => {
   return (
     <div className="Manager-header">
       <div className="logo">
-        <Link to={"/member"}>
+        <Link to={"/manager"}>
           <img src={logo} alt="logo" />
         </Link>
       </div>
       <div className="link">
         <ul className="ul_1">
           <li>
-            <Link to={"/member"}>
+            <Link to={"/manager"}>
               <Button type="primary" icon={<HomeOutlined />}>
                 Home
               </Button>
             </Link>
           </li>
           <li>
-            <Link to={"/member/news"}>
+            <Link to={"/manager/news"}>
               <Button type="primary" icon={<FileTextOutlined />}>
                 News
               </Button>
             </Link>
           </li>
           <li>
-            <Link to={"/member/competition"}>
+            <Link to={"/manager/competition"}>
               <Button type="primary" icon={<TrophyOutlined />}>
                 Competition
               </Button>
             </Link>
           </li>
           <li>
-            <Link to={"/member/contact"}>
+            <Link to={"/manager/contact"}>
               <Button type="primary" icon={<PhoneOutlined />}>
                 Contact
               </Button>
