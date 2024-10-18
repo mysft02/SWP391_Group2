@@ -1,0 +1,69 @@
+.Admin-footer {
+    background-color: #222; /* Màu nền tối */
+    color: #fff; /* Màu chữ trắng */
+    padding: 20px 0; /* Khoảng cách trên dưới */
+    font-family: Arial, sans-serif;
+  }
+  
+  .Admin-footer .container {
+    max-width: 1200px;
+    margin: 0 35px; /* Căn giữa */
+    padding: 0 35px;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between; /* Chia đều 2 bên */
+    align-items: center;
+    flex-wrap: wrap; /* Tự động xuống hàng khi màn hình nhỏ */
+    text-align: left; /* Căn văn bản bên trái */
+  }
+  
+  .company-info {
+    flex: 1; /* Để phần company-info chiếm đầy đủ bên trái */
+  }
+  
+  .company-info h2 {
+    font-size: 28px;
+    margin: 0;
+  }
+  
+  .company-info p {
+    font-size: 14px;
+    margin: 5px 0 0 0;
+    color: #bbb; /* Màu chữ nhạt hơn */
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: 50px; /* Khoảng cách giữa các link */
+    padding-left: 100px ;
+  }
+  
+  .footer-links a {
+    color: #fff; /* Màu chữ */
+    text-decoration: none;
+    font-size: 16px;
+
+  }
+  
+  .footer-links a:hover {
+    color: #1890ff; /* Màu chữ khi hover */
+  }
+  
+  @media (max-width: 768px) {
+    .footer-content {
+      flex-direction: column; /* Xếp dọc khi màn hình nhỏ */
+      text-align: center;
+    }
+  
+    .footer-links {
+      margin-top: 15px;
+      gap: 15px;
+    }
+  
+    .company-info {
+      text-align: center; /* Khi màn hình nhỏ, căn giữa nội dung */
+    }
+  }
+  

@@ -1,5 +1,5 @@
 import React from 'react'
-import GuestBody from '../components/Guest-HomePage/Guest-Body/GuestBody/GuestBody'
+import GuestBody from '../../components/Guest-HomePage/Guest-Body/GuestBody/GuestBody'
 
 function GuestHomePage() {
   return (

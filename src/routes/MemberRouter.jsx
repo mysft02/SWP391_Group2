@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import MemberLayout from '../template/LayoutHome/MemeberLayout'; // Kiểm tra tên component đúng không
-import MemberPage from '../page/MemberPage';
+import MemberPage from '../page/CustomerPage/MemberPage';
 import Contact from '../components/Customer-Page/Customer-Header/contact/Contact';
-import NewsPage from '../page/NewsPage/NewsPage';
 import CompetitionPage from '../page/CompetitionPage/CompetitionPage';
-import DashBoardPage from '../page/DashBoardPage/DashBoardPage';
+import NewsPage from '../page/CustomerPage/NewsPage/NewsPage';
+import DashBoardPage from '../page/CustomerPage/DashBoardPage/DashBoardPage';
 
 function MemberRouter() {
   return (

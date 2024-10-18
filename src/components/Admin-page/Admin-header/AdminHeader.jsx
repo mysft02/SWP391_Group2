@@ -1,5 +1,5 @@
 import logo from "../../../assets/logo.svg";
-import "./CustomerHeader.css";
+import "./AdminHeader.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Dropdown } from "antd";
 import {
@@ -13,7 +13,7 @@ import {
 import ToggleTheme from "./ToggleTheme/ToggleTheme";
 import { useUser } from "../../../data/UserContext"; // Hook lấy user từ context
 
-const CustomerHeader = () => {
+const AdminHeader = () => {
   const { user, logOut } = useUser(); // Sử dụng logOut từ UserContext
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const CustomerHeader = () => {
   ];
 
   return (
-    <div className="Customer-header">
+    <div className="Admin-header">
       <div className="logo">
         <Link to={"/member"}>
           <img src={logo} alt="logo" />
@@ -74,7 +74,7 @@ const CustomerHeader = () => {
               </Button>
             </Link>
           </li>
-          <ul className="account-customer">
+          <ul className="account-Admin">
             {user ? (
               // Hiển thị dropdown nếu user đã đăng nhập
               <Dropdown menu={{ items: menuItems }} trigger={['click']}>
@@ -113,4 +113,4 @@ const CustomerHeader = () => {
   );
 };
 
-export default CustomerHeader;
+export default AdminHeader;

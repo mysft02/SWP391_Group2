@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import video1 from '../../assets/video/video1.mp4';
+import video1 from '../../../assets/video/video1.mp4';
 import { UserOutlined, GoldOutlined, DollarOutlined } from '@ant-design/icons';
-
 import './DashBoard.css';
-import PaymentCustomer from '../../components/Profile/Payment/paymentCustomer';
-import CustomeProfile from '../../components/Profile/CustomeProfile/CustomeProfile';
+import PaymentCustomer from '../../../components/Profile/Payment/paymentCustomer';
+import CustomeProfile from '../../../components/Profile/CustomeProfile/CustomeProfile';
 
 const { Sider, Content } = Layout;
 

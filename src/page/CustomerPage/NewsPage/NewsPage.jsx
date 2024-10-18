@@ -1,6 +1,6 @@
 import React from 'react';
-import NewsContent from '../../components/NewsContent/NewsContent/NewsContent';
 import { TrophyOutlined} from '@ant-design/icons';
+import NewsContent from '../../../components/NewsContent/NewsContent/NewsContent';
 // import './NewsPage.css'; // Import file CSS
 
 function NewsPage() {
