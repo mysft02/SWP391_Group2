@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, Form, Input, Modal, notification } from 'antd';
-import { api } from '../../../../config/AxiosConfig'; // Đường dẫn tới file cấu hình Axios
+import { api } from '../../../../config/AxiosConfig'; 
+import {
+  EditOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 
 function KoiStandard() {
-  const [koiStandard, setKoiStandard] = useState([]); // Khởi tạo danh sách Koi Standard
+  const [koiStandard, setKoiStandard] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingKoi, setEditingKoi] = useState(null);
   const [form] = Form.useForm();
 
-  // Lấy danh sách Koi Standard từ API
   const fetchKoiStandard = async () => {
     try {
       const response = await api.get('/api/KoiStandard/Get All KoiStandard');
       const formattedData = response.data.map(koi => ({
-        id: koi.standard_id, // Sử dụng standard_id làm ID
-        color: koi.color_koi, // Khởi tạo trường color
-        pattern: koi.pattern_koi, // Khởi tạo trường pattern
-        size: koi.size_koi, // Khởi tạo trường size
-        age: koi.age_koi, // Khởi tạo trường age
-        bodyShape: koi.bodyshape_koi, // Khởi tạo trường bodyShape
-        variety: koi.variety_koi, // Khởi tạo trường variety
-        name: koi.standard_name, // Khởi tạo trường name
-        gender: koi.gender // Khởi tạo trường gender
+        id: koi.standard_id,
+        color: koi.color_koi,
+        pattern: koi.pattern_koi,
+        size: koi.size_koi,
+        age: koi.age_koi,
+        bodyShape: koi.bodyshape_koi,
+        variety: koi.variety_koi,
+        name: koi.standard_name,
+        gender: koi.gender,
       }));
-      setKoiStandard(formattedData); // Cập nhật danh sách Koi Standard
+      setKoiStandard(formattedData);
     } catch (error) {
       console.error('Error fetching Koi Standard:', error);
       notification.error({
@@ -34,71 +40,127 @@ function KoiStandard() {
   };
 
   useEffect(() => {
-    fetchKoiStandard(); // Gọi hàm khi component được mount
+    fetchKoiStandard();
   }, []);
 
-  // Hàm xử lý thêm hoặc cập nhật Koi Standard
-  const handleSubmit = async (values) => {
+  const handleCreate = async (values) => {
     try {
-      if (editingKoi) {
-        // Cập nhật Koi Standard
-        await api.put(`/api/KoiCategory/UpdateKoiCategory/${editingKoi.id}`, values);
-        notification.success({
-          message: 'Update Success',
-          description: 'Koi standard updated successfully.',
-        });
-      } else {
-        // Tạo mới Koi Standard
-        await api.post('/api/KoiCategory/CreateKoiCategory', values);
-        notification.success({
-          message: 'Create Success',
-          description: 'Koi standard created successfully.',
-        });
-      }
+      const payload = {
+        color_koi: values.color_koi,
+        pattern_koi: values.pattern_koi,
+        size_koi: Number(values.size_koi),
+        age_koi: Number(values.age_koi),
+        bodyshape_koi: values.bodyshape_koi,
+        variety_koi: values.variety_koi,
+        standard_name: values.standard_name,
+        gender: values.gender,
+      };
+      
+      await api.post('/api/KoiStandard/CreateKoiStandard', payload);
+      notification.success({
+        message: 'Create Success',
+        description: 'Koi standard created successfully.',
+      });
       setIsModalVisible(false);
-      setEditingKoi(null);
-      fetchKoiStandard(); // Cập nhật lại danh sách
+      fetchKoiStandard(); 
     } catch (error) {
-      console.error('Error saving Koi Standard:', error);
+      console.error('Error creating Koi Standard:', error);
       notification.error({
         message: 'Operation Failed',
-        description: 'Could not save Koi standard.',
+        description: 'Could not create Koi standard.',
       });
     }
   };
 
-  // Mở modal để thêm hoặc chỉnh sửa Koi Standard
+  const handleUpdate = async (values) => {
+    if (!editingKoi) {
+      console.error('No editing Koi found');
+      return;
+    }
+    
+    try {
+      const payload = {
+        standard_id: editingKoi.id,
+        color_koi: values.color_koi,
+        pattern_koi: values.pattern_koi,
+        size_koi: Number(values.size_koi),
+        age_koi: Number(values.age_koi),
+        bodyshape_koi: values.bodyshape_koi,
+        variety_koi: values.variety_koi,
+        standard_name: values.standard_name,
+        gender: values.gender,
+      };
+      
+      console.log("Updating Koi Standard with payload:", payload);
+      
+      await api.put(`/api/KoiStandard/Update KoiStandard/${payload.standard_id}`, payload);
+      notification.success({
+        message: 'Update Success',
+        description: 'Koi standard updated successfully.',
+      });
+      setIsModalVisible(false);
+      setEditingKoi(null);
+      fetchKoiStandard(); 
+    } catch (error) {
+      console.error('Error updating Koi Standard:', error);
+      notification.error({
+        message: 'Operation Failed',
+        description: error.response?.data?.message || 'Could not update Koi standard.',
+      });
+    }
+    
+  };
+  
+
+  const handleSubmit = async (values) => {
+    console.log("Submitting values:", values);
+    if (editingKoi) {
+      await handleUpdate(values);
+    } else {
+      await handleCreate(values);
+    }
+  };
+
   const showModal = (koi) => {
     setEditingKoi(koi);
-    form.setFieldsValue(koi || { // Đặt giá trị vào form
-      id: '',
-      color: '',
-      pattern: '',
-      size: '',
-      age: '',
-      bodyShape: '',
-      variety: '',
-      name: '',
-      gender: ''
+    console.log("ID:",koi.id)
+    form.setFieldsValue(koi ? {
+        standard_id: koi.id,
+        standard_name: koi.name,
+        color_koi: koi.color,
+        pattern_koi: koi.pattern,
+        size_koi: koi.size,
+        age_koi: koi.age,
+        bodyshape_koi: koi.bodyShape,
+        variety_koi: koi.variety,
+        gender: koi.gender,
+    } : {
+        standard_name: '',
+        color_koi: '',
+        pattern_koi: '',
+        size_koi: '',
+        age_koi: '',
+        bodyshape_koi: '',
+        variety_koi: '',
+        gender: '',
     });
     setIsModalVisible(true);
   };
 
-  // Đóng modal
   const handleCancel = () => {
     setIsModalVisible(false);
     setEditingKoi(null);
   };
 
-  // Xóa Koi Standard
   const handleDelete = async (id) => {
+    console.log('Deleting Koi Standard ID:', id);
     try {
-      await api.delete(`/api/KoiCategory/DeleteKoiCategory/${id}`);
+      await api.delete(`/api/KoiStandard/Delete KoiStandard?standardId=${id}`);
       notification.success({
         message: 'Delete Success',
         description: 'Koi standard deleted successfully.',
       });
-      fetchKoiStandard(); // Cập nhật lại danh sách
+      fetchKoiStandard(); 
     } catch (error) {
       console.error('Error deleting Koi Standard:', error);
       notification.error({
@@ -159,8 +221,8 @@ function KoiStandard() {
       key: 'action',
       render: (_, record) => (
         <>
-          <Button type="link" onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id)}>Delete</Button>
+          <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
+          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)}>Delete</Button>
         </>
       ),
     },
@@ -169,7 +231,7 @@ function KoiStandard() {
   return (
     <div>
       <h1>Koi Standard Management</h1>
-      <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
+      <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
         Add Koi Standard
       </Button>
       <Table dataSource={koiStandard} columns={columns} rowKey="id" />
@@ -182,58 +244,58 @@ function KoiStandard() {
       >
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
-            name="name"
+            name="standard_name"
             label="Name"
             rules={[{ required: true, message: 'Please input the name of the Koi standard!' }]}
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="color"
+            name="color_koi"
             label="Color"
             rules={[{ required: true, message: 'Please input the color of the Koi!' }]}
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="pattern"
+            name="pattern_koi"
             label="Pattern"
             rules={[{ required: true, message: 'Please input the pattern of the Koi!' }]}
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="size"
+            name="size_koi"
             label="Size"
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="age"
+            name="age_koi"
             label="Age"
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="bodyShape"
+            name="bodyshape_koi"
             label="Body Shape"
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
-            name="variety"
+            name="variety_koi"
             label="Variety"
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item
             name="gender"
             label="Gender"
           >
-            <Input />
+            <Input prefix={<CheckOutlined />} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
               {editingKoi ? "Update" : "Create"}
             </Button>
           </Form.Item>
