@@ -4,7 +4,7 @@ import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext'; // Sử dụng UserContext
 
 function CustomeProfile() {
-  const { user } = useUser(); // Lấy dữ liệu người dùng từ UserContext
+  const { user , setUser} = useUser(); // Lấy dữ liệu người dùng từ UserContext
   const [formData, setFormData] = useState({
     user_name: '',
     full_name: '',
@@ -20,7 +20,6 @@ function CustomeProfile() {
         full_name: user.full_name || '',
         email: user.email || '',
         phone: user.phone || '',
-
       });
     }
   }, [user]);
@@ -33,19 +32,37 @@ function CustomeProfile() {
 
   // Submit dữ liệu cập nhật lên server
   const handleSubmit = async () => {
+    if (!user || !user.accessToken) {
+      message.error('Không tìm thấy token, vui lòng đăng nhập lại.');
+      return;
+    }
+
     const payload = {
-      user_name: formData.user_name,
       full_name: formData.full_name,
       email: formData.email,
       phone: formData.phone,
-
     };
 
     try {
-      await api.put('/api/User/update-profile', payload);
+      await api.put('/api/User/update-profile', payload, {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`, // Thêm token vào headers
+          'Content-Type': 'application/json',
+        },
+      });
       message.success('Thông tin đã được cập nhật thành công!');
+      setUser({
+        ...user, // Giữ lại các thông tin khác của người dùng
+        full_name: formData.full_name,
+        email: formData.email,
+        phone: formData.phone,
+      });
     } catch (error) {
-      message.error('Đã xảy ra lỗi khi cập nhật thông tin.');
+      if (error.response?.status === 401) {
+        message.error('Bạn không có quyền thực hiện hành động này. Vui lòng đăng nhập lại.');
+      } else {
+        message.error('Đã xảy ra lỗi khi cập nhật thông tin.');
+      }
       console.error(error);
     }
   };
@@ -79,7 +96,6 @@ function CustomeProfile() {
             style={{ color: '#003366' }}
           />
         </Form.Item>
-
 
         <Form.Item
           label={<span style={{ fontSize: '20px', fontWeight: 'bold' }}>Email</span>}
