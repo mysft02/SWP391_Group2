@@ -11,7 +11,7 @@ namespace KoiBet.DTO.Competition
 
         public DateTime? EndTime { get; init; }
 
-        public bool? StatusCompetition { get; init; }
+        public string? StatusCompetition { get; init; }
 
         public string? Round { get; init; }
 

@@ -40,7 +40,7 @@ namespace KoiBet.Controllers
         public async Task<IActionResult> UpdateCompetition([FromBody] UpdateCompetitionDTO _updateCompetition)
         {
             return await _competitionService.HandleUpdateCompetition(_updateCompetition);
-        
+
         }
 
         [HttpDelete("Delete Competition")]

@@ -8,7 +8,7 @@ namespace KoiBet.DTO.Competition
         public string competition_description { get; set; }
         public DateTime start_time { get; set; }
         public DateTime end_time { get; set; }
-        public bool status_competition { get; set; }
+        public string status_competition { get; set; }
         public string category_id { get; set; }
         public string koi_id { get; set; }
         public string referee_id { get; set; }

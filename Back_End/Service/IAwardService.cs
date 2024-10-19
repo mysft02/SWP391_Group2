@@ -30,7 +30,7 @@ namespace KoiBet.Service
         {
             try
             {
-                var awards = await _context.Awards
+                var awards = await _context.Award
                     .Select(a => new AwardDTO
                     {
                         award_id = a.award_id,
@@ -57,7 +57,7 @@ namespace KoiBet.Service
         {
             try
             {
-                var lastAward = await _context.Awards
+                var lastAward = await _context.Award
                     .OrderByDescending(a => a.award_id)
                     .FirstOrDefaultAsync();
 
@@ -80,7 +80,7 @@ namespace KoiBet.Service
                     quantity = createAwardDTO.quantity
                 };
 
-                _context.Awards.Add(newAward);
+                _context.Award.Add(newAward);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -99,7 +99,7 @@ namespace KoiBet.Service
         // Update an existing Award
         public async Task<IActionResult> HandleUpdateAward(string awardId , UpdateAwardDTO updateAwardDTO)
         {
-                var existingAward = await _context.Awards
+                var existingAward = await _context.Award
                     .FirstOrDefaultAsync(a => a.award_id == awardId);
 
                 if (existingAward == null)
@@ -120,7 +120,7 @@ namespace KoiBet.Service
         {
             try
             {
-                var existingAward = await _context.Awards
+                var existingAward = await _context.Award
                     .FirstOrDefaultAsync(a => a.award_id == awardId);
 
                 if (existingAward == null)
@@ -128,7 +128,7 @@ namespace KoiBet.Service
                     return NotFound("Award not found!");
                 }
 
-                _context.Awards.Remove(existingAward);
+                _context.Award.Remove(existingAward);
                 var result = await _context.SaveChangesAsync();
 
                 if (result != 1)
@@ -149,7 +149,7 @@ namespace KoiBet.Service
         {
             try
             {
-                var award = await _context.Awards
+                var award = await _context.Award
                     .Select(a => new AwardDTO
                     {
                         award_id = a.award_id,
