@@ -29,13 +29,8 @@ namespace KoiBet.Controllers
 
 
         [HttpPut("Update KoiStandard")]
-        public async Task<IActionResult> UpdateKoiStandard(string standardId, [FromBody] UpdateKoiStandardDTO updateKoiStandardDto)
+        public async Task<IActionResult> UpdateKoiStandard([FromBody] UpdateKoiStandardDTO updateKoiStandardDto)
         {
-            if (standardId != updateKoiStandardDto.standard_id)
-            {
-                return BadRequest("Standard ID mismatch.");
-            }
-
             return await _koiStandardService.HandleUpdateKoiStandard(updateKoiStandardDto);
         }
 

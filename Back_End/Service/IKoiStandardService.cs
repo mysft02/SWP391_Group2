@@ -107,8 +107,13 @@ namespace Service.KoiStandardService
             }
         }
 
-        public async Task<IActionResult> HandleUpdateKoiStandard(UpdateKoiStandardDTO updateKoiStandardDto)
+        public async Task<IActionResult> HandleUpdateKoiStandard([FromBody] UpdateKoiStandardDTO updateKoiStandardDto)
         {
+            if (string.IsNullOrEmpty(updateKoiStandardDto.standard_id))
+            {
+                return BadRequest("Standard ID is required!");
+            }
+
             try
             {
                 var koiStandard = await _context.KoiStandard
@@ -143,6 +148,8 @@ namespace Service.KoiStandardService
                 return BadRequest(ex.Message);
             }
         }
+
+
 
         public async Task<IActionResult> HandleDeleteKoiStandard(string standardId)
         {
