@@ -28,7 +28,7 @@ namespace KoiBet.Controllers
         }
 
 
-        [HttpPut("Update KoiStandard")]
+        [HttpPut("Update KoiStandard/{standard_id}")]
         public async Task<IActionResult> UpdateKoiStandard([FromBody] UpdateKoiStandardDTO updateKoiStandardDto)
         {
             return await _koiStandardService.HandleUpdateKoiStandard(updateKoiStandardDto);
