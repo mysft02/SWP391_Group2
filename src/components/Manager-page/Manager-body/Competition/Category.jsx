@@ -11,12 +11,13 @@ function Category() {
   // Lấy danh sách Koi Category từ API
   const fetchCategories = async () => {
     try {
-      const response = await api.get('/api/KoiCategory/GetAll');
+      const response = await api.get('/api/KoiCategory/Get all KoiCategory'); // Đường dẫn API đã chỉnh sửa
       // Chuyển đổi dữ liệu nếu cần thiết để khớp với cấu trúc
       setCategories(response.data.map(category => ({
-        ...category,
-        standardName: category.standard ? category.standard.standard_name : 'N/A',
-        standardId: category.standard ? category.standard.standard_id : 'N/A'
+        category_id: category.category_id, // Lưu category_id
+        category_name: category.category_name, // Lưu category_name
+        standard_id: category.standard_id
+        
       })));
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -66,7 +67,7 @@ function Category() {
     setEditingCategory(category);
     form.setFieldsValue({
       category_name: category ? category.category_name : '',
-      description: category ? category.standard?.description : '',
+      // Nếu bạn có trường 'description', hãy thêm ở đây nếu cần
     });
     setIsModalVisible(true);
   };
@@ -75,6 +76,7 @@ function Category() {
   const handleCancel = () => {
     setIsModalVisible(false);
     setEditingCategory(null);
+    form.resetFields(); // Đặt lại trường biểu mẫu
   };
 
   // Xóa Koi Category
@@ -108,14 +110,10 @@ function Category() {
     },
     {
       title: 'Standard ID',
-      dataIndex: 'standardId',
-      key: 'standardId',
+      dataIndex: 'standard_id',
+      key: 'standard_id',
     },
-    {
-      title: 'Standard Name',
-      dataIndex: 'standardName',
-      key: 'standardName',
-    },
+
     {
       title: 'Action',
       key: 'action',
@@ -138,7 +136,7 @@ function Category() {
 
       <Modal
         title={editingCategory ? "Edit Koi Category" : "Add Koi Category"}
-        visible={isModalVisible}
+        visible={isModalVisible} // Sửa thuộc tính từ isModalVisible sang visible
         onCancel={handleCancel}
         footer={null}
       >
@@ -149,12 +147,6 @@ function Category() {
             rules={[{ required: true, message: 'Please input the name of the Koi category!' }]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-          >
-            <Input.TextArea />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

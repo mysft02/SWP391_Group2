@@ -3,63 +3,84 @@ import { Table, Button, Form, Input, Modal, notification } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; // Đường dẫn tới file cấu hình Axios
 
 function KoiStandard() {
-  const [koiCategories, setKoiCategories] = useState([]);
+  const [koiStandard, setKoiStandard] = useState([]); // Khởi tạo danh sách Koi Standard
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingKoi, setEditingKoi] = useState(null);
   const [form] = Form.useForm();
 
-  // Lấy danh sách Koi Category từ API
-  const fetchKoiCategories = async () => {
+  // Lấy danh sách Koi Standard từ API
+  const fetchKoiStandard = async () => {
     try {
-      const response = await api.get('/api/KoiCategory/GetAll');
-      setKoiCategories(response.data);
+      const response = await api.get('/api/KoiStandard/Get All KoiStandard');
+      const formattedData = response.data.map(koi => ({
+        id: koi.standard_id, // Sử dụng standard_id làm ID
+        color: koi.color_koi, // Khởi tạo trường color
+        pattern: koi.pattern_koi, // Khởi tạo trường pattern
+        size: koi.size_koi, // Khởi tạo trường size
+        age: koi.age_koi, // Khởi tạo trường age
+        bodyShape: koi.bodyshape_koi, // Khởi tạo trường bodyShape
+        variety: koi.variety_koi, // Khởi tạo trường variety
+        name: koi.standard_name, // Khởi tạo trường name
+        gender: koi.gender // Khởi tạo trường gender
+      }));
+      setKoiStandard(formattedData); // Cập nhật danh sách Koi Standard
     } catch (error) {
-      console.error('Error fetching Koi Categories:', error);
+      console.error('Error fetching Koi Standard:', error);
       notification.error({
         message: 'Fetch Failed',
-        description: 'Could not fetch Koi categories.',
+        description: 'Could not fetch Koi standard.',
       });
     }
   };
 
   useEffect(() => {
-    fetchKoiCategories(); // Gọi hàm khi component được mount
+    fetchKoiStandard(); // Gọi hàm khi component được mount
   }, []);
 
-  // Hàm xử lý thêm hoặc cập nhật Koi Category
+  // Hàm xử lý thêm hoặc cập nhật Koi Standard
   const handleSubmit = async (values) => {
     try {
       if (editingKoi) {
-        // Cập nhật Koi Category
+        // Cập nhật Koi Standard
         await api.put(`/api/KoiCategory/UpdateKoiCategory/${editingKoi.id}`, values);
         notification.success({
           message: 'Update Success',
-          description: 'Koi category updated successfully.',
+          description: 'Koi standard updated successfully.',
         });
       } else {
-        // Tạo mới Koi Category
+        // Tạo mới Koi Standard
         await api.post('/api/KoiCategory/CreateKoiCategory', values);
         notification.success({
           message: 'Create Success',
-          description: 'Koi category created successfully.',
+          description: 'Koi standard created successfully.',
         });
       }
       setIsModalVisible(false);
       setEditingKoi(null);
-      fetchKoiCategories(); // Cập nhật lại danh sách
+      fetchKoiStandard(); // Cập nhật lại danh sách
     } catch (error) {
-      console.error('Error saving Koi Category:', error);
+      console.error('Error saving Koi Standard:', error);
       notification.error({
         message: 'Operation Failed',
-        description: 'Could not save Koi category.',
+        description: 'Could not save Koi standard.',
       });
     }
   };
 
-  // Mở modal để thêm hoặc chỉnh sửa Koi Category
+  // Mở modal để thêm hoặc chỉnh sửa Koi Standard
   const showModal = (koi) => {
     setEditingKoi(koi);
-    form.setFieldsValue(koi || { name: '', description: '' }); // Đặt giá trị vào form
+    form.setFieldsValue(koi || { // Đặt giá trị vào form
+      id: '',
+      color: '',
+      pattern: '',
+      size: '',
+      age: '',
+      bodyShape: '',
+      variety: '',
+      name: '',
+      gender: ''
+    });
     setIsModalVisible(true);
   };
 
@@ -69,20 +90,20 @@ function KoiStandard() {
     setEditingKoi(null);
   };
 
-  // Xóa Koi Category
+  // Xóa Koi Standard
   const handleDelete = async (id) => {
     try {
       await api.delete(`/api/KoiCategory/DeleteKoiCategory/${id}`);
       notification.success({
         message: 'Delete Success',
-        description: 'Koi category deleted successfully.',
+        description: 'Koi standard deleted successfully.',
       });
-      fetchKoiCategories(); // Cập nhật lại danh sách
+      fetchKoiStandard(); // Cập nhật lại danh sách
     } catch (error) {
-      console.error('Error deleting Koi Category:', error);
+      console.error('Error deleting Koi Standard:', error);
       notification.error({
         message: 'Delete Failed',
-        description: 'Could not delete Koi category.',
+        description: 'Could not delete Koi standard.',
       });
     }
   };
@@ -94,14 +115,44 @@ function KoiStandard() {
       key: 'id',
     },
     {
+      title: 'Color',
+      dataIndex: 'color',
+      key: 'color',
+    },
+    {
+      title: 'Pattern',
+      dataIndex: 'pattern',
+      key: 'pattern',
+    },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+      key: 'size',
+    },
+    {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: 'Body Shape',
+      dataIndex: 'bodyShape',
+      key: 'bodyShape',
+    },
+    {
+      title: 'Variety',
+      dataIndex: 'variety',
+      key: 'variety',
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      title: 'Gender',
+      dataIndex: 'gender',
+      key: 'gender',
     },
     {
       title: 'Action',
@@ -117,14 +168,14 @@ function KoiStandard() {
 
   return (
     <div>
-      <h1>Koi Category Management</h1>
+      <h1>Koi Standard Management</h1>
       <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
-        Add Koi Category
+        Add Koi Standard
       </Button>
-      <Table dataSource={koiCategories} columns={columns} rowKey="id" />
+      <Table dataSource={koiStandard} columns={columns} rowKey="id" />
 
       <Modal
-        title={editingKoi ? "Edit Koi Category" : "Add Koi Category"}
+        title={editingKoi ? "Edit Koi Standard" : "Add Koi Standard"}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={null}
@@ -133,15 +184,53 @@ function KoiStandard() {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please input the name of the Koi category!' }]}
+            rules={[{ required: true, message: 'Please input the name of the Koi standard!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="description"
-            label="Description"
+            name="color"
+            label="Color"
+            rules={[{ required: true, message: 'Please input the color of the Koi!' }]}
           >
-            <Input.TextArea />
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="pattern"
+            label="Pattern"
+            rules={[{ required: true, message: 'Please input the pattern of the Koi!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="size"
+            label="Size"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="age"
+            label="Age"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="bodyShape"
+            label="Body Shape"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="variety"
+            label="Variety"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="gender"
+            label="Gender"
+          >
+            <Input />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

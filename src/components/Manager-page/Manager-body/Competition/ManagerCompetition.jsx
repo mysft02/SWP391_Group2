@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, Input, Modal, notification } from 'antd';
+import { Table, Button, Form, Input, Modal, notification, DatePicker } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Import các icon cần thiết
 import { api } from '../../../../config/AxiosConfig'; // Đường dẫn tới file cấu hình Axios
 
 function ManagerCompetition() {
@@ -11,7 +12,7 @@ function ManagerCompetition() {
   // Lấy danh sách Competition Koi từ API
   const fetchCompetitions = async () => {
     try {
-      const response = await api.get('/api/CompetitionKoi/GetAll'); // Đảm bảo endpoint này chính xác
+      const response = await api.get('/api/CompetitionKoi/Get all CompetitionKoi'); // Đảm bảo endpoint này chính xác
       setCompetitions(response.data);
     } catch (error) {
       console.error('Error fetching competitions:', error);
@@ -31,14 +32,14 @@ function ManagerCompetition() {
     try {
       if (editingCompetition) {
         // Cập nhật Competition Koi
-        await api.put(`/api/CompetitionKoi/UpdateCompetitionKoi/${editingCompetition.id}`, values);
+        await api.put(`/api/Competition/UpdateCompetition/${editingCompetition.competitionId}`, values);
         notification.success({
           message: 'Update Success',
           description: 'Competition updated successfully.',
         });
       } else {
         // Tạo mới Competition Koi
-        await api.post('/api/CompetitionKoi/CreateCompetitionKoi', values);
+        await api.post('/api/Competition/CreateCompetition', values);
         notification.success({
           message: 'Create Success',
           description: 'Competition created successfully.',
@@ -59,7 +60,14 @@ function ManagerCompetition() {
   // Mở modal để thêm hoặc chỉnh sửa Competition Koi
   const showModal = (competition) => {
     setEditingCompetition(competition);
-    form.setFieldsValue(competition || { name: '', description: '', categoryId: '' }); // Đặt giá trị vào form
+    form.setFieldsValue(competition || { 
+      competitionName: '', 
+      competitionDescription: '', 
+      round: '', 
+      statusCompetition: '', 
+      startTime: null, 
+      endTime: null
+    }); // Đặt giá trị vào form
     setIsModalVisible(true);
   };
 
@@ -72,7 +80,7 @@ function ManagerCompetition() {
   // Xóa Competition Koi
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/CompetitionKoi/DeleteCompetitionKoi/${id}`);
+      await api.delete(`/api/Competition/DeleteCompetition/${id}`);
       notification.success({
         message: 'Delete Success',
         description: 'Competition deleted successfully.',
@@ -90,31 +98,48 @@ function ManagerCompetition() {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'competitionId',
+      key: 'competitionId',
     },
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'competitionName',
+      key: 'competitionName',
     },
     {
       title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      dataIndex: 'competitionDescription',
+      key: 'competitionDescription',
     },
     {
-      title: 'Category ID',
-      dataIndex: 'categoryId',
-      key: 'categoryId',
+      title: 'Round',
+      dataIndex: 'round',
+      key: 'round',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'statusCompetition',
+      key: 'statusCompetition',
+    },
+    {
+      title: 'Start Time',
+      dataIndex: 'startTime',
+      key: 'startTime',
+      render: (text) => new Date(text).toLocaleString(),
+    },
+    {
+      title: 'End Time',
+      dataIndex: 'endTime',
+      key: 'endTime',
+      render: (text) => new Date(text).toLocaleString(),
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
         <>
-          <Button type="link" onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id)}>Delete</Button>
+          <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
+          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competitionId)}>Delete</Button>
         </>
       ),
     },
@@ -123,10 +148,15 @@ function ManagerCompetition() {
   return (
     <div>
       <h1>Competition Management</h1>
-      <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
+      <Button 
+        type="primary" 
+        icon={<PlusOutlined />} 
+        onClick={() => showModal(null)} 
+        style={{ marginBottom: '20px' }}
+      >
         Add Competition
       </Button>
-      <Table dataSource={competitions} columns={columns} rowKey="id" />
+      <Table dataSource={competitions} columns={columns} rowKey="competitionId" />
 
       <Modal
         title={editingCompetition ? "Edit Competition" : "Add Competition"}
@@ -136,27 +166,48 @@ function ManagerCompetition() {
       >
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
-            name="name"
+            name="competitionName"
             label="Name"
             rules={[{ required: true, message: 'Please input the name of the competition!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="description"
+            name="competitionDescription"
             label="Description"
           >
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            name="categoryId"
-            label="Category ID"
-            rules={[{ required: true, message: 'Please input the category ID!' }]}
+            name="round"
+            label="Round"
+            rules={[{ required: true, message: 'Please input the round!' }]}
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            name="statusCompetition"
+            label="Status"
+            rules={[{ required: true, message: 'Please input the status!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="startTime"
+            label="Start Time"
+            rules={[{ required: true, message: 'Please select the start time!' }]}
+          >
+            <DatePicker showTime />
+          </Form.Item>
+          <Form.Item
+            name="endTime"
+            label="End Time"
+            rules={[{ required: true, message: 'Please select the end time!' }]}
+          >
+            <DatePicker showTime />
+          </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" icon={editingCompetition ? <EditOutlined /> : <PlusOutlined />}>
               {editingCompetition ? "Update" : "Create"}
             </Button>
           </Form.Item>

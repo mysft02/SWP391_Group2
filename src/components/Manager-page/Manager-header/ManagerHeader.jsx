@@ -53,20 +53,7 @@ const ManagerHeader = () => {
               </Button>
             </Link>
           </li>
-          <li>
-            <Link to={"/manager/news"}>
-              <Button type="primary" icon={<FileTextOutlined />}>
-                News
-              </Button>
-            </Link>
-          </li>
-          <li>
-            <Link to={"/manager/competition"}>
-              <Button type="primary" icon={<TrophyOutlined />}>
-                Competition
-              </Button>
-            </Link>
-          </li>
+          
           <li>
             <Link to={"/manager/contact"}>
               <Button type="primary" icon={<PhoneOutlined />}>
