@@ -40,7 +40,7 @@ namespace KoiBet.Controllers
 
         // GET: user/{id}
         [Authorize]
-        [HttpGet]
+        [HttpGet("GetUser")]
         public async Task<IActionResult> GetUser([FromQuery] string userId)
         {
             var currentUser = HttpContext.User;
@@ -79,6 +79,38 @@ namespace KoiBet.Controllers
             }
 
             return await _userService.HandleDeleteByID(id);
+        }
+
+        [Authorize]
+        [HttpGet("GetAllUser")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            var currentUser = HttpContext.User;
+            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Ki?m tra quy?n truy c?p
+            if (currentUserRole != "admin")
+            {
+                return BadRequest(new { message = "Unauthorized!" });
+            }
+
+            return await _userService.HandleGetAllUser();
+        }
+
+        [Authorize]
+        [HttpGet("UpdateUserRole")]
+        public async Task<IActionResult> UpdateUserRole([FromQuery] UpdateUserRoleDTO updateUserRoleDTO)
+        {
+            var currentUser = HttpContext.User;
+            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Ki?m tra quy?n truy c?p
+            if (currentUserRole != "admin")
+            {
+                return BadRequest(new { message = "Unauthorized!" });
+            }
+
+            return await _userService.HandleUpdateUserRole(updateUserRoleDTO);
         }
     }
 }

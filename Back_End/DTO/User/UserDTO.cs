@@ -18,4 +18,11 @@ namespace KoiBet.DTO.User
 
         public decimal? balance { get; set; } = 0.0M;
     }
+
+    public class UpdateUserRoleDTO
+    {
+        public string? userName { get; set; }
+        public string? user_id { get; set; }
+        public string? role_id { get; set; }
+    }
 }

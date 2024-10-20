@@ -15,6 +15,8 @@ namespace KoiBet.Service
         Task<IActionResult> HandleUpdateByUsername(ClaimsPrincipal currentUser, UpdateUserDTO _updateDTO);
         Task<IActionResult> HandleDeleteByID(string user_id);
         Task<IActionResult> HandleGetUser(string user_id);
+        Task<IActionResult> HandleGetAllUser();
+        Task<IActionResult> HandleUpdateUserRole(UpdateUserRoleDTO updateUserRoleDTO);
     }
 
     public class UserService : ControllerBase, IUserService
@@ -147,6 +149,45 @@ namespace KoiBet.Service
                 RoleName = user.Role?.role_name, // Thêm dòng này nếu bạn đã include Role
                 Balance = user.Balance
             });
+        }
+
+        public async Task<IActionResult> HandleGetAllUser()
+        {
+            var user = _context.Users
+                .Include(u => u.Role);
+
+            var result = user
+                .OrderByDescending(c => c.Username)
+                .ToList();
+
+            if (result == null)
+            {
+                return new NotFoundObjectResult("Không tìm thấy người dùng");
+            }
+
+            return new OkObjectResult(result);
+        }
+
+        public async Task<IActionResult> HandleUpdateUserRole(UpdateUserRoleDTO updateUserRoleDTO)
+        {
+            // Find the user by username
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == updateUserRoleDTO.user_id);
+
+            if (user == null)
+            {
+                return NotFound("User not found!");
+            }
+
+            // Update user information only if the new value is provided
+            if (!string.IsNullOrWhiteSpace(updateUserRoleDTO.role_id))
+            {
+                user.role_id = updateUserRoleDTO.role_id;
+            }
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
         }
     }
 }
