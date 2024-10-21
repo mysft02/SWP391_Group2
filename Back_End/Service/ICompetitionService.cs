@@ -11,7 +11,7 @@ namespace Service.ICompetitionService
     {
         Task<IActionResult> HandleGetAllCompetitions();
         Task<IActionResult> HandleCreateNewCompetition(CreateCompetitionDTO createCompetitionDto);
-        Task<IActionResult> HandleUpdateCompetition(UpdateCompetitionDTO updateCompetitionDto);
+        Task<IActionResult> HandleUpdateCompetition(string CompetitionId, UpdateCompetitionDTO updateCompetitionDto);
         Task<IActionResult> HandleDeleteCompetition(string competitionId);
         Task<IActionResult> HandleGetCompetition(string competitionId);
     }
@@ -115,7 +115,7 @@ namespace Service.ICompetitionService
         }
 
         // Update an existing Competition
-        public async Task<IActionResult> HandleUpdateCompetition(UpdateCompetitionDTO updateCompetitionDto)
+        public async Task<IActionResult> HandleUpdateCompetition(string CompetitionId, UpdateCompetitionDTO updateCompetitionDto)
         {
             try
             {
