@@ -74,36 +74,40 @@ function ManagerCompetition() {
   };
 
   const updateCompetition = async (values) => {
-    const payload = {
-      competitionId: editingCompetition.competitionId, // Thêm trường competitionId
-      competitionName: values.competitionName,
-      competitionDescription: values.competitionDescription,
-      start_time: values.startTime ? values.startTime.toISOString() : null,
-      end_time: values.endTime ? values.endTime.toISOString() : null,
-      status_competition: values.statusCompetition,
-      category_id: values.categoryId || "CAT_1", // Cần tương ứng với koiCategoryId
-      koi_id: values.koiId || "K1", // Cần tương ứng với koiFishId
-      referee_id: values.refereeId || "REF_1",
-      award_id: values.awardId || "AWD_1",
-      rounds: values.round,
-      competition_img: values.competitionImg || "haha.jpg",
-    };
-  
+    const params = new URLSearchParams({
+        competitionId: editingCompetition.competitionId,
+        competitionName: values.competitionName,
+        competitionDescription: values.competitionDescription,
+        startTime: values.startTime ? values.startTime.toISOString() : '',
+        endTime: values.endTime ? values.endTime.toISOString() : '',
+        statusCompetition: values.statusCompetition,
+        koiCategoryId: values.categoryId || "CAT_1",
+        koiFishId: values.koiId || "K1",
+        refereeId: values.refereeId || "REF_1",
+        awardId: values.awardId || "AWD_1",
+        round: values.round,
+        competitionImg: values.competitionImg || "haha.jpg",
+    });
+
     try {
-      await api.put(`/api/CompetitionKoi/Update Competition/${editingCompetition.competitionId}`, payload);
-      notification.success({
-        message: 'Update Success',
-        description: 'Competition updated successfully.',
-      });
-      fetchCompetitions();
+        // Gọi API với query string
+        await api.post(`/api/CompetitionKoi/Update Competition?${params.toString()}`);
+        notification.success({
+            message: 'Cập nhật thành công',
+            description: 'Cập nhật cuộc thi thành công.',
+        });
+        fetchCompetitions(); // Tải lại danh sách
     } catch (error) {
-      console.error('Error updating competition:', error);
-      notification.error({
-        message: 'Update Failed',
-        description: 'Could not update competition.',
-      });
+        console.error('Lỗi khi cập nhật cuộc thi:', error);
+        notification.error({
+            message: 'Cập nhật thất bại',
+            description: 'Không thể cập nhật cuộc thi.',
+        });
     }
-  };
+};
+
+
+
   
 
   const handleSubmit = async (values) => {
