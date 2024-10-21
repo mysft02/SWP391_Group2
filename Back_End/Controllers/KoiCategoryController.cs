@@ -36,7 +36,7 @@ namespace KoiBet.Controllers
             return await _KoiCategoryService.HandleCreateKoiCategory(_createKoiCategory);
         }
 
-        [HttpPut("Update KoiCategory")]
+        [HttpPut("Update KoiCategory/{category_id}")]
         public async Task<IActionResult> UpdateKoiCategory([FromBody] UpdateKoiCategoryDTO _updateKoiCategory)
         {
             return await _KoiCategoryService.HandleUpdateKoiCategory(_updateKoiCategory);
