@@ -56,7 +56,7 @@ function ManagerCompetition() {
       rounds: values.round,
       competition_img: values.competitionImg || "haha.jpg",
     };
-
+    
     try {
       await api.post('/api/CompetitionKoi/Create CompetitionKoi', payload);
       notification.success({

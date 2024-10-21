@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, notification } from 'antd';
+import { Table, Button, notification, Modal, Select } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; // Thay đổi theo đường dẫn của bạn
 import { useUser } from '../../../../data/UserContext'; // Sử dụng useUser để lấy token
+
+const { Option } = Select;
 
 function UserManagement() {
   const { user } = useUser(); // Lấy user từ useUser
   const accessToken = user.accessToken; // Lấy accessToken từ user
   const [users, setUsers] = useState([]); // Quản lý danh sách người dùng
   const [loading, setLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [newRole, setNewRole] = useState('');
 
   // Hàm để lấy danh sách người dùng từ API
   const fetchUsers = async () => {
@@ -17,19 +22,17 @@ function UserManagement() {
         message: 'Fetch Failed',
         description: 'No access token found. Please log in again.',
       });
-      return; // Ngăn chặn việc gọi API nếu không có token
+      return;
     }
 
     try {
       const response = await api.get('/api/User/GetAllUser', {
         headers: {
-          Authorization: `Bearer ${accessToken}`, // Sử dụng accessToken từ useUser
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       });
-      console.log("Token:", accessToken);
-      console.log('Response:', response);
-      setUsers(response.data); // Cập nhật danh sách người dùng
+      setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
       notification.error({
@@ -43,7 +46,7 @@ function UserManagement() {
 
   useEffect(() => {
     fetchUsers(); // Gọi API ngay khi component được render
-  }, [accessToken]); // Chỉ chạy khi accessToken thay đổi
+  }, [accessToken]);
 
   // Cấu hình các cột cho bảng
   const columns = [
@@ -59,44 +62,60 @@ function UserManagement() {
     },
     {
       title: 'Full Name',
-      dataIndex: 'FullName',
+      dataIndex: 'full_name',
       key: 'fullName',
     },
     {
       title: 'Role',
-      dataIndex: 'role_Id',
+      dataIndex: 'role_id',
       key: 'roleId',
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button type="link" onClick={() => handleDelete(record.user_id)}>
-          Delete
-        </Button>
+        <>
+          <Button type="link" onClick={() => handleUpdateRole(record)}>
+            Update Role
+          </Button>
+        </>
       ),
     },
   ];
 
-  // Hàm để xử lý xóa người dùng
-  const handleDelete = async (uid) => {
-    console.log("uid",uid)
+  // Hiển thị modal cập nhật role
+  const handleUpdateRole = (user) => {
+    setSelectedUser(user);
+    setNewRole(user.role_id);
+    setIsModalVisible(true);
+  };
+
+  // Hàm cập nhật role người dùng
+  const updateRole = async () => {
+    if (!selectedUser || !newRole) return;
+
     try {
-      await api.delete(`/api/User?id=${uid}`, {
+      await api.post(`/api/User/UpdateUserRole`, null, {
+        params: {
+          user_id: selectedUser.user_id,
+          role_id: newRole,
+        },
         headers: {
-          Authorization: `Bearer ${accessToken}`, // Thêm accessToken khi xóa người dùng
+          Authorization: `Bearer ${accessToken}`,
         },
       });
+
       notification.success({
-        message: 'User Deleted',
-        description: `User with ID ${uid} has been deleted.`,
+        message: 'Role Updated',
+        description: `User with ID ${selectedUser.user_id} role has been updated.`,
       });
-      fetchUsers(); // Cập nhật lại danh sách người dùng
+      setIsModalVisible(false);
+      fetchUsers();
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error updating role:', error);
       notification.error({
-        message: 'Delete Failed',
-        description: 'Could not delete user.',
+        message: 'Update Failed',
+        description: 'Could not update user role.',
       });
     }
   };
@@ -111,8 +130,25 @@ function UserManagement() {
         dataSource={users}
         columns={columns}
         loading={loading}
-        rowKey="uid" // Đảm bảo uid là key duy nhất
+        rowKey="uid"
       />
+
+      {/* Modal cập nhật Role */}
+      <Modal
+        title="Update Role"
+        visible={isModalVisible}
+        onOk={updateRole}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <p>Update role for {selectedUser?.full_name}</p>
+        <Select value={newRole} onChange={setNewRole} style={{ width: '100%' }}>
+          <Option value="R5">Admin</Option>
+          <Option value="R4">Manager</Option>
+          <Option value="R3">Reefeer</Option>
+          <Option value="R2">Staff</Option>
+          <Option value="R1">Customer</Option>
+        </Select>
+      </Modal>
     </div>
   );
 }
