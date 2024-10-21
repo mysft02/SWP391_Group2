@@ -28,10 +28,6 @@ const ManagerHeader = () => {
 
   const menuItems = [
     {
-      key: "dashboard",
-      label: <Link to="/member/dashboard">Dashboard</Link>,
-    },
-    {
       key: "logout",
       label: <span onClick={handleLogout}>Logout</span>, // Gọi handleLogout để đăng xuất
     },

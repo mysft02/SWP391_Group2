@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { UserOutlined, GoldOutlined, DollarOutlined, AppstoreOutlined } from '@ant-design/icons';
+import { UserOutlined, GoldOutlined, DollarOutlined} from '@ant-design/icons';
 import ManagerProfile from '../../components/Manager-page/Manager-body/ManagerProfile/ManagerProfile';
 import Category from '../../components/Manager-page/Manager-body/Competition/Category';
 import KoiStandard from '../../components/Manager-page/Manager-body/Competition/KoiStandard';
 import ManagerCompetition from '../../components/Manager-page/Manager-body/Competition/ManagerCompetition';
+import ManagementFishKoi from '../../components/Manager-page/Manager-body/FishKoi/ManagementFishKoi';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -24,8 +25,12 @@ function DashBoardManager() {
         return <Category />;
       case 'competition-standard':
         return <KoiStandard />;
+      case 'fishkoi':
+          return <ManagementFishKoi/>;
       case 'bet':
         return <div>Bet Component</div>;
+      case 'award':
+          return <div>Award</div>;
       default:
         return <ManagerProfile />;
     }
@@ -38,7 +43,8 @@ function DashBoardManager() {
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         collapsedWidth={60}
-        style={{ height: '125vh', overflow: 'auto', position: 'relative' }}
+        style={{ height: '120vh', overflow: 'auto', position: 'relative', color: "#333" }}
+        
       >
         <Menu
           theme="dark"
@@ -55,10 +61,16 @@ function DashBoardManager() {
             <Menu.Item key="competition-category">Category</Menu.Item>
             <Menu.Item key="competition-standard">Koi Standard</Menu.Item>
           </SubMenu>
+          <SubMenu key="bet" icon={<DollarOutlined />} title="Bet">
+          <Menu.Item key="bet">Bet</Menu.Item>
+            <Menu.Item key="award">Award</Menu.Item>
 
-          <Menu.Item key="bet" icon={<DollarOutlined />}>
-            Bet
+          </SubMenu>
+          <Menu.Item key="fishkoi" icon={<DollarOutlined />}>
+            Fish Koi 
           </Menu.Item>
+
+          
         </Menu>
       </Sider>
 

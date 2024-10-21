@@ -31,7 +31,7 @@ const SignIn = () => {
   
         // Kiểm tra và điều hướng theo roleId
         if (user.roleId === 'R5') {
-          navigate("/admin-dashboard");
+          navigate("/admin");
         }else if(user.roleId === 'R4'){
           navigate("/manager");
         } 

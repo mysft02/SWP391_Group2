@@ -28,10 +28,6 @@ const AdminHeader = () => {
 
   const menuItems = [
     {
-      key: "dashboard",
-      label: <Link to="/member/dashboard">Dashboard</Link>,
-    },
-    {
       key: "logout",
       label: <span onClick={handleLogout}>Logout</span>, // Gọi handleLogout để đăng xuất
     },
@@ -40,35 +36,22 @@ const AdminHeader = () => {
   return (
     <div className="Admin-header">
       <div className="logo">
-        <Link to={"/member"}>
+        <Link to={"/admin"}>
           <img src={logo} alt="logo" />
         </Link>
       </div>
       <div className="link">
         <ul className="ul_1">
           <li>
-            <Link to={"/member"}>
+            <Link to={"/admin"}>
               <Button type="primary" icon={<HomeOutlined />}>
                 Home
               </Button>
             </Link>
           </li>
+          
           <li>
-            <Link to={"/member/news"}>
-              <Button type="primary" icon={<FileTextOutlined />}>
-                News
-              </Button>
-            </Link>
-          </li>
-          <li>
-            <Link to={"/member/competition"}>
-              <Button type="primary" icon={<TrophyOutlined />}>
-                Competition
-              </Button>
-            </Link>
-          </li>
-          <li>
-            <Link to={"/member/contact"}>
+            <Link to={"/admin/contact"}>
               <Button type="primary" icon={<PhoneOutlined />}>
                 Contact
               </Button>

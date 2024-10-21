@@ -1,16 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, notification } from 'antd';
-import { api } from '../../../config/AxiosConfig'; // Thay đổi theo đường dẫn của bạn
+import { api } from '../../../../config/AxiosConfig'; // Thay đổi theo đường dẫn của bạn
+import { useUser } from '../../../../data/UserContext'; // Sử dụng useUser để lấy token
 
-function AdminDashboard() {
-  const [users, setUsers] = useState([]);
+function UserManagement() {
+  const { user } = useUser(); // Lấy user từ useUser
+  const accessToken = user.accessToken; // Lấy accessToken từ user
+  const [users, setUsers] = useState([]); // Quản lý danh sách người dùng
   const [loading, setLoading] = useState(true);
 
   // Hàm để lấy danh sách người dùng từ API
   const fetchUsers = async () => {
+    if (!accessToken) {
+      console.error("Access token is missing");
+      notification.error({
+        message: 'Fetch Failed',
+        description: 'No access token found. Please log in again.',
+      });
+      return; // Ngăn chặn việc gọi API nếu không có token
+    }
+
     try {
-      const response = await api.get('/api/users'); // Giả sử đây là endpoint để lấy danh sách người dùng
-      setUsers(response.data);
+      const response = await api.get('/api/User/GetAllUser', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Sử dụng accessToken từ useUser
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log("Token:", accessToken);
+      console.log('Response:', response);
+      setUsers(response.data); // Cập nhật danh sách người dùng
     } catch (error) {
       console.error('Error fetching users:', error);
       notification.error({
@@ -23,14 +42,14 @@ function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchUsers(); // Gọi hàm khi component được mount
-  }, []);
+    fetchUsers(); // Gọi API ngay khi component được render
+  }, [accessToken]); // Chỉ chạy khi accessToken thay đổi
 
   // Cấu hình các cột cho bảng
   const columns = [
     {
       title: 'User ID',
-      dataIndex: 'uid',
+      dataIndex: 'user_id',
       key: 'uid',
     },
     {
@@ -40,19 +59,19 @@ function AdminDashboard() {
     },
     {
       title: 'Full Name',
-      dataIndex: 'fullName',
+      dataIndex: 'FullName',
       key: 'fullName',
     },
     {
       title: 'Role',
-      dataIndex: 'roleId',
+      dataIndex: 'role_Id',
       key: 'roleId',
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Button type="link" onClick={() => handleDelete(record.uid)}>
+        <Button type="link" onClick={() => handleDelete(record.user_id)}>
           Delete
         </Button>
       ),
@@ -61,8 +80,13 @@ function AdminDashboard() {
 
   // Hàm để xử lý xóa người dùng
   const handleDelete = async (uid) => {
+    console.log("uid",uid)
     try {
-      await api.delete(`/api/users/${uid}`); // Giả sử đây là endpoint để xóa người dùng
+      await api.delete(`/api/User?id=${uid}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Thêm accessToken khi xóa người dùng
+        },
+      });
       notification.success({
         message: 'User Deleted',
         description: `User with ID ${uid} has been deleted.`,
@@ -79,7 +103,7 @@ function AdminDashboard() {
 
   return (
     <div>
-      <h1>Admin Dashboard</h1>
+      <h1>User Manager</h1>
       <Button type="primary" onClick={fetchUsers} style={{ marginBottom: '20px' }}>
         Refresh Users
       </Button>
@@ -93,4 +117,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default UserManagement;
