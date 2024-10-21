@@ -16,7 +16,7 @@ using DTO.KoiFish;
 
 public interface IKoiFishService
 {
-    public Task<IActionResult> HandleGetAllKoiFishes(string userId);
+    public Task<IActionResult> HandleGetAllKoiFishes();
     public Task<IActionResult> HandleGetKoiFishById(string searchValue);
     public Task<IActionResult> HandleCreateNewKoiFish(CreateKoiFishDTO createKoiFishDto);
     public Task<IActionResult> HandleUpdateKoiFish(UpdateKoiFishDTO updateKoiFishDto);
@@ -34,12 +34,11 @@ public class KoiFishService : ControllerBase, IKoiFishService
         _jwtService = jwtService;
     }
 
-    public async Task<IActionResult> HandleGetAllKoiFishes(string userId)
+    public async Task<IActionResult> HandleGetAllKoiFishes()
     {
         try
         {
             var koiFish = _context.FishKoi
-                .Where(r => r.users_id == userId)
                 .Include(e => e.User);// Bao gồm thông tin người sở hữu
 
             var koiFishes = koiFish
@@ -52,7 +51,7 @@ public class KoiFishService : ControllerBase, IKoiFishService
                     koi_age = koiFish.koi_age,
                     users_id = new UserDTO
                     {
-                        user_id = userId,
+                        user_id = koiFish.User.user_id,
                         Username = koiFish.User.Username,
                         full_name = koiFish.User.full_name,
                         email = koiFish.User.Email,

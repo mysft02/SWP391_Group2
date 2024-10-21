@@ -13,7 +13,6 @@ namespace KoiBet.Service
     {
         Task<IActionResult> HandleCreate(ManagerDTO managerDTO);
         Task<IActionResult> HandleUpdateByUsername(ClaimsPrincipal currentUser, UpdateUserDTO _updateDTO);
-        Task<IActionResult> HandleDeleteByID(string user_id);
         Task<IActionResult> HandleGetUser(string user_id);
         Task<IActionResult> HandleGetAllUser();
         Task<IActionResult> HandleUpdateUserRole(UpdateUserRoleDTO updateUserRoleDTO);

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Service.KoiFishService;
+using System.Security.Claims;
 
 namespace KoiBet.Controllers
 {
@@ -23,10 +24,20 @@ namespace KoiBet.Controllers
         }
 
         // POST: auth/login
+        [Authorize]
         [HttpPost("Get All Koi Fishes")]
-        public async Task<IActionResult> GetAllKoiFishes([FromBody] string userId)
+        public async Task<IActionResult> GetAllKoiFishes()
         {
-            return await _koiFishService.HandleGetAllKoiFishes(userId);
+            var currentUser = HttpContext.User;
+            var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
+
+            // Ki?m tra quy?n truy c?p
+            if (currentUserRole != "admin")
+            {
+                return BadRequest(new { message = "Unauthorized!" });
+            }
+
+            return await _koiFishService.HandleGetAllKoiFishes();
         }
 
         // POST: auth/login
