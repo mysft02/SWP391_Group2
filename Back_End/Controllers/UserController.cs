@@ -98,7 +98,7 @@ namespace KoiBet.Controllers
         }
 
         [Authorize]
-        [HttpGet("UpdateUserRole")]
+        [HttpPost("UpdateUserRole")]
         public async Task<IActionResult> UpdateUserRole([FromQuery] UpdateUserRoleDTO updateUserRoleDTO)
         {
             var currentUser = HttpContext.User;
