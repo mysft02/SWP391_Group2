@@ -91,27 +91,6 @@ namespace KoiBet.Service
             return Ok(user);
         }
 
-        // Xóa user theo ID
-        public async Task<IActionResult> HandleDeleteByID(string user_id)
-        {
-            if (string.IsNullOrEmpty(user_id) || !Guid.TryParse(user_id, out var userIdGuid))
-            {
-                return BadRequest("Invalid user ID");
-            }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.user_id == userIdGuid.ToString());
-
-            if (user == null)
-            {
-                return NotFound("User not found");
-            }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return Ok("User deleted successfully");
-        }
-
         // Lấy thông tin user theo ID hoặc Username
         public async Task<IActionResult> HandleGetUser(string user_id)
         {

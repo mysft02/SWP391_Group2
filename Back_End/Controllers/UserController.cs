@@ -69,18 +69,6 @@ namespace KoiBet.Controllers
             return await _userService.HandleUpdateByUsername(currentUser, _updateUserDTO);
         }
 
-        // DELETE: user/{id}
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUser(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id) || !Guid.TryParse(id, out var userIdGuid))
-            {
-                return BadRequest(new { message = "Invalid ID format" });
-            }
-
-            return await _userService.HandleDeleteByID(id);
-        }
-
         [Authorize]
         [HttpGet("GetAllUser")]
         public async Task<IActionResult> GetAllUser()
