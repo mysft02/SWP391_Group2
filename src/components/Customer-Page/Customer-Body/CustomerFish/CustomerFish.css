@@ -1,0 +1,33 @@
+/* CustomerFish.css */
+
+.customer-fish-container {
+    display: flex;
+    margin-top: 20px;
+  }
+  
+  .customer-fish-form{
+    width: 500px;
+  } 
+  .customer-fish-table {
+    flex: 1;
+    padding: 0 10px;
+  }
+  
+  .divider {
+    width: 1px;
+    background-color: #000;
+    margin: 0 10px;
+  }
+  
+  .fish-modal-footer {
+    display: flex;
+    justify-content: space-between; /* Thay đổi từ flex-end thành space-between */
+    gap: 10px; /* Tạo khoảng cách giữa các nút */
+    padding: 0 20px; /* Thêm một chút padding để có không gian giữa các cạnh */
+  }
+  
+  
+  .fish-modal-footer button {
+    margin-left: 10px;
+  }
+  
