@@ -18,3 +18,13 @@ public class KoiFishDTO
 
     public UserDTO? users_id { get; set; }
 }
+
+public class SearchKoiDTO
+{
+    public string koi_id { get; set; }
+}
+
+public class SearchKoiUserIdDTO
+{
+    public string user_id { get; set; }
+}

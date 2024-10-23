@@ -17,7 +17,8 @@ using DTO.KoiFish;
 public interface IKoiFishService
 {
     public Task<IActionResult> HandleGetAllKoiFishes();
-    public Task<IActionResult> HandleGetKoiFishById(string searchValue);
+    public Task<IActionResult> HandleGetKoiFishById(SearchKoiDTO searchKoiDTO);
+    public Task<IActionResult> HandleGetKoiFishByUserId(SearchKoiUserIdDTO searchKoiUserId);
     public Task<IActionResult> HandleCreateNewKoiFish(CreateKoiFishDTO createKoiFishDto);
     public Task<IActionResult> HandleUpdateKoiFish(UpdateKoiFishDTO updateKoiFishDto);
     public Task<IActionResult> HandleDeleteKoiFish(string koiId);
@@ -74,12 +75,12 @@ public class KoiFishService : ControllerBase, IKoiFishService
         catch (Exception ex) { return BadRequest(ex.Message); }
     }
 
-    public async Task<IActionResult> HandleGetKoiFishById(string searchValue)
+    public async Task<IActionResult> HandleGetKoiFishById(SearchKoiDTO searchKoiDTO)
     {
         try
         {
             var koiFish = _context.FishKoi
-                .Where(r => r.koi_id.Contains(searchValue))
+                .Where(r => r.koi_id == searchKoiDTO.koi_id)
                 .Include(e => e.User);// Bao gồm thông tin người sở hữu
 
             //Nếu list null trả về badrequest
@@ -88,7 +89,26 @@ public class KoiFishService : ControllerBase, IKoiFishService
                 return BadRequest("No fish!");
             }
 
-            return Ok(koiFish);
+            return new OkObjectResult(koiFish);
+        }
+        catch (Exception ex) { return BadRequest(ex.Message); }
+    }
+
+    public async Task<IActionResult> HandleGetKoiFishByUserId(SearchKoiUserIdDTO searchKoiUserId)
+    {
+        try
+        {
+            var koiFish = _context.FishKoi
+                .Where(r => r.users_id == searchKoiUserId.user_id)
+                .Include(e => e.User);// Bao gồm thông tin người sở hữu
+
+            //Nếu list null trả về badrequest
+            if (koiFish == null)
+            {
+                return BadRequest("No fish!");
+            }
+
+            return new OkObjectResult(koiFish);
         }
         catch (Exception ex) { return BadRequest(ex.Message); }
     }
