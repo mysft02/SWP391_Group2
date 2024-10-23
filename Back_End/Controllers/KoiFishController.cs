@@ -67,9 +67,9 @@ namespace KoiBet.Controllers
         }
 
         [HttpPost("Delete Koi Fish")]
-        public async Task<IActionResult> DeleteKoiFish([FromBody] string koiId)
+        public async Task<IActionResult> DeleteKoiFish([FromBody] SearchKoiDTO searchKoiDTO)
         {
-            return await _koiFishService.HandleDeleteKoiFish(koiId);
+            return await _koiFishService.HandleDeleteKoiFish(searchKoiDTO.koi_id);
         }
     }
 }
