@@ -1,9 +1,7 @@
-.custom-sider {
-  height: 100vh; /* Chiều cao full màn hình */
-}
+
 
 .dashboard .ant-layout-content {
-  background-color: #fff;
+  background-color: #9b2b2b;
   padding: 20px;
 }
 
@@ -31,6 +29,6 @@
   max-width: 1000px; /* Độ rộng tối đa của nội dung */
   margin: 50px auto; /* Căn giữa theo chiều ngang */
   min-height: 300px; /* Chiều cao tối thiểu */
-  background-color: #f0f2f5; /* Màu nền nhẹ cho nội dung */
+  background-color: #142b504a; /* Màu nền nhẹ cho nội dung */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
 }

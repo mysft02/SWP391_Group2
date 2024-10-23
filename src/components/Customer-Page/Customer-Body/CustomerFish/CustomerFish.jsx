@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import { Form, Input, Button, Table, message, Modal } from 'antd';
-import { UserOutlined, TagOutlined, ExpandOutlined, CalendarOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
+import { UserOutlined, TagOutlined, ExpandOutlined, CalendarOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './CustomerFish.css'; // Import CSS
 
 function CustomerFish() {
@@ -16,8 +16,12 @@ function CustomerFish() {
   const [fishId, setFishId] = useState(null);
   const [userFishList, setUserFishList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isTableVisible, setIsTableVisible] = useState(true);
-  
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false); // Modal xóa
+
+  // Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 2; // Số cá hiển thị trên mỗi trang
+
   // Khởi tạo form
   const [form] = Form.useForm();
 
@@ -51,7 +55,6 @@ function CustomerFish() {
   };
 
   const createFish = async () => {
-    // Kiểm tra xem tất cả các trường đã được điền hay chưa
     if (!fishData.koi_name || !fishData.koi_variety || !fishData.koi_size || !fishData.koi_age) {
       message.error('Vui lòng điền đầy đủ thông tin cá Koi.');
       return; // Không gửi nếu có trường trống
@@ -75,7 +78,6 @@ function CustomerFish() {
   };
 
   const updateFish = async () => {
-    // Kiểm tra xem tất cả các trường đã được điền hay chưa
     if (!fishData.koi_name || !fishData.koi_variety || !fishData.koi_size || !fishData.koi_age) {
       message.error('Vui lòng điền đầy đủ thông tin cá Koi để cập nhật.');
       return; // Không gửi nếu có trường trống
@@ -112,6 +114,28 @@ function CustomerFish() {
     setIsModalVisible(true);
   };
 
+  // Hàm xóa cá Koi
+  const deleteFish = async (koiId) => {
+    try {
+      await api.post('/api/KoiFish/Delete Koi Fish', { koi_id: koiId });
+      message.success('Xóa cá Koi thành công!');
+      fetchUserFishList();
+      setIsDeleteModalVisible(false);
+    } catch (error) {
+      message.error('Đã xảy ra lỗi khi xóa cá Koi.');
+    }
+  };
+
+  const confirmDelete = (koiId) => {
+    setIsDeleteModalVisible(true);
+    setFishId(koiId);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalVisible(false);
+    setFishId(null);
+  };
+
   useEffect(() => {
     fetchUserFishList();
   }, []);
@@ -141,12 +165,19 @@ function CustomerFish() {
       title: 'Hành động',
       key: 'action',
       render: (_, record) => (
-        <Button type="link" icon={<EditOutlined />} onClick={() => handleSelectFish(record)}>
-          Cập nhật
-        </Button>
+        <>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleSelectFish(record)}>
+            Cập nhật
+          </Button>
+          <Button type="link" icon={<DeleteOutlined />} onClick={() => confirmDelete(record.koi_id)}>
+            Xóa
+          </Button>
+        </>
       ),
     },
   ];
+
+  const paginatedData = userFishList.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="customer-fish-container">
@@ -175,52 +206,49 @@ function CustomerFish() {
 
       <div className="customer-fish-table">
         <h2>Danh sách cá Koi</h2>
-        <Button
-          type="default"
-          onClick={() => setIsTableVisible(!isTableVisible)}
-          style={{ marginBottom: '20px' }}
-        >
-          {isTableVisible ? 'Ẩn danh sách cá' : 'Hiện danh sách cá'}
-        </Button>
+        <Table
+          dataSource={paginatedData}
+          columns={columns}
+          rowKey="koi_id"
+          pagination={{
+            current: currentPage,
+            pageSize: pageSize,
+            total: userFishList.length,
+            onChange: (page) => setCurrentPage(page),
+          }}
+          style={{ marginTop: '20px' }}
+        />
 
-        {isTableVisible && (
-          <Table
-            dataSource={userFishList}
-            columns={columns}
-            rowKey="koi_id"
-            pagination={false}
-            style={{ marginTop: '20px' }}
-          />
-        )}
+        {/* Modal xóa */}
+        <Modal
+          title="Xóa cá Koi"
+          visible={isDeleteModalVisible}
+          onOk={() => deleteFish(fishId)}
+          onCancel={handleCancelDelete}
+        >
+          <p>Bạn có chắc chắn muốn xóa cá Koi này?</p>
+        </Modal>
       </div>
 
+      {/* Modal cập nhật */}
       <Modal
         title="Cập nhật cá Koi"
         visible={isModalVisible}
+        onOk={updateFish}
         onCancel={() => setIsModalVisible(false)}
-        footer={
-          <div className="fish-modal-footer">
-            <Button key="update" type="primary" onClick={updateFish} icon={<EditOutlined />}>
-              Cập nhật
-            </Button>
-            <Button key="cancel" onClick={() => setIsModalVisible(false)}>
-              Hủy
-            </Button>
-          </div>
-        }
       >
-        <Form form={form} layout="inline">
+        <Form layout="vertical">
           <Form.Item label="Tên cá">
-            <Input value={fishData.koi_name} onChange={handleChange} name="koi_name" prefix={<UserOutlined />} />
+            <Input value={fishData.koi_name} onChange={handleChange} name="koi_name" />
           </Form.Item>
           <Form.Item label="Loài cá">
-            <Input value={fishData.koi_variety} onChange={handleChange} name="koi_variety" prefix={<TagOutlined />} />
+            <Input value={fishData.koi_variety} onChange={handleChange} name="koi_variety" />
           </Form.Item>
           <Form.Item label="Kích thước cá">
-            <Input value={fishData.koi_size} onChange={handleChange} name="koi_size" prefix={<ExpandOutlined />} />
+            <Input value={fishData.koi_size} onChange={handleChange} name="koi_size" />
           </Form.Item>
           <Form.Item label="Tuổi cá">
-            <Input value={fishData.koi_age} onChange={handleChange} name="koi_age" prefix={<CalendarOutlined />} />
+            <Input value={fishData.koi_age} onChange={handleChange} name="koi_age" />
           </Form.Item>
         </Form>
       </Modal>
