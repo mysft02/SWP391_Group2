@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { api } from '../../../config/AxiosConfig';
-import { useUser } from '../../../data/UserContext'; // Sử dụng UserContext
+import { UserOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
+import { api } from '../../../../config/AxiosConfig';
+import { useUser } from '../../../../data/UserContext';
 
 function CustomeProfile() {
-  const { user , setUser} = useUser(); // Lấy dữ liệu người dùng từ UserContext
+  const { user, setUser } = useUser();
   const [formData, setFormData] = useState({
     user_name: '',
     full_name: '',
@@ -12,7 +13,6 @@ function CustomeProfile() {
     phone: '',
   });
 
-  // Cập nhật formData từ dữ liệu user trong context
   useEffect(() => {
     if (user) {
       setFormData({
@@ -24,13 +24,11 @@ function CustomeProfile() {
     }
   }, [user]);
 
-  // Cập nhật thông tin khi người dùng thay đổi các input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Submit dữ liệu cập nhật lên server
   const handleSubmit = async () => {
     if (!user || !user.accessToken) {
       message.error('Không tìm thấy token, vui lòng đăng nhập lại.');
@@ -46,13 +44,13 @@ function CustomeProfile() {
     try {
       await api.put('/api/User/update-profile', payload, {
         headers: {
-          'Authorization': `Bearer ${user.accessToken}`, // Thêm token vào headers
+          'Authorization': `Bearer ${user.accessToken}`,
           'Content-Type': 'application/json',
         },
       });
       message.success('Thông tin đã được cập nhật thành công!');
       setUser({
-        ...user, // Giữ lại các thông tin khác của người dùng
+        ...user,
         full_name: formData.full_name,
         email: formData.email,
         phone: formData.phone,
@@ -68,7 +66,7 @@ function CustomeProfile() {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px', color: '#003366' }}>
+    <div style={{ maxWidth: '600px', margin: '0 auto', color: '#003366' }}>
       <h2 style={{ fontSize: '30px', fontWeight: 'bold' }}>Update Profile</h2>
       <Form layout="vertical" onFinish={handleSubmit}>
         <Form.Item
@@ -80,6 +78,7 @@ function CustomeProfile() {
             value={formData.user_name}
             onChange={handleInputChange}
             placeholder="Enter your username"
+            prefix={<UserOutlined />}
             style={{ color: '#003366' }}
           />
         </Form.Item>
@@ -93,6 +92,7 @@ function CustomeProfile() {
             value={formData.full_name}
             onChange={handleInputChange}
             placeholder="Enter your full name"
+            prefix={<UserOutlined />}
             style={{ color: '#003366' }}
           />
         </Form.Item>
@@ -106,6 +106,7 @@ function CustomeProfile() {
             value={formData.email}
             onChange={handleInputChange}
             placeholder="Enter your email"
+            prefix={<MailOutlined />}
             style={{ color: '#003366' }}
           />
         </Form.Item>
@@ -119,6 +120,7 @@ function CustomeProfile() {
             value={formData.phone}
             onChange={handleInputChange}
             placeholder="Enter your phone number"
+            prefix={<PhoneOutlined />}
             style={{ color: '#003366' }}
           />
         </Form.Item>
@@ -127,6 +129,7 @@ function CustomeProfile() {
           <Button
             type="primary"
             htmlType="submit"
+            icon={<UserOutlined />} // Add icon here
             style={{ fontSize: '15px', fontWeight: 'bold', marginLeft: '200px' }}
           >
             Update Profile

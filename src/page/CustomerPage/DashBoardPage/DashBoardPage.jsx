@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import video1 from '../../../assets/video/video1.mp4';
 import { UserOutlined, GoldOutlined, DollarOutlined } from '@ant-design/icons';
 import './DashBoard.css';
-import PaymentCustomer from '../../../components/Profile/Payment/paymentCustomer';
-import CustomeProfile from '../../../components/Profile/CustomeProfile/CustomeProfile';
+import CustomerFish from '../../../components/Customer-Page/Customer-Body/CustomerFish/CustomerFish';
+import CustomeProfile from '../../../components/Customer-Page/Customer-Body/CustomeProfile/CustomeProfile';
+import PaymentCustomer from '../../../components/Customer-Page/Customer-Body/Payment/paymentCustomer';
 
 const { Sider, Content } = Layout;
 
@@ -18,9 +18,9 @@ function DashBoardPage() {
       case 'profile':
         return <CustomeProfile />;
       case 'fishKoi':
-        return <div>My Fish Koi Component</div>;
+        return <CustomerFish />;
       case 'payment':
-        return <div><PaymentCustomer/></div>;
+        return <PaymentCustomer />;
       default:
         return <CustomeProfile />;
     }
@@ -33,7 +33,7 @@ function DashBoardPage() {
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         collapsedWidth={60}
-        style={{ height: '125vh', overflow: 'auto', position: 'relative' }}
+        style={{ height: '100vh', overflow: 'auto', position: 'relative' }}
       >
         <Menu
           theme="dark"
@@ -54,11 +54,7 @@ function DashBoardPage() {
       </Sider>
 
       <Layout>
-        <Content style={{ position: 'relative', padding: 0, flex: 1 }}>
-          <video className="background-video" autoPlay loop muted>
-            <source src={video1} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+        <Content style={{ padding: 0, flex: 1 }}>
           <div className="content-wrapper">
             {renderComponent()}
           </div>

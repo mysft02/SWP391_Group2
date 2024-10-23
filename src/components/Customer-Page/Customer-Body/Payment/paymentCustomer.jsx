@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Form, Input, Button, DatePicker, message as antdMessage } from 'antd'; // Đổi tên message thành antdMessage để tránh xung đột
-import { api } from '../../../config/AxiosConfig';
+import { api } from '../../../../config/AxiosConfig';
 import moment from 'moment'; // Nhập moment để xử lý thời gian
 
 const PaymentCustomer = () => {

@@ -1,43 +1,36 @@
 .custom-sider {
-    height: 100vh; /* Chiều cao full màn hình */
-  }
-  
-  .dashboard .ant-layout-content {
-    background-color: #fff;
-    padding: 20px;
-  }
+  height: 100vh; /* Chiều cao full màn hình */
+}
 
-  
-/* DashBoard.css */
+.dashboard .ant-layout-content {
+  background-color: #fff;
+  padding: 20px;
+}
 
+/* Tùy chỉnh trigger */
 .ant-layout-sider-trigger {
-    position: fixed;
-    top: 84%; /* Đặt trigger ở giữa dọc */
-    transform: translateY(-50%); /* Canh giữa trigger dọc */
-    height: 32px; /* Chiều cao của trigger */
-    width: 32px; /* Chiều rộng của trigger */
-    line-height: 32px; /* Căn giữa chữ */
-    background-color: #183e7f; /* Màu nền cho trigger */
-    color: white; /* Màu chữ */
-    border-radius: 10%; /* Bo góc cho trigger */
-  }
-  
-  .background-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.7;
-  }
-  
-  /* Nội dung được căn giữa */
-  .content-wrapper {
-    position: relative;
-    padding: 24px;
-    border-radius: 8px;
-    max-width: 800px;
-    margin: 50px auto; /* Căn giữa theo chiều ngang */
-    min-height: 400px; /* Đảm bảo nội dung có chiều cao tối thiểu */
-  }
+  position: fixed;
+  top: 84%; /* Đặt trigger gần cuối */
+  transform: translateY(-50%); /* Canh giữa trigger theo chiều dọc */
+  height: 32px; /* Chiều cao của trigger */
+  width: 32px; /* Chiều rộng của trigger */
+  line-height: 32px; /* Căn giữa chữ theo chiều dọc */
+  background-color: #183e7f; /* Màu nền cho trigger */
+  color: white; /* Màu chữ của trigger */
+  border-radius: 10%; /* Bo góc cho trigger */
+}
+
+/* Loại bỏ video nền */
+
+
+/* Nội dung được căn giữa */
+.content-wrapper {
+  position: relative;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 800px; /* Độ rộng tối đa của nội dung */
+  margin: 50px auto; /* Căn giữa theo chiều ngang */
+  min-height: 400px; /* Chiều cao tối thiểu */
+  background-color: #f0f2f5; /* Màu nền nhẹ cho nội dung */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
