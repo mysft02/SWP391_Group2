@@ -87,17 +87,9 @@ namespace Service.ICompetitionService
                     // Get KoiFish information based on koi_id
                     if (!string.IsNullOrEmpty(competition.koi_id?.ToString()))
                     {
-                        // Log koi_id before calling the service
-                        Console.WriteLine($"Retrieving KoiFish for koi_id: {competition.koi_id}");
-
                         var koiResult = await _koiService.HandleGetKoiFishById(new SearchKoiDTO { koi_id = competition.koi_id.ToString() }) as OkObjectResult;
 
-                        // Check if koiResult is null or if the value is null
-                        if (koiResult == null || koiResult.Value == null)
-                        {
-                            Console.WriteLine($"No KoiFish found for koi_id: {competition.koi_id}");
-                        }
-                        else if (koiResult.Value is KoiFishDTO koi)
+                        if (koiResult?.Value is KoiFishDTO koi)
                         {
                             competition.KoiFish = koi;
                         }
