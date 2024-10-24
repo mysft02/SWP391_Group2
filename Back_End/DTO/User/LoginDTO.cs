@@ -6,4 +6,10 @@
         public string Password { get; set; }
 
     }
+
+    public class PasswordChangeDTO
+    {
+        public string OldPassword { get; set; }
+        public string NewPassword { get; set; }
+    }
 }

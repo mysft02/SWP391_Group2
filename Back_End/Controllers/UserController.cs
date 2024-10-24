@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace KoiBet.Controllers
 {
@@ -99,6 +100,16 @@ namespace KoiBet.Controllers
             }
 
             return await _userService.HandleUpdateUserRole(updateUserRoleDTO);
+        }
+
+        [Authorize]
+        [HttpPost("Change Password")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeDTO passwordChangeDTO)
+        {
+            var currentUser = HttpContext.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return await _userService.HandleChangePassword(currentUserId, passwordChangeDTO);
         }
     }
 }

@@ -6,6 +6,7 @@ using KoiBet.Entities;
 using System;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using BCrypt.Net;
 
 namespace KoiBet.Service
 {
@@ -16,6 +17,7 @@ namespace KoiBet.Service
         Task<IActionResult> HandleGetUser(string user_id);
         Task<IActionResult> HandleGetAllUser();
         Task<IActionResult> HandleUpdateUserRole(UpdateUserRoleDTO updateUserRoleDTO);
+        Task<IActionResult> HandleChangePassword(string userId, PasswordChangeDTO passwordChangeDTO);
     }
 
     public class UserService : ControllerBase, IUserService
@@ -161,6 +163,35 @@ namespace KoiBet.Service
             {
                 user.role_id = updateUserRoleDTO.role_id;
             }
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+
+            return Ok(user);
+        }
+
+        public async Task<IActionResult> HandleChangePassword(string userId, PasswordChangeDTO passwordChangeDTO)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("ID must be provided");
+            }
+
+            var user = _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefault(u => u.user_id == userId);
+
+            if (user == null)
+            {
+                return new NotFoundObjectResult("User Not Found!");
+            }
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(passwordChangeDTO.OldPassword, user.Password))
+            {
+                return Unauthorized("Invalid username or password");
+            }
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(passwordChangeDTO.NewPassword);
 
             // Save changes to the database
             await _context.SaveChangesAsync();
