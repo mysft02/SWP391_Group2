@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.AuthService;
 using Service.JwtService;
 using Service.VNPayService;
+using System.Security.Claims;
 
 namespace KoiBet.Controllers
 {
@@ -23,11 +24,15 @@ namespace KoiBet.Controllers
         }
 
         // POST: auth/login
+        [Authorize]
         [AllowAnonymous]
         [HttpPost("Get-Payment-Url")]
         public async Task<IActionResult> GetVNPayUrl([FromBody] VnPayRequestDTO vnPayRequestDTO)
         {
-            return await _vnPayService.HandleCreateVNPayUrl(HttpContext, vnPayRequestDTO);
+            var currentUser = HttpContext.User;
+            var currentUserId = currentUser.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            return await _vnPayService.HandleCreateVNPayUrl(HttpContext, vnPayRequestDTO, currentUserId);
         }
 
         [AllowAnonymous]
