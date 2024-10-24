@@ -88,7 +88,8 @@ namespace Service.KoiStandardService
                     bodyshape_koi = createKoiStandardDto.bodyshape_koi,
                     variety_koi = createKoiStandardDto.variety_koi,
                     standard_name = createKoiStandardDto.standard_name,
-                    gender = createKoiStandardDto.gender
+                    gender = createKoiStandardDto.gender,
+                    KoiCategories = new List<KoiCategory>()
                 };
 
                 _context.KoiStandard.Add(newKoiStandard);

@@ -8,7 +8,6 @@ using Service.AuthService;
 using Service.KoiFishService;
 using Service.KoiStandardService;
 using Service.VNPayService;
-using Service.IKoiCategoryService;
 using Service.ICompetitionService;
 using KoiBet.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -104,6 +103,8 @@ builder.Services.AddScoped<IKoiCategoryService, KoiCategoryService>();
 builder.Services.AddScoped<ICompetitionService, CompetitionService>();
 builder.Services.AddScoped<IVNPayService, VnPayService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRefereeService, RefereeService>();
+builder.Services.AddScoped<IAwardService, AwardService>();
 
 var app = builder.Build();
 

@@ -4,6 +4,13 @@ using KoiBet.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using KoiBet.DTO.Competition;
+using KoiBet.Service;
+using KoiBet.DTO.Award;
+using KoiBet.DTO.Referee;
+using System.ComponentModel.Design;
+using Service.KoiFishService;
+using DTO.KoiFish;
+using KoiBet.DTO.KoiCategory;
 
 namespace Service.ICompetitionService
 {
@@ -19,10 +26,21 @@ namespace Service.ICompetitionService
     public class CompetitionService : ControllerBase, ICompetitionService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IKoiCategoryService _koiCategoryService;
+        private readonly IKoiFishService _koiService;
+        private readonly IRefereeService _refereeService;
+        private readonly IAwardService _awardService;
 
-        public CompetitionService(ApplicationDbContext context)
+
+
+
+        public CompetitionService(ApplicationDbContext context, IKoiFishService koiService, IRefereeService refereeService, IAwardService awardService, IKoiCategoryService koiCategoryService)
         {
             _context = context;
+            _koiService = koiService;
+            _refereeService = refereeService;
+            _awardService = awardService;
+            _koiCategoryService = koiCategoryService;
         }
 
         // Get all Competitions
@@ -53,6 +71,59 @@ namespace Service.ICompetitionService
                     return NotFound("No competitions found!");
                 }
 
+                // Loop through each competition to get additional information for Koi, Referee, and Award
+                foreach (var competition in competitions)
+                {
+                    // Get Koi Category based on category_id
+                    if (!string.IsNullOrEmpty(competition.category_id?.ToString()))
+                    {
+                        var categoryResult = await _koiCategoryService.HandleGetKoiCategory(competition.category_id.ToString()) as OkObjectResult;
+                        if (categoryResult?.Value is KoiCategoryDTO category)
+                        {
+                            competition.KoiCategory = category;
+                        }
+                    }
+
+                    // Get KoiFish information based on koi_id
+                    if (!string.IsNullOrEmpty(competition.koi_id?.ToString()))
+                    {
+                        // Log koi_id before calling the service
+                        Console.WriteLine($"Retrieving KoiFish for koi_id: {competition.koi_id}");
+
+                        var koiResult = await _koiService.HandleGetKoiFishById(new SearchKoiDTO { koi_id = competition.koi_id.ToString() }) as OkObjectResult;
+
+                        // Check if koiResult is null or if the value is null
+                        if (koiResult == null || koiResult.Value == null)
+                        {
+                            Console.WriteLine($"No KoiFish found for koi_id: {competition.koi_id}");
+                        }
+                        else if (koiResult.Value is KoiFishDTO koi)
+                        {
+                            competition.KoiFish = koi;
+                        }
+                    }
+
+                    // Get Referee information based on referee_id
+                    if (!string.IsNullOrEmpty(competition.referee_id?.ToString()))
+                    {
+                        var refereeResult = await _refereeService.HandleGetReferee(competition.referee_id.ToString()) as OkObjectResult;
+                        if (refereeResult?.Value is RefereeDTO referee)
+                        {
+                            competition.Referee = referee;
+                        }
+                    }
+
+                    // Get Award information based on award_id
+                    if (!string.IsNullOrEmpty(competition.award_id?.ToString()))
+                    {
+                        var awardResult = await _awardService.HandleGetAwardById(competition.award_id.ToString()) as OkObjectResult;
+                        if (awardResult?.Value is AwardDTO award)
+                        {
+                            competition.Award = award;
+                        }
+                    }
+                }
+
                 return Ok(competitions);
             }
             catch (Exception ex)
@@ -60,6 +131,7 @@ namespace Service.ICompetitionService
                 return BadRequest($"Error retrieving competitions: {ex.Message}");
             }
         }
+
 
         // Create a new Competition
         public async Task<IActionResult> HandleCreateNewCompetition(CreateCompetitionDTO createCompetitionDto)

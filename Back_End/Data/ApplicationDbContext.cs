@@ -11,7 +11,7 @@ namespace KoiBet.Data
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<Transactions> Transactions { get; set; }
-        public DbSet<Referee> Referees { get; set; }
+        public DbSet<Referee> Referee { get; set; }
         public DbSet<FishKoi> FishKoi { get; set; }
         public DbSet<KoiStandard> KoiStandard { get; set; }
         public DbSet<KoiCategory> KoiCategory { get; set; }
@@ -51,7 +51,7 @@ namespace KoiBet.Data
             modelBuilder.Entity<Referee>()
                 .HasOne(r => r.User)
                 .WithMany(u => u.Referees)
-                .HasForeignKey(r => r.users_id);
+                .HasForeignKey(r => r.user_id);
 
             modelBuilder.Entity<FishKoi>()
                 .HasOne(k => k.User)

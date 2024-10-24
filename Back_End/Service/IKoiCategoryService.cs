@@ -1,13 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using KoiBet.Data;
-using KoiBet.Entities;
+﻿using KoiBet.Data;
 using KoiBet.DTO.KoiCategory;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using KoiBet.DTO.KoiStandard;
-using DTO.KoiFish;
+using KoiBet.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Service.KoiStandardService;
 
-namespace Service.IKoiCategoryService
+namespace KoiBet.Service
 {
     public interface IKoiCategoryService
     {
@@ -21,12 +20,13 @@ namespace Service.IKoiCategoryService
     public class KoiCategoryService : ControllerBase, IKoiCategoryService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IKoiStandardService _koiStandardService;
 
-        public KoiCategoryService(ApplicationDbContext context)
+        public KoiCategoryService(ApplicationDbContext context, IKoiStandardService koiStandardService)
         {
             _context = context;
+            _koiStandardService = koiStandardService;
         }
-
         // Get all Koi Categories
         public async Task<IActionResult> HandleGetAllKoiCategories()
         {
@@ -38,11 +38,22 @@ namespace Service.IKoiCategoryService
                         category_id = category.category_id,
                         category_name = category.category_name,
                         standard_id = category.standard_id,
-                        Standard = new KoiStandardDTO
-                        {
-                        },
                     })
                     .ToListAsync();
+
+                foreach (var category in categories)
+                {
+                    if (!string.IsNullOrEmpty(category.standard_id))
+                    {
+                        // Gọi hàm HandleGetKoiStandard để lấy thông tin standard
+                        var standardResult = await _koiStandardService.HandleGetKoiStandard(category.standard_id) as OkObjectResult;
+
+                        if (standardResult != null && standardResult.Value is KoiStandardDTO standard)
+                        {
+                            category.Standard = standard;
+                        }
+                    }
+                }
 
                 if (!categories.Any())
                 {
@@ -184,16 +195,8 @@ namespace Service.IKoiCategoryService
         {
             try
             {
+                // Fetch the category with the given ID
                 var category = await _context.KoiCategory
-                    .Select(c => new KoiCategoryDTO
-                    {
-                        category_id = c.category_id,
-                        category_name = c.category_name,
-                        standard_id = c.standard_id,
-                        Standard = new KoiStandardDTO
-                        {
-                        },
-                    })
                     .FirstOrDefaultAsync(c => c.category_id == categoryId);
 
                 if (category == null)
@@ -201,11 +204,31 @@ namespace Service.IKoiCategoryService
                     return NotFound("Koi category not found!");
                 }
 
-                return Ok(category);
+                // Create the KoiCategoryDTO
+                var categoryDto = new KoiCategoryDTO
+                {
+                    category_id = category.category_id,
+                    category_name = category.category_name,
+                    standard_id = category.standard_id,
+                    Standard = null // Initialize as null
+                };
+
+                // If standard_id is available, fetch the KoiStandardDTO
+                if (!string.IsNullOrEmpty(category.standard_id))
+                {
+                    var standardResult = await _koiStandardService.HandleGetKoiStandard(category.standard_id) as OkObjectResult;
+
+                    if (standardResult != null && standardResult.Value is KoiStandardDTO standard)
+                    {
+                        categoryDto.Standard = standard; // Assign the fetched standard to the DTO
+                    }
+                }
+
+                return Ok(categoryDto);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest($"Error retrieving Koi category: {ex.Message}");
             }
         }
     }

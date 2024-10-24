@@ -4,40 +4,34 @@ namespace KoiBet.DTO.Referee
 {
     public class RefereeDTO
     {
-        public string referee_id { get; set; }
+        public string RefereeId { get; set; }
 
-        public string referee_name { get; set; }
+        public string RefereeName { get; set; }
 
-        public string exp_judge {  get; set; }
+        public string ExpJudge { get; set; }
 
-        public string? Username { get; set; }
+        public string UserId { get; set; }
 
-        public UserDTO User {get; set; }
     }
 
-    public class CreatRefereeDTO
+    public class CreateRefereeDTO
     {
-        private string referee_id { get; set; }
 
-        public string referee_name { get; set; }
+        public string RefereeName { get; set; }
 
-        public string exp_judge { get; set; }
+        public string ExpJudge { get; set; }
 
-        private string? Username { get; set; }
-
-        public UserDTO User { get; set; }
+        public string? UsersId { get; set; }
     }
 
-    public class UpdateRefereeDTO { 
-        private string referee_id { get; set;  }
+    public class UpdateRefereeDTO
+    {
+        public string RefereeId { get; set; }
 
-        public string referee_name { get; set; }
+        public string RefereeName { get; set; }
 
-        public string exp_judge { get; set; }
+        public string ExpJudge { get; set; }
 
-        public string? Username { get; set;}
-
-        public UserDTO User { get; set; }
+        public string? UsersId { get; set; }
     }
-
 }

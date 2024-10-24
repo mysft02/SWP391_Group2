@@ -88,6 +88,7 @@ public class AuthService : ControllerBase, IAuthService
                 user.full_name,
                 user.Email,
                 user.Phone,
+                user.Balance,
                 RoleId = user.Role.role_id,
                 RoleName = user.Role.role_name,
                 AccessToken = accessToken,

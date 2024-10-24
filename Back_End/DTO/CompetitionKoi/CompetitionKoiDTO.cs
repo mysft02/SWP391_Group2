@@ -28,14 +28,14 @@ namespace KoiBet.DTO.Competition
         public string? referee_id { get; set; }
         public string? award_id { get; set; }
 
-        public KoiCategoryDTO? KoiCategory { get; init; }
+        public KoiCategoryDTO? KoiCategory { get; set; }
 
-        public KoiFishDTO? KoiFish { get; init; }
+        public KoiFishDTO? KoiFish { get; set; }
 
-        public RefereeDTO? Referee { get; init; }
+        public RefereeDTO? Referee { get; set; }
 
-        public AwardDTO? Award { get; init; }
+        public AwardDTO? Award { get; set; }
 
-        public string? CompetitionImg { get; init; }
+        public string? CompetitionImg { get; set; }
     }
 }

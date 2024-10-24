@@ -11,5 +11,7 @@ namespace KoiBet.Entities
         public string role_name { get; set; }
 
         public virtual ICollection<Users> Users { get; set; }
+
+
     }
 }
