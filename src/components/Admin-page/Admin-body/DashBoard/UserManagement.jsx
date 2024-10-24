@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, notification, Modal, Select } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; // Điều chỉnh đường dẫn nếu cần
 import { useUser } from '../../../../data/UserContext'; // Sử dụng useUser để lấy token
-import { UserOutlined, EditOutlined } from '@ant-design/icons'; // Nhập các biểu tượng cần thiết
+import { UserOutlined, EditOutlined, LoadingOutlined } from '@ant-design/icons'; // Nhập các biểu tượng cần thiết
 
 const { Option } = Select;
 
@@ -127,9 +127,9 @@ function UserManagement() {
 
   return (
     <div>
-      <h1>Quản lý Người dùng</h1>
+      <h1>Management Account </h1>
       <Button type="primary" onClick={fetchUsers} style={{ marginBottom: '20px' }}>
-        <EditOutlined style={{ marginRight: 8 }} /> Làm mới Người dùng
+        <LoadingOutlined style={{ marginRight: 8 }} /> Refresh
       </Button>
       <Table
         dataSource={users}

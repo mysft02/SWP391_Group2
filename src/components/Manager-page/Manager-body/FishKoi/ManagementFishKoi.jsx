@@ -1,20 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, notification } from 'antd';
+import { Table, Input, notification, Button } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; // Đảm bảo đường dẫn đúng
+import { useUser } from '../../../../data/UserContext';
+import { SearchOutlined, ReloadOutlined, IdcardOutlined, TagOutlined, DashboardOutlined, ClockCircleOutlined, UserOutlined } from '@ant-design/icons'; // Import icons
 
 function ManagementFishKoi() {
+  const { user } = useUser(); // Lấy thông tin user từ context
   const [fishes, setFishes] = useState([]); // Quản lý danh sách cá Koi
   const [loading, setLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [currentFish, setCurrentFish] = useState(null);
-  const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState(''); // Lưu trữ giá trị tìm kiếm
 
   // Hàm để lấy danh sách cá Koi từ API
   const fetchFishes = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/api/KoiFish/GetAllKoiFishes');
+      const response = await api.post('/api/KoiFish/Get All Koi Fishes', {}, {
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`, // Token lấy từ user context
+          'Content-Type': 'application/json',
+        },
+      });
       setFishes(response.data);
+      console.log("List koi:", response.data);
     } catch (error) {
       console.error('Error fetching fishes:', error);
       notification.error({
@@ -26,148 +33,117 @@ function ManagementFishKoi() {
     }
   };
 
+  console.log("Rendering ManagementFishKoi", fishes);
+
   useEffect(() => {
-    fetchFishes();
-  }, []);
-
-  // Hàm để hiển thị modal cho việc thêm/sửa cá Koi
-  const showModal = (fish) => {
-    setCurrentFish(fish);
-    if (fish) {
-      form.setFieldsValue(fish); // Set giá trị cho form nếu là sửa
-    } else {
-      form.resetFields(); // Reset form nếu là thêm mới
+    if (user && user.accessToken) {
+      fetchFishes();
     }
-    setIsModalVisible(true);
+  }, [user]); // Gọi fetchFishes khi user thay đổi
+
+  // Hàm lọc cá Koi theo tên
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
   };
 
-  // Hàm để xử lý thêm cá Koi
-  const handleAddFish = async (values) => {
-    try {
-      await api.post(`/api/CompetitionKoi/Create CompetitionKoi`, values);
-      notification.success({ message: 'Fish added successfully' });
-      fetchFishes(); // Cập nhật lại danh sách cá Koi
-      setIsModalVisible(false);
-    } catch (error) {
-      console.error('Error adding fish:', error);
-      notification.error({
-        message: 'Add Failed',
-        description: 'Could not add fish data.',
-      });
-    }
-  };
-
-  // Hàm để xử lý cập nhật cá Koi
-  const handleUpdateFish = async (values) => {
-    try {
-      await api.put(`/api/CompetitionKoi/Update Competition`, {
-        ...values,
-        id: currentFish.id, // Giả sử bạn có id trong thông tin cá
-      });
-      notification.success({ message: 'Fish updated successfully' });
-      fetchFishes(); // Cập nhật lại danh sách cá Koi
-      setIsModalVisible(false);
-    } catch (error) {
-      console.error('Error updating fish:', error);
-      notification.error({
-        message: 'Update Failed',
-        description: 'Could not update fish data.',
-      });
-    }
-  };
-
-  // Hàm để xóa cá Koi
-  const handleDelete = async (id) => {
-    try {
-      await api.delete(`/api/KoiFish/DeleteKoiFish/${id}`);
-      notification.success({ message: 'Fish deleted successfully' });
-      fetchFishes(); // Cập nhật lại danh sách cá Koi
-    } catch (error) {
-      console.error('Error deleting fish:', error);
-      notification.error({
-        message: 'Delete Failed',
-        description: 'Could not delete fish.',
-      });
-    }
-  };
+  // Lọc cá theo tên dựa trên từ khóa tìm kiếm
+  const filteredFishes = fishes.filter((fish) =>
+    fish.koi_name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const columns = [
     {
-      title: 'Fish ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Fish Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Color',
-      dataIndex: 'color',
-      key: 'color',
-    },
-    {
-      title: 'Size',
-      dataIndex: 'size',
-      key: 'size',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <div>
-          <Button type="link" onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id)}>Delete</Button>
-        </div>
+      title: (
+        <span>
+          <IdcardOutlined style={{ marginRight: 8 }} />
+          Fish ID
+        </span>
       ),
+      dataIndex: 'koi_id', // Dùng đúng tên thuộc tính từ API
+      key: 'koi_id',
+    },
+    {
+      title: (
+        <span>
+          <TagOutlined style={{ marginRight: 8 }} />
+          Fish Name
+        </span>
+      ),
+      dataIndex: 'koi_name', // Đúng tên thuộc tính từ API
+      key: 'koi_name',
+    },
+    {
+      title: (
+        <span>
+          <DashboardOutlined style={{ marginRight: 8 }} />
+          Variety
+        </span>
+      ),
+      dataIndex: 'koi_variety', // Đúng tên thuộc tính từ API
+      key: 'koi_variety',
+    },
+    {
+      title: (
+        <span>
+          <ClockCircleOutlined style={{ marginRight: 8 }} />
+          Size
+        </span>
+      ),
+      dataIndex: 'koi_size', // Đúng tên thuộc tính từ API
+      key: 'koi_size',
+    },
+    {
+      title: (
+        <span>
+          <ClockCircleOutlined style={{ marginRight: 8 }} />
+          Age
+        </span>
+      ),
+      dataIndex: 'koi_age', // Đúng tên thuộc tính từ API
+      key: 'koi_age',
+    },
+    {
+      title: (
+        <span>
+          <UserOutlined style={{ marginRight: 8 }} />
+          User
+        </span>
+      ),
+      dataIndex: ['users_id', 'username'], // Đúng tên thuộc tính từ API
+      key: 'username',
     },
   ];
-
-  const handleSubmit = (values) => {
-    if (currentFish) {
-      handleUpdateFish(values); // Nếu có currentFish, gọi hàm cập nhật
-    } else {
-      handleAddFish(values); // Nếu không có currentFish, gọi hàm thêm mới
-    }
-  };
 
   return (
     <div>
       <h1>Management Fish Koi</h1>
-      <Button type="primary" onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
-        Add New Fish
+      <Button 
+        type="primary" 
+        icon={<ReloadOutlined />} // Thêm icon cho nút refresh
+        onClick={fetchFishes} // Gọi hàm fetchFishes khi nhấn nút
+        style={{ marginBottom: '20px', marginLeft: '10px' }}
+      >
+        Refresh
       </Button>
-      <Table
-        dataSource={fishes}
-        columns={columns}
-        loading={loading}
-        rowKey="id" // Đảm bảo id là key duy nhất
+
+      {/* Ô tìm kiếm */}
+      <Input
+        placeholder="Search fish by name"
+        value={searchText}
+        onChange={handleSearch}
+        prefix={<SearchOutlined />} // Thêm icon vào ô tìm kiếm
+        style={{ marginBottom: '20px', width: '300px' }}
       />
 
-      <Modal
-        title={currentFish ? 'Edit Fish' : 'Add Fish'}
-        visible={isModalVisible}
-        onCancel={() => setIsModalVisible(false)}
-        footer={null}
-      >
-        <Form form={form} onFinish={handleSubmit}>
-          <Form.Item name="name" label="Fish Name" rules={[{ required: true, message: 'Please input fish name!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="color" label="Color" rules={[{ required: true, message: 'Please input fish color!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="size" label="Size" rules={[{ required: true, message: 'Please input fish size!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              {currentFish ? 'Update Fish' : 'Add Fish'}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <Table
+        dataSource={filteredFishes}
+        columns={columns}
+        loading={loading}
+        rowKey="koi_id" // Đảm bảo id là key duy nhất 
+        pagination={{
+          pageSize: 5, // Số lượng cá hiển thị trên mỗi trang
+        }}
+      />
     </div>
   );
 }
