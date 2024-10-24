@@ -36,7 +36,7 @@ namespace KoiBet.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("{userId}&{requestUrl}")]
+        [HttpPost]
         public async Task<IActionResult> ProcessVNPay(/*[FromQuery] string paymentUrl*/)
         {
             return await _vnPayService.HandleVNPay(Request.Query);
