@@ -31,17 +31,55 @@
 //        }
 
 //        // Place a bet on a Koi fish
-//        public async Task<IActionResult> HandlePlaceBet(CreateBetDTO createBetDto)
+//        public async Task<IActionResult> HandlePlaceBet(CreateBetDTO _createBetDTO)
 //        {
 //            try
 //            {
-//                var newBet = new BetKoiDTO
+//                // Check if the user exists
+//                var user = await _context.Users
+//                    .FirstOrDefaultAsync(u => u.user_id == _createBetDTO.UserId);
+
+//                if (user == null)
 //                {
-//                    bet_id = Guid.NewGuid().ToString(),
-//                    user_id = new UserDTO { UserId = createBetDto.UserId }, // Assuming UserDTO maps to the User entity
+//                    return NotFound("User not found.");
+//                }
+
+//                // Fetch the last bet to get the highest number in the current BetId format
+//                var lastBet = await _context.BetKoi
+//                    .OrderByDescending(b => b.bet_id)
+//                    .FirstOrDefaultAsync();
+
+//                int lastNumber = 0;
+//                if (lastBet != null && lastBet.bet_id.StartsWith("BET_"))
+//                {
+//                    var numberPart = lastBet.bet_id.Substring(4); // Get the numeric part after "BET_"
+//                    if (int.TryParse(numberPart, out int parsedNumber))
+//                    {
+//                        lastNumber = parsedNumber;
+//                    }
+//                }
+
+//                // Increment the number for the new BetId
+//                string newBetId = $"BET_{lastNumber + 1}";
+
+//                // Ensure BetId does not already exist
+//                while (await _context.BetKoi.AnyAsync(b => b.bet_id == newBetId))
+//                {
+//                    lastNumber++;
+//                    newBetId = $"BET_{lastNumber + 1}";
+//                }
+
+//                // Create a new BetKoi entity (not DTO)
+//                var newBet = new BetKoi
+//                {
+//                    bet_id = newBetId,
+//                    users_id = user.user_id,
+//                    registration_id = _createBetDTO
+//                    competition_id = _createBetDTO
 //                };
 
-//                _context.KoiBet.Add(newBet); // Make sure KoiBet is the right DbSet name for your table
+//                // Add the BetKoi entity to the DbSet
+//                _context.BetKoi.Add(newBet);
 //                var result = await _context.SaveChangesAsync();
 
 //                if (result != 1)
@@ -50,110 +88,6 @@
 //                }
 
 //                return Ok(newBet);
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
-
-//        // Get all bets placed by a user
-//        public async Task<IActionResult> HandleGetUserBets(string userId)
-//        {
-//            try
-//            {
-//                var bets = await _context.KoiBet
-//                    .Where(b => b.user_id.UserId == userId) // Adjust according to the entity relationships
-//                    .ToListAsync();
-
-//                if (!bets.Any())
-//                {
-//                    return NotFound("No bets found for the user.");
-//                }
-
-//                return Ok(bets);
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
-
-//        // Update an existing bet
-//        public async Task<IActionResult> HandleUpdateBet(UpdateBetDTO updateBetDto)
-//        {
-//            try
-//            {
-//                var bet = await _context.KoiBet
-//                    .FirstOrDefaultAsync(b => b.bet_id == updateBetDto.BetId);
-
-//                if (bet == null)
-//                {
-//                    return NotFound("Bet not found!");
-//                }
-
-//                // Update properties as needed
-//                // bet.Amount = updateBetDto.Amount;
-
-//                _context.KoiBet.Update(bet);
-//                var result = await _context.SaveChangesAsync();
-
-//                if (result != 1)
-//                {
-//                    return BadRequest("Failed to update bet!");
-//                }
-
-//                return Ok(bet);
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
-
-//        // Delete a specific bet
-//        public async Task<IActionResult> HandleDeleteBet(string betId)
-//        {
-//            try
-//            {
-//                var bet = await _context.KoiBet
-//                    .FirstOrDefaultAsync(b => b.bet_id == betId);
-
-//                if (bet == null)
-//                {
-//                    return NotFound("Bet not found!");
-//                }
-
-//                _context.KoiBet.Remove(bet);
-//                var result = await _context.SaveChangesAsync();
-
-//                if (result != 1)
-//                {
-//                    return BadRequest("Failed to delete bet!");
-//                }
-
-//                return Ok("Bet deleted successfully!");
-//            }
-//            catch (Exception ex)
-//            {
-//                return BadRequest(ex.Message);
-//            }
-//        }
-
-//        // Get a specific bet by ID
-//        public async Task<IActionResult> HandleGetBet(string betId)
-//        {
-//            try
-//            {
-//                var bet = await _context.KoiBet
-//                    .FirstOrDefaultAsync(b => b.bet_id == betId);
-
-//                if (bet == null)
-//                {
-//                    return NotFound("Bet not found!");
-//                }
-
-//                return Ok(bet);
 //            }
 //            catch (Exception ex)
 //            {

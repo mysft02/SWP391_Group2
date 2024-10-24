@@ -1,6 +1,5 @@
 ﻿using KoiBet.DTO.User;
 using KoiBet.DTO.Competition;
-using KoiBet.DTO.KoiRegistration;
 using KoiBet.Entities;
 
 namespace KoiBet.DTO.BetKoi
@@ -9,9 +8,16 @@ namespace KoiBet.DTO.BetKoi
     {
         public string BetId { get; set; }
 
+        
+        public string user_id { get; set; }
+
         public UserDTO? User { get; set; } 
 
-        public KoiRegistrationDTO? KoiRegistration { get; set; } 
+        public string registration_id { get; set; }
+
+        public string RegistrationId { get; set; }
+
+        public string competition_id { get; set; }
 
         public CompetitionKoi? CompetitionKoi { get; set; } 
     }

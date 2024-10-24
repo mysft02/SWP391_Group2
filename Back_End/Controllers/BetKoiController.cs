@@ -22,8 +22,8 @@
 //            return await _betKoiService.HandlePlaceBet(createBetDto);
 //        }
 
-//        [HttpPut("Update Bet")]
-//        public async Task<IActionResult> UpdateBet([FromBody] UpdateBetDTO updateBetDto)
+//        [HttpPost("Update Bet")]
+//        public async Task<IActionResult> UpdateBet([FromQuery] UpdateBetDTO updateBetDto)
 //        {
 //            return await _betKoiService.HandleUpdateBet(updateBetDto);
 //        }
