@@ -223,8 +223,17 @@ function CustomerFish() {
         <Modal
           title="Xóa cá Koi"
           visible={isDeleteModalVisible}
-          onOk={() => deleteFish(fishId)}
           onCancel={handleCancelDelete}
+          footer={
+            <div className="fish-modal-footer">
+            <Button key="delete" type="primary" danger onClick={() => deleteFish(fishId)}>
+              Xóa
+            </Button>,
+            <Button key="cancel" onClick={handleCancelDelete}>
+              Hủy
+            </Button>,
+            </div>
+          }
         >
           <p>Bạn có chắc chắn muốn xóa cá Koi này?</p>
         </Modal>
@@ -234,8 +243,19 @@ function CustomerFish() {
       <Modal
         title="Cập nhật cá Koi"
         visible={isModalVisible}
-        onOk={updateFish}
+        footer={
+          <div className="fish-modal-footer">
+          <Button key="update" type="primary" onClick={updateFish}>
+            Cập nhật
+          </Button>,
+          <Button key="cancel" onClick={() => setIsModalVisible(false)}>
+            Hủy
+          </Button>,
+
+          </div>
+        }
         onCancel={() => setIsModalVisible(false)}
+        className="fish-modal-footer"
       >
         <Form layout="vertical">
           <Form.Item label="Tên cá">
