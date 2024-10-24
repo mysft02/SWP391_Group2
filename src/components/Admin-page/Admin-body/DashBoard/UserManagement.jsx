@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Button, notification, Modal, Select } from 'antd';
-import { api } from '../../../../config/AxiosConfig'; // Thay đổi theo đường dẫn của bạn
+import { api } from '../../../../config/AxiosConfig'; // Điều chỉnh đường dẫn nếu cần
 import { useUser } from '../../../../data/UserContext'; // Sử dụng useUser để lấy token
+import { UserOutlined, EditOutlined } from '@ant-design/icons'; // Nhập các biểu tượng cần thiết
 
 const { Option } = Select;
 
@@ -14,7 +15,7 @@ function UserManagement() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [newRole, setNewRole] = useState('');
 
-  // Hàm để lấy danh sách người dùng từ API
+  // Lấy danh sách người dùng từ API
   const fetchUsers = async () => {
     if (!accessToken) {
       console.error("Access token is missing");
@@ -54,6 +55,12 @@ function UserManagement() {
       title: 'User ID',
       dataIndex: 'user_id',
       key: 'uid',
+      render: (text) => (
+        <span>
+          <UserOutlined style={{ marginRight: 8 }} />
+          {text.length > 10 ? `${text.slice(0, 10)}...` : text} {/* Cắt bớt nếu dài hơn 10 ký tự */}
+        </span>
+      ),
     },
     {
       title: 'Email',
@@ -74,23 +81,21 @@ function UserManagement() {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => handleUpdateRole(record)}>
-            Update Role
-          </Button>
-        </>
+        <Button type="link" onClick={() => handleUpdateRole(record)}>
+          <EditOutlined style={{ marginRight: 8 }} /> Cập nhật vai trò
+        </Button>
       ),
     },
   ];
 
-  // Hiển thị modal cập nhật role
+  // Hiển thị modal để cập nhật vai trò
   const handleUpdateRole = (user) => {
     setSelectedUser(user);
     setNewRole(user.role_id);
     setIsModalVisible(true);
   };
 
-  // Hàm cập nhật role người dùng
+  // Cập nhật vai trò người dùng
   const updateRole = async () => {
     if (!selectedUser || !newRole) return;
 
@@ -122,33 +127,46 @@ function UserManagement() {
 
   return (
     <div>
-      <h1>User Manager</h1>
+      <h1>Quản lý Người dùng</h1>
       <Button type="primary" onClick={fetchUsers} style={{ marginBottom: '20px' }}>
-        Refresh Users
+        <EditOutlined style={{ marginRight: 8 }} /> Làm mới Người dùng
       </Button>
       <Table
         dataSource={users}
         columns={columns}
         loading={loading}
         rowKey="uid"
+        pagination={{ pageSize: 5 }} // Đặt phân trang cho 5 người dùng mỗi trang
       />
 
-      {/* Modal cập nhật Role */}
+      {/* Modal để cập nhật vai trò */}
       <Modal
-        title="Update Role"
-        visible={isModalVisible}
-        onOk={updateRole}
-        onCancel={() => setIsModalVisible(false)}
-      >
-        <p>Update role for {selectedUser?.full_name}</p>
-        <Select value={newRole} onChange={setNewRole} style={{ width: '100%' }}>
-          <Option value="R5">Admin</Option>
-          <Option value="R4">Manager</Option>
-          <Option value="R3">Reefeer</Option>
-          <Option value="R2">Staff</Option>
-          <Option value="R1">Customer</Option>
-        </Select>
-      </Modal>
+  title="Cập nhật Vai trò"
+  visible={isModalVisible}
+  onCancel={() => setIsModalVisible(false)} // Đóng modal khi nhấn hủy
+  footer={null} // Tắt footer mặc định để tùy chỉnh
+>
+  <p>Cập nhật vai trò cho {selectedUser?.full_name}</p>
+  <Select value={newRole} onChange={setNewRole} style={{ width: '100%' }}>
+    <Option value="R5">Admin</Option>
+    <Option value="R4">Manager</Option>
+    <Option value="R3">Reefeer</Option>
+    <Option value="R2">Staff</Option>
+    <Option value="R1">Customer</Option>
+  </Select>
+  
+  {/* Thêm hai nút tại đây */}
+  <div className="fish-modal-footer">
+  <Button type="primary" onClick={updateRole}>
+      Lưu
+    </Button>
+    <Button onClick={() => setIsModalVisible(false)} style={{ marginRight: '10px' }}>
+      Hủy
+    </Button>
+
+  </div>
+</Modal>
+
     </div>
   );
 }

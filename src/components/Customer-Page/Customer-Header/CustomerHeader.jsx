@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import ToggleTheme from "./ToggleTheme/ToggleTheme";
 import { useUser } from "../../../data/UserContext"; // Hook lấy user từ context
-
+import { DashboardOutlined, CreditCardOutlined, LogoutOutlined } from '@ant-design/icons';
 const CustomerHeader = () => {
   const { user, logOut } = useUser(); // Sử dụng logOut từ UserContext
   const navigate = useNavigate();
@@ -29,11 +29,27 @@ const CustomerHeader = () => {
   const menuItems = [
     {
       key: "dashboard",
-      label: <Link to="/member/dashboard">Dashboard</Link>,
+      label: (
+        <Link to="/member/dashboard">
+          <DashboardOutlined style={{ marginRight: 8 }} /> Dashboard
+        </Link>
+      ),
+    },
+    {
+      key: "payment",
+      label: (
+        <Link to="/member/payment">
+          <CreditCardOutlined style={{ marginRight: 8 }} /> Payment
+        </Link>
+      ),
     },
     {
       key: "logout",
-      label: <span onClick={handleLogout}>Logout</span>, // Gọi handleLogout để đăng xuất
+      label: (
+        <span onClick={handleLogout}>
+          <LogoutOutlined style={{ marginRight: 8 }} /> Logout
+        </span>
+      ),
     },
   ];
 

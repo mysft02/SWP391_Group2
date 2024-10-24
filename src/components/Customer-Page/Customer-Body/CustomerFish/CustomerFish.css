@@ -23,7 +23,7 @@
     display: flex;
     justify-content: space-between; /* Thay đổi từ flex-end thành space-between */
     gap: 10px; /* Tạo khoảng cách giữa các nút */
-    padding: 0 20px; /* Thêm một chút padding để có không gian giữa các cạnh */
+    padding: 15px 30px; /* Thêm một chút padding để có không gian giữa các cạnh */
   }
   
   

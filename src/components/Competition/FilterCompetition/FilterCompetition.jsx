@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Button, Form } from "antd";
 import { FilterOutlined, TagsOutlined, BgColorsOutlined, PictureOutlined, 
          LineHeightOutlined, ColumnWidthOutlined, ManOutlined, WomanOutlined } from "@ant-design/icons";
+import { api } from "../../../config/AxiosConfig"; 
 
 const { Option } = Select;
 
@@ -15,6 +16,26 @@ function FilterCompetitions({ competitions, onFilter }) {
     variety_koi: "",
     gender: ""
   });
+
+  const [categories, setCategories] = useState([]);
+  const [standards, setStandards] = useState([]);
+
+  // Lấy dữ liệu từ API khi component được mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const categoryResponse = await api.get("/api/KoiCategory/Get all KoiCategory");
+        const standardResponse = await api.get("/api/KoiStandard/Get All KoiStandard");
+
+        setCategories(categoryResponse.data);
+        setStandards(standardResponse.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Thay đổi bộ lọc
   const handleFilterChange = (value, name) => {
@@ -35,20 +56,20 @@ function FilterCompetitions({ competitions, onFilter }) {
   };
 
   return (
-    <div style={{ width: "250px", padding: "20px", backgroundColor: "none", height: "120vh" }}>
+    <div style={{ width: "250px", padding: "20px", height: "120vh" }}>
       <h3><FilterOutlined /> Filter Competitions</h3>
 
       <Form layout="vertical">
-      <Form.Item label={<span style={{ color: '#FFD700' }}><TagsOutlined /> Category</span>}>
+        <Form.Item label={<span style={{ color: '#FFD700' }}><TagsOutlined /> Category</span>}>
           <Select
             placeholder="Select Category"
             value={filters.category_name}
             onChange={(value) => handleFilterChange(value, "category_name")}
           >
             <Option value="">All</Option>
-            <Option value="A">Category A</Option>
-            <Option value="B">Category B</Option>
-            <Option value="C">Category C</Option>
+            {categories.map((category) => (
+              <Option key={category.category_id} value ={category.category_name} >{category.category_name}</Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -72,8 +93,9 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "pattern_koi")}
           >
             <Option value="">All</Option>
-            <Option value="Pattern1">Pattern 1</Option>
-            <Option value="Pattern2">Pattern 2</Option>
+            {standards.map((standard) => (
+              <Option key={standard.id} value={standard.pattern}>{standard.pattern}</Option>
+            ))}
           </Select>
         </Form.Item>
 
