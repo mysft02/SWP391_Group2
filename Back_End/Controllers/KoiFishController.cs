@@ -32,7 +32,7 @@ namespace KoiBet.Controllers
             var currentUserRole = currentUser.FindFirst(ClaimTypes.Role)?.Value;
 
             // Ki?m tra quy?n truy c?p
-            if (currentUserRole != "admin")
+            if (currentUserRole != "admin" && currentUserRole != "manager")
             {
                 return BadRequest(new { message = "Unauthorized!" });
             }
