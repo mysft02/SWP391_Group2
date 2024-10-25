@@ -1,119 +1,40 @@
-import React, { useState } from 'react';
-import { Button, Card, Row, Col } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Card, Row, Col, Spin, Alert } from 'antd';
 import { TrophyOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { api } from '../../../../config/AxiosConfig'; // Ensure this file exports the configured Axios instance
 import './GuestCompetition.css';
-import '../../../../data/DataCompetition';
+
 function GuestCompetition() {
-  // Dữ liệu giả lập cho cuộc thi
-  const competitions = [
-    {
-      competition_id: 1,
-      competition_name: "Koi Competition Spring 2024",
-      competition_description: "A major competition for koi enthusiasts",
-      start_time: "2024-03-15T09:00:00",
-      end_time: "2024-03-20T18:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
-      status_competition: "Active",
-      category_name: "A",
-      color_koi: "Red",
-      pattern_koi: "Pattern1",
-      size_koi: "Small",
-      bodyshape_koi: "Oval",
-      variety_koi: "Variety1",
-      gender: "Male"
-    },
-    {
-      competition_id: 2,
-      competition_name: "Autumn Koi Showcase",
-      competition_description: "A seasonal showcase of the best koi fish",
-      start_time: "2024-09-10T10:00:00",
-      end_time: "2024-09-12T17:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
-      status_competition: "scheduled",
-      category_name: "B",
-      color_koi: "Blue",
-      pattern_koi: "Pattern2",
-      size_koi: "Medium",
-      bodyshape_koi: "Round",
-      variety_koi: "Variety2",
-      gender: "Female"
-    },
-    {
-      competition_id: 3,
-      competition_name: "Autumn Koi Showcase",
-      competition_description: "A seasonal showcase of the best koi fish",
-      start_time: "2024-09-10T10:00:00",
-      end_time: "2024-09-12T17:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
+  const [competitions, setCompetitions] = useState([]); // State for competitions
+  const [currentIndex, setCurrentIndex] = useState(0); // State for current index
+  const [loading, setLoading] = useState(true); // State for loading status
+  const [error, setError] = useState(null); // State for error handling
 
-      status_competition: "scheduled",
-      category_name: "C",
-      color_koi: "Blue",
-      pattern_koi: "Pattern2",
-      size_koi: "Medium",
-      bodyshape_koi: "Round",
-      variety_koi: "Variety2",
-      gender: "Female"
-    },
-    {
-      competition_id: 4,
-      competition_name: "Autumn Koi Showcase",
-      competition_description: "A seasonal showcase of the best koi fish",
-      start_time: "2024-09-10T10:00:00",
-      end_time: "2024-09-12T17:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
+  const pageSize = 3; // Number of cards to display per page
 
-      status_competition: "scheduled",
-      category_name: "C",
-      color_koi: "Blue",
-      pattern_koi: "Pattern2",
-      size_koi: "Medium",
-      bodyshape_koi: "Round",
-      variety_koi: "Variety2",
-      gender: "Female"
-    },
-    {
-      competition_id: 5,
-      competition_name: "Autumn Koi Showcase",
-      competition_description: "A seasonal showcase of the best koi fish",
-      start_time: "2024-09-10T10:00:00",
-      end_time: "2024-09-12T17:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
-      status_competition: "scheduled",
-      category_name: "C",
-      color_koi: "White",
-      pattern_koi: "Pattern2",
-      size_koi: "Medium",
-      bodyshape_koi: "Round",
-      variety_koi: "Variety2",
-      gender: "Female"
-    },
-    {
-      competition_id: 6,
-      competition_name: "Autumn Koi Showcase",
-      competition_description: "A seasonal showcase of the best koi fish",
-      start_time: "2024-09-10T10:00:00",
-      end_time: "2024-09-12T17:00:00",
-      competition_img:"https://img.freepik.com/premium-photo/color-paint-watercolor-art-fish-aquarium-animals-wildlife-illustration_1258-220470.jpg",
-      status_competition: "scheduled",
-      category_name: "C",
-      color_koi: "White",
-      pattern_koi: "Pattern2",
-      size_koi: "Medium",
-      bodyshape_koi: "Round",
-      variety_koi: "Variety2",
-      gender: "Female"
+  // Fetch competitions from the API
+useEffect(() => {
+  const fetchCompetitions = async () => {
+    try {
+      const response = await api.get('/api/CompetitionKoi/Get all CompetitionKoi');
+      console.log(response.data); // Log the data for debugging
+      setCompetitions(response.data); // Assuming response.data is the array of competitions
+      setLoading(false);
+    } catch (err) {
+      console.error(err); // Log the error for debugging
+      setError(err.message);
+      setLoading(false);
     }
-  ];
+  };
 
-  // State để điều khiển vị trí card đang hiển thị
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const pageSize = 3; // Số lượng card hiển thị mỗi trang
+  fetchCompetitions();
+}, []);
 
-  // Tính toán các card hiện tại
+
+  // Calculate current competitions to display
   const currentCompetitions = competitions.slice(currentIndex, currentIndex + pageSize);
 
-  // Hàm xử lý di chuyển card
+  // Handle previous and next button clicks
   const handlePrevClick = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
@@ -126,45 +47,52 @@ function GuestCompetition() {
     }
   };
 
+  // Render loading, error, or competitions
+  if (loading) {
+    return <Spin size="large" style={{ display: 'block', margin: '20px auto' }} />;
+  }
+
+  if (error) {
+    return <Alert message="Error" description={error} type="error" style={{ margin: '20px' }} />;
+  }
+
   return (
     <div className='Guest-Competition'>
-      <Button style={{
-        marginRight:"10px",
-      }}
+      <Button
+        style={{ marginRight: "10px" }}
         className='nav-button prev-button'
         onClick={handlePrevClick}
         icon={<LeftOutlined />}
-        disabled={currentIndex === 0} // Vô hiệu hóa khi đang ở trang đầu
+        disabled={currentIndex === 0} // Disable when on the first page
       >
         Previous
       </Button>
 
       <Row gutter={[16, 16]} justify="center">
         {currentCompetitions.map((competition, index) => (
-          <Col className ="Guestcompetition-container" key={index} xs={24} sm={12} md={8}>
+          <Col className="Guestcompetition-container" key={index} xs={24} sm={12} md={8}>
             <Card className='Guestcompetition-card'>
               <div className='competition-content'>
                 <div className='competition-info'>
                   <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
-                  <h3>{competition.competition_name}</h3>
-                  <p>Thời gian bắt đầu: {competition.start_time}</p>
-                  <p>Thời gian kết thúc: {competition.end_time}</p>
+                  <h3>{competition.competitionName}</h3>
+                  <p>Thời gian bắt đầu: {competition.startTime}</p>
+                  <p>Thời gian kết thúc: {competition.endTime}</p>
                 </div>
-                <img alt="Competition" src={competition.competition_img} className='competition-image' />
+                <img alt="Competition" src={competition.competitionImg} className='competition_img' />
               </div>
-              <Button className='view-button'>Join in </Button>
+              <Button className='view-button'>Join in</Button>
             </Card>
           </Col>
         ))}
       </Row>
 
-      <Button style={{
-        marginRight:"20px"
-      }}
+      <Button
+        style={{ marginRight: "20px" }}
         className='nav-button next-button'
         onClick={handleNextClick}
         icon={<RightOutlined />}
-        disabled={currentIndex + pageSize >= competitions.length} // Vô hiệu hóa khi đang ở trang cuối
+        disabled={currentIndex + pageSize >= competitions.length} // Disable when on the last page
       >
         Next
       </Button>

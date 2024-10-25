@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Tag } from "antd";
 import {
   CalendarOutlined,
@@ -13,23 +13,39 @@ import {
   CheckCircleOutlined,
   StopOutlined,
 } from "@ant-design/icons";
-import './CompetitionDisplay.css'
-function CompetitionDisplay({ filteredCompetitions }) {
+import { api } from "../../../config/AxiosConfig";
+import './CompetitionDisplay.css';
+
+function CompetitionDisplay() {
+  const [filteredCompetitions, setFilteredCompetitions] = useState([]);
+
+  useEffect(() => {
+    const fetchCompetitions = async () => {
+      try {
+        const response = await api.get("/api/CompetitionKoi/Get all CompetitionKoi");
+        setFilteredCompetitions(response.data); // Cập nhật state với dữ liệu nhận được từ API
+      } catch (error) {
+        console.error("Error fetching competitions:", error);
+      }
+    };
+
+    fetchCompetitions();
+  }, []); // Chạy hàm chỉ một lần khi component được mount
+
   const handleJoin = (competitionId) => {
-    // Xử lý tham gia vào cuộc thi
     console.log(`Joining competition with ID: ${competitionId}`);
-    // Thực hiện thêm hành động tại đây, ví dụ: gửi yêu cầu API
   };
+
   return (
     <div className="competition-container">
       {filteredCompetitions.length > 0 ? (
         <div className="competition-row">
           {filteredCompetitions.map((comp) => (
             <Card
-              key={comp.competition_id}
-              title={comp.competition_name}
+              key={comp.competitionId}
+              title={comp.competitionName}
               extra={
-                comp.status_competition === "Active" ? (
+                comp.statusCompetition === "Active" ? (
                   <Tag icon={<CheckCircleOutlined />} color="success">
                     Active
                   </Tag>
@@ -42,41 +58,41 @@ function CompetitionDisplay({ filteredCompetitions }) {
               className="competition-card"
             >
               <p>
-                <InfoCircleOutlined /> {comp.competition_description}
+                <InfoCircleOutlined /> {comp.competitionDescription}
               </p>
               <p>
-                <CalendarOutlined /> Start: {comp.start_time}
+                <CalendarOutlined /> Start: {new Date(comp.startTime).toLocaleString()}
               </p>
               <p>
-                <CalendarOutlined /> End: {comp.end_time}
+                <CalendarOutlined /> End: {new Date(comp.endTime).toLocaleString()}
               </p>
               <p>
-                <TagOutlined /> Category: {comp.category_name}
+                <TagOutlined /> Category: {comp.koiCategory.category_name}
               </p>
               <p>
-                <BgColorsOutlined /> Color Koi: {comp.color_koi}
+                <BgColorsOutlined /> Color Koi: {comp.koiCategory.standard.color_koi}
               </p>
               <p>
-                <PictureOutlined /> Pattern Koi: {comp.pattern_koi}
+                <PictureOutlined /> Pattern Koi: {comp.koiCategory.standard.pattern_koi}
               </p>
               <p>
-                <ColumnWidthOutlined /> Size Koi: {comp.size_koi}
+                <ColumnWidthOutlined /> Size Koi: {comp.koiCategory.standard.size_koi}
               </p>
               <p>
-                <LineHeightOutlined /> Bodyshape Koi: {comp.bodyshape_koi}
+                <LineHeightOutlined /> Bodyshape Koi: {comp.koiCategory.standard.bodyshape_koi}
               </p>
               <p>
-                <TagOutlined /> Variety Koi: {comp.variety_koi}
+                <TagOutlined /> Variety Koi: {comp.koiCategory.standard.variety_koi}
               </p>
               <p>
-                {comp.gender === "Male" ? (
+                {comp.koiCategory.standard.gender === "Male" ? (
                   <ManOutlined />
                 ) : (
                   <WomanOutlined />
                 )}{" "}
-                Gender: {comp.gender}
+                Gender: {comp.koiCategory.standard.gender}
               </p>
-              <Button type="primary" onClick={() => handleJoin(comp.competition_id)}>Join In</Button>
+              <Button type="primary" onClick={() => handleJoin(comp.competitionId)}>Join In</Button>
             </Card>
           ))}
         </div>

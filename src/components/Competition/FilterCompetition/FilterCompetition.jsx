@@ -18,17 +18,57 @@ function FilterCompetitions({ competitions, onFilter }) {
   });
 
   const [categories, setCategories] = useState([]);
-  const [standards, setStandards] = useState([]);
+  const [standards, setStandards] = useState({
+    colors: [],
+    patterns: [],
+    sizes: [],          // Thêm trường sizes
+    bodyshapes: [],    // Thêm trường bodyshapes
+    genders: []        // Thêm trường genders
+  });
 
   // Lấy dữ liệu từ API khi component được mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         const categoryResponse = await api.get("/api/KoiCategory/Get all KoiCategory");
-        const standardResponse = await api.get("/api/KoiStandard/Get All KoiStandard");
-
         setCategories(categoryResponse.data);
-        setStandards(standardResponse.data);
+
+        // Lưu trữ thông tin tiêu chuẩn
+        const standardsData = categoryResponse.data.flatMap(category => category.standard);
+
+        // Tạo Map để lưu trữ màu sắc và hoa văn duy nhất
+        const colorSet = new Set();
+        const patternSet = new Set();
+        const sizeSet = new Set();           // Set cho size
+        const bodyshapeSet = new Set();      // Set cho bodyshape
+        const genderSet = new Set();         // Set cho gender
+
+        standardsData.forEach(standard => {
+          if (standard.color_koi) {
+            colorSet.add(standard.color_koi);
+          }
+          if (standard.pattern_koi) {
+            patternSet.add(standard.pattern_koi);
+          }
+          if (standard.size_koi) {            // Giả định có trường size_koi trong API
+            sizeSet.add(standard.size_koi);
+          }
+          if (standard.bodyshape_koi) {       // Giả định có trường bodyshape_koi trong API
+            bodyshapeSet.add(standard.bodyshape_koi);
+          }
+          if (standard.gender) {               // Giả định có trường gender trong API
+            genderSet.add(standard.gender);
+          }
+        });
+
+        // Cập nhật state với các giá trị duy nhất
+        setStandards({
+          colors: [...colorSet],
+          patterns: [...patternSet],
+          sizes: [...sizeSet],                // Cập nhật sizes
+          bodyshapes: [...bodyshapeSet],      // Cập nhật bodyshapes
+          genders: [...genderSet]              // Cập nhật genders
+        });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -68,7 +108,7 @@ function FilterCompetitions({ competitions, onFilter }) {
           >
             <Option value="">All</Option>
             {categories.map((category) => (
-              <Option key={category.category_id} value ={category.category_name} >{category.category_name}</Option>
+              <Option key={category.category_id} value={category.category_name}>{category.category_name}</Option>
             ))}
           </Select>
         </Form.Item>
@@ -80,9 +120,9 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "color_koi")}
           >
             <Option value="">All</Option>
-            <Option value="Red">Red</Option>
-            <Option value="Blue">Blue</Option>
-            <Option value="Yellow">Yellow</Option>
+            {standards.colors.map((color, index) => (
+              <Option key={index} value={color}>{color}</Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -93,8 +133,8 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "pattern_koi")}
           >
             <Option value="">All</Option>
-            {standards.map((standard) => (
-              <Option key={standard.id} value={standard.pattern}>{standard.pattern}</Option>
+            {standards.patterns.map((pattern, index) => (
+              <Option key={index} value={pattern}>{pattern}</Option>
             ))}
           </Select>
         </Form.Item>
@@ -106,9 +146,9 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "size_koi")}
           >
             <Option value="">All</Option>
-            <Option value="Small">Small</Option>
-            <Option value="Medium">Medium</Option>
-            <Option value="Large">Large</Option>
+            {standards.sizes.map((size, index) => (
+              <Option key={index} value={size}>{size}</Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -119,20 +159,9 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "bodyshape_koi")}
           >
             <Option value="">All</Option>
-            <Option value="Oval">Oval</Option>
-            <Option value="Round">Round</Option>
-          </Select>
-        </Form.Item>
-
-        <Form.Item label={<span style={{ color: '#FFD700' }}><PictureOutlined /> Variety Koi</span>}>
-          <Select
-            placeholder="Select Variety"
-            value={filters.variety_koi}
-            onChange={(value) => handleFilterChange(value, "variety_koi")}
-          >
-            <Option value="">All</Option>
-            <Option value="Variety1">Variety 1</Option>
-            <Option value="Variety2">Variety 2</Option>
+            {standards.bodyshapes.map((bodyshape, index) => (
+              <Option key={index} value={bodyshape}>{bodyshape}</Option>
+            ))}
           </Select>
         </Form.Item>
 
@@ -143,8 +172,9 @@ function FilterCompetitions({ competitions, onFilter }) {
             onChange={(value) => handleFilterChange(value, "gender")}
           >
             <Option value="">All</Option>
-            <Option value="Male">Male</Option>
-            <Option value="Female">Female</Option>
+            {standards.genders.map((gender, index) => (
+              <Option key={index} value={gender}>{gender}</Option>
+            ))}
           </Select>
         </Form.Item>
 

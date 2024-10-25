@@ -98,7 +98,7 @@ function KoiStandard() {
         message: 'Update Success',
         description: 'Koi standard updated successfully.',
       });
-      setIsModalVisible(false);
+      setIsModalVisible(true);
       setEditingKoi(null);
       fetchKoiStandard(); 
     } catch (error) {
@@ -123,7 +123,6 @@ function KoiStandard() {
 
   const showModal = (koi) => {
     setEditingKoi(koi);
-    console.log("ID:",koi.id)
     form.setFieldsValue(koi ? {
         standard_id: koi.id,
         standard_name: koi.name,
@@ -231,14 +230,15 @@ function KoiStandard() {
   return (
     <div>
       <h1>Koi Standard Management</h1>
-      <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
-        Add Koi Standard
-      </Button>
-      <Table dataSource={koiStandard} columns={columns} rowKey="id" />
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(null)} style={{ marginBottom: '20px' }}>
+    Add Koi Standard
+  </Button>
+
+      <Table dataSource={koiStandard} columns={columns} rowKey="id" pagination={{ pageSize: 4 }}/>
 
       <Modal
         title={editingKoi ? "Edit Koi Standard" : "Add Koi Standard"}
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
