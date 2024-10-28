@@ -30,52 +30,47 @@ function FilterCompetitions({ competitions, onFilter }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch Koi Categories
         const categoryResponse = await api.get("/api/KoiCategory/Get all KoiCategory");
         setCategories(categoryResponse.data);
-
-        // Lưu trữ thông tin tiêu chuẩn
-        const standardsData = categoryResponse.data.flatMap(category => category.standard);
-
-        // Tạo Map để lưu trữ màu sắc và hoa văn duy nhất
+  
+        // Fetch Koi Standards
+        const standardsResponse = await api.get("/api/KoiStandard/Get All KoiStandard");
+        console.log("Koi Standards API Response:", standardsResponse.data); // Log the response data
+        const standardsData = standardsResponse.data;
+  
+        // Create unique sets for each filterable standard
         const colorSet = new Set();
         const patternSet = new Set();
-        const sizeSet = new Set();           // Set cho size
-        const bodyshapeSet = new Set();      // Set cho bodyshape
-        const genderSet = new Set();         // Set cho gender
-
-        standardsData.forEach(standard => {
-          if (standard.color_koi) {
-            colorSet.add(standard.color_koi);
-          }
-          if (standard.pattern_koi) {
-            patternSet.add(standard.pattern_koi);
-          }
-          if (standard.size_koi) {            // Giả định có trường size_koi trong API
-            sizeSet.add(standard.size_koi);
-          }
-          if (standard.bodyshape_koi) {       // Giả định có trường bodyshape_koi trong API
-            bodyshapeSet.add(standard.bodyshape_koi);
-          }
-          if (standard.gender) {               // Giả định có trường gender trong API
-            genderSet.add(standard.gender);
-          }
+        const sizeSet = new Set();
+        const bodyshapeSet = new Set();
+        const genderSet = new Set();
+  
+        standardsData.forEach((standard) => {
+          if (standard.color_koi) colorSet.add(standard.color_koi);
+          if (standard.pattern_koi) patternSet.add(standard.pattern_koi);
+          if (standard.size_koi) sizeSet.add(standard.size_koi);
+          if (standard.bodyshape_koi) bodyshapeSet.add(standard.bodyshape_koi);
+          if (standard.gender) genderSet.add(standard.gender);
         });
-
-        // Cập nhật state với các giá trị duy nhất
+  
+        // Update the standards state with unique values
         setStandards({
           colors: [...colorSet],
           patterns: [...patternSet],
-          sizes: [...sizeSet],                // Cập nhật sizes
-          bodyshapes: [...bodyshapeSet],      // Cập nhật bodyshapes
-          genders: [...genderSet]              // Cập nhật genders
+          sizes: [...sizeSet],
+          bodyshapes: [...bodyshapeSet],
+          genders: [...genderSet],
         });
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
+
 
   // Thay đổi bộ lọc
   const handleFilterChange = (value, name) => {

@@ -13,6 +13,7 @@ import AdminRouter from './AdminRouter'
 import ManagerRouter from './ManagerRouter'
 import GuestHomePage from '../page/GuestPage/GuestHomePage'
 import NewsPage from '../page/CustomerPage/NewsPage/NewsPage'
+import StaffRouter from './StaffRouter'
 
 
 function AppRouter() {
@@ -34,6 +35,9 @@ function AppRouter() {
         {/* Các route yêu cầu phân quyền */}
         <Route element={<PrivateRoutes requiredRoles={['R1']} />}>
           <Route path="/member/*" element={<MemberRouter />} />
+        </Route>
+        <Route element={<PrivateRoutes requiredRoles={['R2']} />}>
+          <Route path="/staff/*" element={<StaffRouter/>} />
         </Route>
         <Route element={<PrivateRoutes requiredRoles={['R4']} />}>
           <Route path="/manager/*" element={<ManagerRouter/>} />

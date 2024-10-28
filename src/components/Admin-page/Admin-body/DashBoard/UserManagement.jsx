@@ -63,6 +63,11 @@ function UserManagement() {
       ),
     },
     {
+      title: 'UserName',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',

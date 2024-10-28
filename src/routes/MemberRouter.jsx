@@ -7,6 +7,7 @@ import CompetitionPage from '../page/CompetitionPage/CompetitionPage';
 import NewsPage from '../page/CustomerPage/NewsPage/NewsPage';
 import DashBoardPage from '../page/CustomerPage/DashBoardPage/DashBoardPage';
 import PaymentCustomer from '../components/Customer-Page/Customer-Body/Payment/paymentCustomer';
+import DetailCompetition from '../components/Competition/DetailCompetition/DetailCompetition';
 
 function MemberRouter() {
   return (
@@ -16,6 +17,7 @@ function MemberRouter() {
         <Route index element={<MemberPage />} />
         <Route path="/news" element={<NewsPage/>} />
         <Route path="competition" element={<CompetitionPage/>} />
+        <Route path="detail-competition" element={<DetailCompetition/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/dashboard" element={<DashBoardPage/>} />
         <Route path="/payment" element={<PaymentCustomer/>} />

@@ -8,7 +8,7 @@ function ManagerRouter() {
   return (
     <div>
     <Routes>
-      <Route path="/" element={<ManagerLayout/>}>
+        <Route path="/" element={<ManagerLayout/>}>
         {/* Các trang không yêu cầu phân quyền */}
         <Route index element={<DashBoardManager/>} />
         <Route path="/contact" element={<Contact />} />

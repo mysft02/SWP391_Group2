@@ -34,6 +34,8 @@ const SignIn = () => {
           navigate("/admin");
         }else if(user.roleId === 'R4'){
           navigate("/manager");
+        }else if(user.roleId === 'R2'){
+          navigate("/staff");
         } 
         else if (user.roleId === 'R1') {
           navigate("/member");

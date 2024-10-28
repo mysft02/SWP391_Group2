@@ -13,11 +13,13 @@ import {
   CheckCircleOutlined,
   StopOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { api } from "../../../config/AxiosConfig";
-import './CompetitionDisplay.css';
+import "./CompetitionDisplay.css";
 
 function CompetitionDisplay() {
   const [filteredCompetitions, setFilteredCompetitions] = useState([]);
+  const navigate = useNavigate(); // Khởi tạo navigate
 
   useEffect(() => {
     const fetchCompetitions = async () => {
@@ -32,8 +34,9 @@ function CompetitionDisplay() {
     fetchCompetitions();
   }, []); // Chạy hàm chỉ một lần khi component được mount
 
-  const handleJoin = (competitionId) => {
-    console.log(`Joining competition with ID: ${competitionId}`);
+  const handleJoin = (competition) => {
+    // Sử dụng navigate để chuyển trang và truyền dữ liệu qua state
+    navigate("/member/detail-competition", { state: { competition } });
   };
 
   return (
@@ -92,7 +95,7 @@ function CompetitionDisplay() {
                 )}{" "}
                 Gender: {comp.koiCategory.standard.gender}
               </p>
-              <Button type="primary" onClick={() => handleJoin(comp.competitionId)}>Join In</Button>
+              <Button type="primary" onClick={() => handleJoin(comp)}>Join In</Button>
             </Card>
           ))}
         </div>
