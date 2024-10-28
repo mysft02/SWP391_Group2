@@ -1,6 +1,7 @@
 import  { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { UserOutlined, DollarOutlined} from '@ant-design/icons';
+import StaffProfile from '../../components/Staff-page/Staff-body/StaffProfile/StaffProfile';
 
 
 
@@ -14,13 +15,13 @@ function DashBoardStaff() {
   const renderComponent = () => {
     switch (activeComponent) {
       case 'profile':
-        return <div>profile</div>;
+        return <StaffProfile/>;
       case 'management-news':
         return <div>profile</div>;
       case 'bet':
         return <div>Bet Component</div>;
       default:
-        return <div>profile</div>;
+        return <StaffProfile/>;
     }
   };
 

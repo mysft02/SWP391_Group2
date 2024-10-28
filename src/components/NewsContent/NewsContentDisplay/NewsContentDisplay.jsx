@@ -5,8 +5,7 @@ function NewsContentDisplay({ filteredNews }) {
   const [isRankDetailModalVisible, setIsRankDetailModalVisible] = useState(false);
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
-  
-  // State cho form đăng ký
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,29 +31,23 @@ function NewsContentDisplay({ filteredNews }) {
   };
 
   const handleSubmit = () => {
-    // Xử lý gửi form ở đây
     console.log(formData);
     handleCancel();
   };
 
   return (
-    <div style={{  flex: 1, padding: '20px', height: '850px', overflowY: 'auto' }}>
+    <div style={{ flex: 1, padding: '20px', height: '850px', overflowY: 'auto' }}>
       <h3>News List</h3>
       {filteredNews.length > 0 ? (
         filteredNews.map((news) => (
           <div key={news.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
-            <h4>{news.topic}</h4>
-            <p>{news.content}</p>
-            <p>Rank: {news.rank}</p>
+            <h4>{news.competitionName}</h4>
+            <p>Rank: {news.koiCategory.category_name}</p>
             <p>Award: {news.award}</p>
-            <p>Created At: {new Date(news.created_at).toLocaleDateString()}</p>
-            <div style={{ display: 'flex', gap: '10px', marginRight:'10px' }}> {/* Sử dụng flexbox với gap để tạo khoảng cách */}
-              <Button onClick={() => showRankDetailModal(news)}>
-                Detail Rank
-              </Button>
-              <Button onClick={showRegisterModal}>
-                Regist Competition
-              </Button>
+            <p>Created At: {new Date(news.startTime).toLocaleDateString()}</p>
+            <div style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
+              <Button onClick={() => showRankDetailModal(news)}>Detail Rank</Button>
+              <Button onClick={showRegisterModal}>Regist Competition</Button>
             </div>
           </div>
         ))
@@ -62,7 +55,6 @@ function NewsContentDisplay({ filteredNews }) {
         <p>No news found matching the selected filters.</p>
       )}
 
-      {/* Modal hiển thị chi tiết rank */}
       <Modal
         title="Detail Rank"
         open={isRankDetailModalVisible}
@@ -75,21 +67,21 @@ function NewsContentDisplay({ filteredNews }) {
       >
         {selectedNews && (
           <div>
-            <h4>{selectedNews.topic}</h4>
-            <p>{selectedNews.content}</p>
-            <p>Rank: {selectedNews.rank}</p>
+            <p>Rank: {selectedNews.koiCategory.category_name}</p>
+            <p>Detail:{selectedNews.competitionDescription}</p>
             <p>Award: {selectedNews.award}</p>
-            <p>Created At: {new Date(selectedNews.created_at).toLocaleDateString()}</p>
+            <p>Start: {new Date(selectedNews.startTime).toLocaleDateString()}</p>
+            <p>End: {new Date(selectedNews.endTime).toLocaleDateString()}</p>
+
           </div>
         )}
       </Modal>
 
-      {/* Modal đăng ký tham gia */}
       <Modal
         title="Regist Competition"
         open={isRegisterModalVisible}
         onCancel={handleCancel}
-        footer={null} // Để không sử dụng footer mặc định
+        footer={null}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <Input
@@ -107,12 +99,8 @@ function NewsContentDisplay({ filteredNews }) {
         </div>
 
         <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-          <Button onClick={handleCancel}>
-            Close
-          </Button>
-          <Button type="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
+          <Button onClick={handleCancel}>Close</Button>
+          <Button type="primary" onClick={handleSubmit}>Submit</Button>
         </div>
       </Modal>
     </div>

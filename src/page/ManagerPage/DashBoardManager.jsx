@@ -25,6 +25,8 @@ function DashBoardManager() {
         return <Category />;
       case 'competition-standard':
         return <KoiStandard />;
+      case 'competition-registration':
+        return <div>Registration</div>;
       case 'fishkoi':
           return <ManagementFishKoi/>;
       case 'bet':
@@ -60,6 +62,8 @@ function DashBoardManager() {
           <Menu.Item key="competition">Competition</Menu.Item>
             <Menu.Item key="competition-category">Category</Menu.Item>
             <Menu.Item key="competition-standard">Koi Standard</Menu.Item>
+            <Menu.Item key="competition-registration">Koi Registration</Menu.Item>
+
           </SubMenu>
           <SubMenu key="bet" icon={<DollarOutlined />} title="Bet">
           <Menu.Item key="bet">Bet</Menu.Item>

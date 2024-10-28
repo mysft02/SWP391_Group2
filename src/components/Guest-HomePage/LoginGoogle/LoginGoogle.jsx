@@ -2,6 +2,7 @@ import React from 'react';
 import GoogleButton from 'react-google-button';
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from '../../../config/firebase';
+import './LoginGoogle.css'; // Thêm file CSS cho nút
 
 const LoginGoogle = ({ onGoogleLogin }) => {
   const handleGoogleSignIn = async () => {
@@ -18,7 +19,7 @@ const LoginGoogle = ({ onGoogleLogin }) => {
     }
   };
 
-  return <GoogleButton onClick={handleGoogleSignIn} />;
+  return <GoogleButton className="custom-google-button" onClick={handleGoogleSignIn} />;
 };
 
 export default LoginGoogle;

@@ -1,0 +1,12 @@
+.custom-google-button {
+    border-radius: 25px; /* Bo tròn nút */
+    width: 300px; /* Tăng chiều dài nút */
+    height: 50px; /* Tăng chiều cao nút */
+    background-color: #748cb4; /* Màu nền mặc định của nút */
+    font-size: 16px; /* Điều chỉnh kích thước font */
+    transition: background-color 0.3s ease; /* Hiệu ứng mượt khi đổi màu */
+}
+
+.custom-google-button:hover {
+    background-color: #357ae8; /* Đổi màu khi hover */
+}

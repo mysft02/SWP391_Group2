@@ -1,6 +1,6 @@
 import React from 'react'
 
-function CompetitionContext() {
+function KoiRegistration() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function CompetitionContext() {
   )
 }
 
-export default CompetitionContext
+export default KoiRegistration
