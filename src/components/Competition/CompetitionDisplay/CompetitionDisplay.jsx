@@ -13,30 +13,35 @@ import {
   CheckCircleOutlined,
   StopOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../../data/UserContext"; // Import useUser for accessing user data
 import { api } from "../../../config/AxiosConfig";
 import "./CompetitionDisplay.css";
 
 function CompetitionDisplay() {
   const [filteredCompetitions, setFilteredCompetitions] = useState([]);
-  const navigate = useNavigate(); // Khởi tạo navigate
+  const { user } = useUser(); // Access the logged-in user
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCompetitions = async () => {
       try {
         const response = await api.get("/api/CompetitionKoi/Get all CompetitionKoi");
-        setFilteredCompetitions(response.data); // Cập nhật state với dữ liệu nhận được từ API
+        setFilteredCompetitions(response.data);
       } catch (error) {
         console.error("Error fetching competitions:", error);
       }
     };
 
     fetchCompetitions();
-  }, []); // Chạy hàm chỉ một lần khi component được mount
+  }, []);
 
   const handleJoin = (competition) => {
-    // Sử dụng navigate để chuyển trang và truyền dữ liệu qua state
     navigate("/member/detail-competition", { state: { competition } });
+  };
+
+  const isUserRegistered = (comp) => {
+    return comp.koiRegistrations?.some((registration) => registration.fishKoi.users_id === user.user_id);
   };
 
   return (
@@ -45,10 +50,10 @@ function CompetitionDisplay() {
         <div className="competition-row">
           {filteredCompetitions.map((comp) => (
             <Card
-              key={comp.competitionId}
-              title={comp.competitionName}
+              key={comp.competition_id}
+              title={comp.competition_name}
               extra={
-                comp.statusCompetition === "Active" ? (
+                comp.status_competition === "Active" ? (
                   <Tag icon={<CheckCircleOutlined />} color="success">
                     Active
                   </Tag>
@@ -61,41 +66,47 @@ function CompetitionDisplay() {
               className="competition-card"
             >
               <p>
-                <InfoCircleOutlined /> {comp.competitionDescription}
+                <InfoCircleOutlined /> {comp.competition_description}
               </p>
               <p>
-                <CalendarOutlined /> Start: {new Date(comp.startTime).toLocaleString()}
+                <CalendarOutlined /> Start: {new Date(comp.start_time).toLocaleString()}
               </p>
               <p>
-                <CalendarOutlined /> End: {new Date(comp.endTime).toLocaleString()}
+                <CalendarOutlined /> End: {new Date(comp.end_time).toLocaleString()}
               </p>
               <p>
-                <TagOutlined /> Category: {comp.koiCategory.category_name}
+                <TagOutlined /> Category: {comp.category.category_name}
               </p>
               <p>
-                <BgColorsOutlined /> Color Koi: {comp.koiCategory.standard.color_koi}
+                <BgColorsOutlined /> Color Koi: {comp.category.koiStandard.color_koi}
               </p>
               <p>
-                <PictureOutlined /> Pattern Koi: {comp.koiCategory.standard.pattern_koi}
+                <PictureOutlined /> Pattern Koi: {comp.category.koiStandard.pattern_koi}
               </p>
               <p>
-                <ColumnWidthOutlined /> Size Koi: {comp.koiCategory.standard.size_koi}
+                <ColumnWidthOutlined /> Size Koi: {comp.category.koiStandard.size_koi}
               </p>
               <p>
-                <LineHeightOutlined /> Bodyshape Koi: {comp.koiCategory.standard.bodyshape_koi}
+                <LineHeightOutlined /> Bodyshape Koi: {comp.category.koiStandard.bodyshape_koi}
               </p>
               <p>
-                <TagOutlined /> Variety Koi: {comp.koiCategory.standard.variety_koi}
+                <TagOutlined /> Variety Koi: {comp.category.koiStandard.variety_koi}
               </p>
               <p>
-                {comp.koiCategory.standard.gender === "Male" ? (
+                {comp.category.koiStandard.gender === "Male" ? (
                   <ManOutlined />
                 ) : (
                   <WomanOutlined />
                 )}{" "}
-                Gender: {comp.koiCategory.standard.gender}
+                Gender: {comp.category.koiStandard.gender}
               </p>
-              <Button type="primary" onClick={() => handleJoin(comp)}>Join In</Button>
+              <Button
+                type="primary"
+                onClick={() => handleJoin(comp)}
+                disabled={!isUserRegistered(comp)} // Button enabled if registered
+              >
+                {isUserRegistered(comp) ? "Join In" : "Not yet registered"}
+              </Button>
             </Card>
           ))}
         </div>

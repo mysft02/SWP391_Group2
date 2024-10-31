@@ -1,0 +1,23 @@
+/* Add styles for the modal */
+.custom-modal {
+    max-width: 500px; /* Set a max width for the modal */
+    margin: auto; /* Center the modal */
+  }
+  
+  .modal-title {
+    font-size: 24px; /* Increase font size for the title */
+    font-weight: bold; /* Make the title bold */
+    color: #FFD700; /* Gold color for the title */
+    text-align: center; /* Center align the title */
+    margin-bottom: 20px; /* Spacing below the title */
+  }
+  
+  .modal-input {
+    margin-bottom: 16px; /* Spacing below each input field */
+  }
+  
+  .modal-select {
+    width: 100%; /* Make the select box take full width */
+    margin-top: 16px; /* Spacing above the select box */
+  }
+  

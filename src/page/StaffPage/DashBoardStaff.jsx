@@ -2,6 +2,7 @@ import  { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { UserOutlined, DollarOutlined} from '@ant-design/icons';
 import StaffProfile from '../../components/Staff-page/Staff-body/StaffProfile/StaffProfile';
+import ManagementKoiRegis from '../../components/Staff-page/Staff-body/ManagementKoiRegis/ManagementKoiRegis';
 
 
 
@@ -16,10 +17,8 @@ function DashBoardStaff() {
     switch (activeComponent) {
       case 'profile':
         return <StaffProfile/>;
-      case 'management-news':
-        return <div>profile</div>;
-      case 'bet':
-        return <div>Bet Component</div>;
+      case 'koiRegis':
+        return <ManagementKoiRegis/>;
       default:
         return <StaffProfile/>;
     }
@@ -44,9 +43,6 @@ function DashBoardStaff() {
         <Menu.Item key="profile" icon={<DollarOutlined />}>
            Profile
         </Menu.Item>
-        <Menu.Item key="news" icon={<DollarOutlined />}>
-            News
-          </Menu.Item>
 
         <Menu.Item key="koiRegis" icon={<DollarOutlined />}>
             Koi Registration 

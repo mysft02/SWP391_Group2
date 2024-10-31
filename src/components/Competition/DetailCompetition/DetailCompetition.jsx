@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Select, Card, List, Row, Col, Divider } from 'antd';
+import { Button, Form, Input, Select, Card, List, Row, Col, Divider, Table, Collapse } from 'antd';
 import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext';
 import { useLocation } from 'react-router-dom';
 const { Option } = Select;
+const { Panel } = Collapse;
 
 function DetailCompetition() {
   const { user } = useUser();
@@ -14,13 +15,16 @@ function DetailCompetition() {
   const location = useLocation();
   const { competition } = location.state || {};
 
-  useEffect(() => {
-    if (competition) {
-      console.log("Competition data in DetailCompetition:", competition);
-    } else {
-      console.error("No competition data received.");
-    }
-  }, [competition]);
+  const pointsData = [
+    { key: '1', criteria: 'Color', points: 20 },
+    { key: '2', criteria: 'Pattern', points: 15 },
+    { key: '3', criteria: 'Body Shape', points: 30 },
+  ];
+
+  const pointsColumns = [
+    { title: 'Criteria', dataIndex: 'criteria', key: 'criteria' },
+    { title: 'Points', dataIndex: 'points', key: 'points' },
+  ];
 
   useEffect(() => {
     const fetchKoiFish = async () => {
@@ -31,11 +35,9 @@ function DetailCompetition() {
       try {
         const payload = { user_id: user.user_id };
         const response = await api.post('/api/KoiFish/Get Koi Fish By User Id', payload);
-
         setKoiList(response.data);
         setError('');
       } catch (error) {
-        console.error('Lỗi khi lấy danh sách cá koi:', error);
         setError('Không thể tải danh sách cá koi. Vui lòng thử lại sau.');
       }
     };
@@ -60,46 +62,45 @@ function DetailCompetition() {
   };
 
   return (
-    <Card title={`Name Competition: ${competition?.competitionName}`} style={{ maxWidth: 1500, minHeight:1300,margin: '20px auto' }}>
+    <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500, margin: '20px auto' }}>
       <Row gutter={16}>
-        {/* Thông tin cuộc thi bên trái */}
         <Col span={12}>
-          <p><strong>Detail:</strong> {competition?.competitionDescription}</p>
-          <p><strong>Name Competition:</strong> {competition?.competitionName || "Không có thông tin"}</p>
-          <p><strong>Round:</strong> {competition?.round}</p>
-          <p><strong>Category:</strong> {competition?.koiCategory.category_name}</p>
-          <p><strong>Color:</strong> {competition?.koiCategory.standard.color_koi}</p>
-          <p><strong>Pattern:</strong> {competition?.koiCategory.standard.pattern_koi}</p>
-          <p><strong>Size:</strong> {competition?.koiCategory.standard.size_koi}</p>
-          <p><strong>Age:</strong> {competition?.koiCategory.standard.age_koi}</p>
-          <p><strong>Bodyshape:</strong> {competition?.koiCategory.standard.bodyshape_koi}</p>
-          <p><strong>Variety:</strong> {competition?.koiCategory.standard.variety_koi}</p>
-          <p><strong>Gender:</strong> {competition?.koiCategory.standard.gender}</p>
-          <p><strong>Time Start:</strong> {competition?.startTime}</p>
-          <p><strong>Time End:</strong> {competition?.endTime}</p>
-          <p><strong>Status:</strong> {competition?.statusCompetition}</p>
-          
-          <p><strong>Referee:</strong> {competition?.referee.refereeName}</p>
-          <p><strong>Referee:</strong> {competition?.referee.expJudge}</p>
-
-          
-
-          <img src = {competition.competitionImg}/>
-          
-
-
-
-
+        <img src={competition.competition_img} alt="Competition"  style={{width:'100%'}}/>
+          <Collapse defaultActiveKey={['1']}>
+            <Panel header="Thông tin cuộc thi" key="1">
+              <p><strong>Detail:</strong> {competition?.competition_description}</p>
+              <p><strong>Name Competition:</strong> {competition?.competition_name || "Không có thông tin"}</p>
+              <p><strong>Round:</strong> {competition?.rounds}</p>
+              <p><strong>Status:</strong> {competition?.status_competition}</p>
+              <p><strong>Referee:</strong> {competition?.referee.refereeName}</p>
+              <p><strong>Experience:</strong> {competition?.referee.expJudge}</p>
+            </Panel>
+            <Panel header="Thông tin hạng mục" key="2">
+              <p><strong>Category:</strong> {competition?.category.category_name}</p>
+              <p><strong>Color:</strong> {competition?.category.koiStandard.color_koi}</p>
+              <p><strong>Pattern:</strong> {competition?.category.koiStandard.pattern_koi}</p>
+              <p><strong>Size:</strong> {competition?.category.koiStandard.size_koi}</p>
+              <p><strong>Age:</strong> {competition?.category.koiStandard.age_koi}</p>
+              <p><strong>Bodyshape:</strong> {competition?.category.koiStandard.bodyshape_koi}</p>
+              <p><strong>Variety:</strong> {competition?.category.koiStandard.variety_koi}</p>
+              <p><strong>Gender:</strong> {competition?.category.koiStandard.gender}</p>
+            </Panel>
+            <Panel header="Thông tin thời gian" key="3">
+              <p><strong>Time Start:</strong> {competition?.start_time}</p>
+              <p><strong>Time End:</strong> {competition?.end_time}</p>
+            </Panel>
+          </Collapse>
         </Col>
 
-        {/* Đường kẻ giữa */}
         <Col span={1}>
-          <Divider type="vertical" style={{ height: '150%' , }} />
+          <Divider type="vertical" style={{ height: '100%' , width:'20%'}} />
         </Col>
 
-        {/* Form thông tin người dùng và chọn cá koi bên phải */}
         <Col span={11}>
           {error && <p style={{ color: 'red' }}>{error}</p>}
+
+          <Table columns={pointsColumns} dataSource={pointsData} pagination={false} style={{ marginBottom: '20px' }} />
+          <Divider />
 
           <Form layout="vertical" style={{ marginBottom: '20px' }}>
             <Form.Item label="Họ và tên" required>
@@ -110,6 +111,9 @@ function DetailCompetition() {
             </Form.Item>
             <Form.Item label="Email" required>
               <Input value={user?.email} disabled />
+            </Form.Item>
+            <Form.Item label="score" required>
+              <Input value={user?.score} disabled />
             </Form.Item>
           </Form>
 
