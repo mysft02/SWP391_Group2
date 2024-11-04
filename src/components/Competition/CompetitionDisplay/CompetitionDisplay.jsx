@@ -41,7 +41,12 @@ function CompetitionDisplay() {
   };
 
   const isUserRegistered = (comp) => {
-    return comp.koiRegistrations?.some((registration) => registration.fishKoi.users_id === user.user_id);
+    if (!user) return true;
+    if(user.roleId==='R3') return true;
+    return comp.koiRegistrations?.some((registration) => 
+      registration.fishKoi.users_id === user.user_id &&
+      registration.statusRegistration === "Accepted"
+    );
   };
 
   return (

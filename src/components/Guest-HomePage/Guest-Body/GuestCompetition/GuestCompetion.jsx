@@ -76,10 +76,10 @@ useEffect(() => {
                 <div className='competition-info'>
                   <TrophyOutlined style={{ fontSize: '24px', marginRight: '10px', color: '#FFD700' }} />
                   <h3>{competition.competitionName}</h3>
-                  <p>Thời gian bắt đầu: {competition.startTime}</p>
-                  <p>Thời gian kết thúc: {competition.endTime}</p>
+                  <p>Thời gian bắt đầu: {competition.start_time}</p>
+                  <p>Thời gian kết thúc: {competition.end_time}</p>
                 </div>
-                <img alt="Competition" src={competition.competitionImg} className='competition_img' />
+                <img alt="Competition" src={competition.competition_img} className='competition_img' />
               </div>
               <Button className='view-button'>Join in</Button>
             </Card>

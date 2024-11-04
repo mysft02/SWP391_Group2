@@ -36,6 +36,8 @@ const SignIn = () => {
           navigate("/manager");
         }else if(user.roleId === 'R2'){
           navigate("/staff");
+        }else if(user.roleId === 'R3'){
+          navigate("/referee");
         } 
         else if (user.roleId === 'R1') {
           navigate("/member");

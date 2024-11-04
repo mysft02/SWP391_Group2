@@ -14,6 +14,7 @@ import ManagerRouter from './ManagerRouter'
 import GuestHomePage from '../page/GuestPage/GuestHomePage'
 import NewsPage from '../page/CustomerPage/NewsPage/NewsPage'
 import StaffRouter from './StaffRouter'
+import RefereeRouter from './RefereeRouter'
 
 
 function AppRouter() {
@@ -38,6 +39,9 @@ function AppRouter() {
         </Route>
         <Route element={<PrivateRoutes requiredRoles={['R2']} />}>
           <Route path="/staff/*" element={<StaffRouter/>} />
+        </Route>
+        <Route element={<PrivateRoutes requiredRoles={['R3']} />}>
+          <Route path="/referee/*" element={<RefereeRouter/>} />
         </Route>
         <Route element={<PrivateRoutes requiredRoles={['R4']} />}>
           <Route path="/manager/*" element={<ManagerRouter/>} />
