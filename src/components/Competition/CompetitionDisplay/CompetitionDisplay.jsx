@@ -37,12 +37,19 @@ function CompetitionDisplay() {
   }, []);
 
   const handleJoin = (competition) => {
-    navigate("/member/detail-competition", { state: { competition } });
+    // Check if the user's role is R3
+    if (user?.roleId === "R3") {
+      // Navigate to the admin competition details page
+      navigate("/referee/scoreCompetition", { state: { competition } });
+    } else {
+      // Navigate to the member competition details page
+      navigate("/member/detail-competition", { state: { competition } });
+    }
   };
 
   const isUserRegistered = (comp) => {
     if (!user) return true;
-    if(user.roleId==='R3') return true;
+    if (user.roleId === "R3") return true; // Allow R3 users to join all competitions
     return comp.koiRegistrations?.some((registration) => 
       registration.fishKoi.users_id === user.user_id &&
       registration.statusRegistration === "Accepted"
