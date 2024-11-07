@@ -15,14 +15,14 @@ function ManagerCompetition() {
     try {
       const response = await api.get('/api/CompetitionKoi/Get all CompetitionKoi');
       const formattedData = response.data.map(item => ({
-        competitionId: item.competitionId,
-        competitionName: item.competitionName,
-        competitionDescription: item.competitionDescription,
-        startTime: item.startTime,
-        endTime: item.endTime,
-        statusCompetition: item.statusCompetition,
-        round: item.round,
-        competitionImg: item.competitionImg,
+        competition_id: item.competition_id,
+        competition_name: item.competition_name,
+        competition_description: item.competition_description,
+        start_time: item.start_time,
+        end_time: item.end_time,
+        status_competition: item.status_competition,
+        rounds: item.rounds,
+        competition_img: item.competition_img,
         category_id: item.category_id,
         koi_id: item.koi_id,
         referee_id: item.referee_id,
@@ -44,17 +44,17 @@ function ManagerCompetition() {
 
   const createCompetition = async (values) => {
     const payload = {
-      competition_name: values.competitionName,
-      competition_description: values.competitionDescription,
-      start_time: values.startTime ? values.startTime.toISOString() : null,
-      end_time: values.endTime ? values.endTime.toISOString() : null,
-      status_competition: values.statusCompetition,
+      competition_name: values.competition_name,
+      competition_description: values.competition_description,
+      start_time: values.start_time ? values.start_time.toISOString() : null,
+      end_time: values.end_time ? values.end_time.toISOString() : null,
+      status_competition: values.status_competition,
       category_id: values.categoryId || "CAT_1",
       koi_id: values.koiId || "K1",
       referee_id: values.refereeId || "REF_1",
-      award_id: values.awardId || "AWD_1",
-      rounds: values.round,
-      competition_img: values.competitionImg || "haha.jpg",
+      award_id: values.award_id || "AWD_1",
+      rounds: values.rounds,
+      competition_img: values.competition_img || "haha.jpg",
     };
     
     try {
@@ -75,18 +75,18 @@ function ManagerCompetition() {
 
   const updateCompetition = async (values) => {
     const params = new URLSearchParams({
-        competitionId: editingCompetition.competitionId,
-        competitionName: values.competitionName,
-        competitionDescription: values.competitionDescription,
-        startTime: values.startTime ? values.startTime.toISOString() : '',
-        endTime: values.endTime ? values.endTime.toISOString() : '',
-        statusCompetition: values.statusCompetition,
+        competition_id: editingCompetition.competition_id,
+        competition_name: values.competition_name,
+        competition_description: values.competition_description,
+        start_time: values.start_time ? values.start_time.toISOString() : '',
+        end_time: values.end_time ? values.end_time.toISOString() : '',
+        status_competition: values.status_competition,
         koiCategoryId: values.categoryId || "CAT_1",
         koiFishId: values.koiId || "K1",
         refereeId: values.refereeId || "REF_1",
-        awardId: values.awardId || "AWD_1",
-        round: values.round,
-        competitionImg: values.competitionImg || "haha.jpg",
+        award_id: values.award_id || "AWD_1",
+        rounds: values.rounds,
+        competition_img: values.competition_img || "haha.jpg",
     });
 
     try {
@@ -125,17 +125,17 @@ function ManagerCompetition() {
       console.log("Editing competition:", competition); // Log đối tượng cuộc thi đang chỉnh sửa
       setEditingCompetition(competition);
       form.setFieldsValue({
-        competitionName: competition.competitionName || '',
-        competitionDescription: competition.competitionDescription || '',
-        round: competition.round || '',
-        statusCompetition: competition.statusCompetition || '',
-        startTime: competition.startTime ? moment(competition.startTime) : null,
-        endTime: competition.endTime ? moment(competition.endTime) : null,
+        competition_name: competition.competition_name || '',
+        competition_description: competition.competition_description || '',
+        rounds: competition.rounds || '',
+        status_competition: competition.status_competition || '',
+        start_time: competition.start_time ? moment(competition.start_time) : null,
+        end_time: competition.end_time ? moment(competition.end_time) : null,
         categoryId: competition.category_id || '',
         koiId: competition.koi_id || '',
         refereeId: competition.referee_id || '',
-        awardId: competition.award_id || '',
-        competitionImg: competition.competitionImg || '',
+        award_id: competition.award_id || '',
+        competition_img: competition.competition_img || '',
       });
     } else {
       console.log("Adding new competition"); // Log khi thêm mới
@@ -154,7 +154,7 @@ function ManagerCompetition() {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/CompetitionKoi/Delete Competition?competitionId=${id}`);
+      await api.delete(`/api/CompetitionKoi/Delete Competition?competition_id=${id}`);
       notification.success({
         message: 'Delete Success',
         description: 'Competition deleted successfully.',
@@ -172,39 +172,39 @@ function ManagerCompetition() {
   const columns = [
     {
       title: 'ID',
-      dataIndex: 'competitionId',
-      key: 'competitionId',
+      dataIndex: 'competition_id',
+      key: 'competition_id',
     },
     {
       title: 'Name',
-      dataIndex: 'competitionName',
-      key: 'competitionName',
+      dataIndex: 'competition_name',
+      key: 'competition_name',
     },
     {
       title: 'Description',
-      dataIndex: 'competitionDescription',
-      key: 'competitionDescription',
+      dataIndex: 'competition_description',
+      key: 'competition_description',
     },
     {
       title: 'Round',
-      dataIndex: 'round',
-      key: 'round',
+      dataIndex: 'rounds',
+      key: 'rounds',
     },
     {
       title: 'Status',
-      dataIndex: 'statusCompetition',
-      key: 'statusCompetition',
+      dataIndex: 'status_competition',
+      key: 'status_competition',
     },
     {
       title: 'Start Time',
-      dataIndex: 'startTime',
-      key: 'startTime',
+      dataIndex: 'start_time',
+      key: 'start_time',
       render: (text) => new Date(text).toLocaleString(),
     },
     {
       title: 'End Time',
-      dataIndex: 'endTime',
-      key: 'endTime',
+      dataIndex: 'end_time',
+      key: 'end_time',
       render: (text) => new Date(text).toLocaleString(),
     },
     {
@@ -213,7 +213,7 @@ function ManagerCompetition() {
       render: (_, record) => (
         <>
           <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competitionId)}>Delete</Button>
+          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competition_id)}>Delete</Button>
         </>
       ),
     },
@@ -230,7 +230,7 @@ function ManagerCompetition() {
       >
         Add Competition
       </Button>
-      <Table dataSource={competitions} columns={columns} rowKey="competitionId" />
+      <Table dataSource={competitions} columns={columns} rowKey="competition_id" />
 
       <Modal
         title={editingCompetition ? "Edit Competition" : "Add Competition"}
@@ -240,41 +240,41 @@ function ManagerCompetition() {
       >
         <Form form={form} onFinish={handleSubmit}>
           <Form.Item
-            name="competitionName"
+            name="competition_name"
             label="Name"
             rules={[{ required: true, message: 'Please input the name of the competition!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="competitionDescription"
+            name="competition_description"
             label="Description"
           >
             <Input.TextArea />
           </Form.Item>
           <Form.Item
-            name="round"
-            label="Round"
-            rules={[{ required: true, message: 'Please input the round!' }]}
+            name="rounds"
+            label="rounds"
+            rules={[{ required: true, message: 'Please input the rounds!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="statusCompetition"
+            name="status_competition"
             label="Status"
             rules={[{ required: true, message: 'Please input the status!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="startTime"
+            name="start_time"
             label="Start Time"
             rules={[{ required: true, message: 'Please select the start time!' }]}
           >
             <DatePicker showTime />
           </Form.Item>
           <Form.Item
-            name="endTime"
+            name="end_time"
             label="End Time"
             rules={[{ required: true, message: 'Please select the end time!' }]}
           >
@@ -302,14 +302,14 @@ function ManagerCompetition() {
             <Input />
           </Form.Item>
           <Form.Item
-            name="awardId"
+            name="award_id"
             label="Award ID"
             rules={[{ required: true, message: 'Please input the award ID!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="competitionImg"
+            name="competition_img"
             label="Competition Image"
             rules={[{ required: true, message: 'Please input the competition image!' }]}
           >

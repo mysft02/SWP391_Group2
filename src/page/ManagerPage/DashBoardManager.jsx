@@ -6,6 +6,7 @@ import Category from '../../components/Manager-page/Manager-body/Competition/Cat
 import KoiStandard from '../../components/Manager-page/Manager-body/Competition/KoiStandard';
 import ManagerCompetition from '../../components/Manager-page/Manager-body/Competition/ManagerCompetition';
 import ManagementFishKoi from '../../components/Manager-page/Manager-body/FishKoi/ManagementFishKoi';
+import ManagementReferee from '../../components/Manager-page/Manager-body/ManagementReferee/ManagementReferee';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -27,6 +28,8 @@ function DashBoardManager() {
         return <KoiStandard />;
       case 'competition-registration':
         return <div>Registration</div>;
+      case 'competition-referee':
+        return <ManagementReferee/>;
       case 'fishkoi':
           return <ManagementFishKoi/>;
       case 'bet':
@@ -63,6 +66,8 @@ function DashBoardManager() {
             <Menu.Item key="competition-category">Category</Menu.Item>
             <Menu.Item key="competition-standard">Koi Standard</Menu.Item>
             <Menu.Item key="competition-registration">Koi Registration</Menu.Item>
+            <Menu.Item key="competition-referee">Referee</Menu.Item>
+
 
           </SubMenu>
           <SubMenu key="bet" icon={<DollarOutlined />} title="Bet">
