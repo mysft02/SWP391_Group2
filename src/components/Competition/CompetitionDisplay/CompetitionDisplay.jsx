@@ -12,15 +12,17 @@ import {
   WomanOutlined,
   CheckCircleOutlined,
   StopOutlined,
+  LoginOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../../data/UserContext"; // Import useUser for accessing user data
+import { useUser } from "../../../data/UserContext";
 import { api } from "../../../config/AxiosConfig";
 import "./CompetitionDisplay.css";
 
 function CompetitionDisplay() {
   const [filteredCompetitions, setFilteredCompetitions] = useState([]);
-  const { user } = useUser(); // Access the logged-in user
+  const { user } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,22 +39,24 @@ function CompetitionDisplay() {
   }, []);
 
   const handleJoin = (competition) => {
-    // Check if the user's role is R3
     if (user?.roleId === "R3") {
-      // Navigate to the admin competition details page
       navigate("/referee/scoreCompetition", { state: { competition } });
     } else {
-      // Navigate to the member competition details page
       navigate("/member/detail-competition", { state: { competition } });
     }
   };
 
+  const handleBet = (competition) => {
+    navigate("/member/bet", { state: { competition } });
+  };
+
   const isUserRegistered = (comp) => {
     if (!user) return true;
-    if (user.roleId === "R3") return true; // Allow R3 users to join all competitions
-    return comp.koiRegistrations?.some((registration) => 
-      registration.fishKoi.users_id === user.user_id &&
-      registration.statusRegistration === "Accepted"
+    if (user.roleId === "R3") return true;
+    return comp.koiRegistrations?.some(
+      (registration) =>
+        registration.fishKoi.users_id === user.user_id &&
+        registration.statusRegistration === "Accepted"
     );
   };
 
@@ -112,13 +116,25 @@ function CompetitionDisplay() {
                 )}{" "}
                 Gender: {comp.category.koiStandard.gender}
               </p>
-              <Button
-                type="primary"
-                onClick={() => handleJoin(comp)}
-                disabled={!isUserRegistered(comp)} // Button enabled if registered
-              >
-                {isUserRegistered(comp) ? "Join In" : "Not yet registered"}
-              </Button>
+
+              {/* Wrap the buttons in a flex container */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '16px' }}>
+                <Button
+                  type="primary"
+                  icon={<LoginOutlined />}
+                  onClick={() => handleJoin(comp)}
+                  disabled={!isUserRegistered(comp)}
+                >
+                  {isUserRegistered(comp) ? "Join In" : "Not yet registered"}
+                </Button>
+                <Button
+                  type="default"
+                  icon={<DollarOutlined />}
+                  onClick={() => handleBet(comp)}
+                >
+                  Bet
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
