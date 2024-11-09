@@ -47,7 +47,7 @@ function CompetitionDisplay() {
   };
 
   const handleBet = (competition) => {
-    navigate("/member/bet", { state: { competition } });
+    navigate("/member/bet-competition", { state: { competition } });
   };
 
   const isUserRegistered = (comp) => {

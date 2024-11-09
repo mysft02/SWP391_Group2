@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Select, Card, List, Row, Col, Divider, Table, Collapse, Modal } from 'antd';
+import { Button, Form, Input, Select, Card, Row, Col, Divider, Table, Collapse, Modal } from 'antd';
 import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext';
 import { useLocation } from 'react-router-dom';
+import { UserOutlined, PhoneOutlined, MailOutlined,  TrophyOutlined, InfoCircleOutlined, FieldTimeOutlined, CheckCircleOutlined } from '@ant-design/icons'; // import necessary icons
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -98,122 +99,137 @@ function DetailCompetition() {
       key: 'secondKoi.koi_name',
       render: (secondKoi) => secondKoi ? secondKoi.koi_name : null,
     },
-    { title: 'Result', dataIndex: 'result', key: 'result' },
     { 
-      title: 'Scores', 
-      dataIndex: 'scores', 
-      key: 'scores',
-      render: (scores) => scores ? scores : 'Điểm chưa có',
+      title: 'Result', 
+      key: 'result',
+      render: (_, record) => {
+        // Tách chuỗi result thành Koi ID và Điểm
+        const [koiId, score] = record.result.split('_');
+        
+        // Tìm cá koi tương ứng với koiId từ danh sách koiList
+        const koi = koiList.find(koi => koi.koi_id === koiId);
+        
+        return (
+          <>
+            <p><strong>Koi Name:</strong> {koi ? koi.koi_name : 'Không có thông tin'}</p>
+            <p><strong>Score:</strong> {score || 'Chưa có điểm'}</p>
+          </>
+        );
+      },
     },
+
   ];
   
 
   return (
-    <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500, margin: '20px auto' }}>
-      <Row gutter={16}>
-        <Col span={12}>
-          <img src={competition.competition_img} alt="Competition" style={{ width: '100%' }} />
-          <Collapse defaultActiveKey={['1']}>
-            <Panel header="Thông tin cuộc thi" key="1">
-              <p><strong>Detail:</strong> {competition?.competition_description}</p>
-              <p><strong>Name Competition:</strong> {competition?.competition_name || "Không có thông tin"}</p>
-              <p><strong>Round:</strong> {competition?.rounds}</p>
-              <p><strong>Status:</strong> {competition?.status_competition}</p>
-              <p><strong>Referee:</strong> {competition?.referee?.refereeName}</p>
-              <p><strong>Experience:</strong> {competition?.referee?.expJudge}</p>
-            </Panel>
-            <Panel header="Danh sách các vòng thi đấu" key="2">
-              {rounds.length > 0 ? (
-                rounds.map((round) => (
-                  <p key={round.roundId}>
-                    <strong>Round ID:</strong> {round.roundId} | 
-                    <strong>Match:</strong> {round.match} | 
-                    <strong>Competition ID:</strong> {round.competition_id}
-                  </p>
-                ))
-              ) : (
-                <p>Không có thông tin về vòng thi đấu.</p>
-              )}
-            </Panel>
-          </Collapse>
-        </Col>
+  
 
-        <Col span={1}>
-          <Divider type="vertical" style={{ height: '100%', width: '20%' }} />
-        </Col>
-              
-        <Col span={11}>
-          <Table
-            columns={matchColumns}
-            dataSource={matches}
-            pagination={false}
-            style={{ marginTop: '20px' }}
-            title={() => <strong>Bảng thi đấu</strong>}
-          />
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-              
-          <Form layout="vertical" style={{ marginBottom: '20px' }}>
-            <Form.Item label="Họ và tên" required>
-              <Input value={user?.full_name} disabled />
-            </Form.Item>
-            <Form.Item label="Số điện thoại" required>
-              <Input value={user?.phone} disabled />
-            </Form.Item>
-            <Form.Item label="Email" required>
-              <Input value={user?.email} disabled />
-            </Form.Item>
-          </Form>
 
-          <Form layout="vertical">
-            <Form.Item label="Chọn cá koi">
-              <Select
-                value={selectedKoi?.koi_id || undefined}
-                onChange={handleKoiSelect}
-                placeholder="Chọn một cá koi"
-                style={{ width: '100%' }}
-              >
-                {koiList.map((koi) => (
-                  <Option key={koi.koi_id} value={koi.koi_id}>
-                    {koi.koi_name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Button
-              type="primary"
-              onClick={fetchKoiScoreDetails}
-              disabled={!selectedKoi}
-              style={{ marginTop: '10px' }}
-            >
-              Xem điểm cá koi
-            </Button>
-          </Form>
-          
-          <Modal
-      title="Thông tin điểm cá koi"
-      open={isModalVisible}
-      onCancel={handleModalClose}
-      footer={null}
-    >
-      {koiScoreDetails && koiScoreDetails.length > 0 ? (
-        koiScoreDetails.map((detail) => (
-          <div key={detail.score_id}>
-            <h2><strong>Tên cá koi:</strong> {detail?.fishKoi?.koi_name || 'Không có thông tin'}</h2>
-            <p><strong>Loại cá:</strong> {detail?.fishKoi?.koi_variety || 'Không có thông tin'}</p>
-            <p><strong>Kích thước:</strong> {detail?.fishKoi?.koi_size || 'Không có thông tin'}</p>
-            <p><strong>Tuổi:</strong> {detail?.fishKoi?.koi_age || 'Không có thông tin'}</p>
-            <p><strong>Mã trận đấu:</strong> {detail?.match_id || 'Không có thông tin'}</p>
-            <h2><strong>Điểm:</strong> {detail?.score_koi || 'Không có thông tin'}</h2>
-          </div>
-        ))
-      ) : (
-        <p>Không có thông tin điểm.</p> // Fallback message when koiScoreDetails is empty or null
-      )}
-    </Modal>
+<Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500, margin: '20px auto' }}>
+  <Row gutter={16}>
+    <Col span={12}>
+      <img src={competition.competition_img} alt="Competition" style={{ width: '100%' }} />
+      <Collapse defaultActiveKey={['1']}>
+        <Panel header="Thông tin cuộc thi" key="1">
+          <p><strong><InfoCircleOutlined /> Detail:</strong> {competition?.competition_description}</p>
+          <p><strong><TrophyOutlined /> Name Competition:</strong> {competition?.competition_name || "Không có thông tin"}</p>
+          <p><strong><FieldTimeOutlined /> Round:</strong> {competition?.rounds}</p>
+          <p><strong><CheckCircleOutlined /> Status:</strong> {competition?.status_competition}</p>
+          <p><strong><UserOutlined /> Referee:</strong> {competition?.referee?.refereeName}</p>
+          <p><strong><UserOutlined /> Experience:</strong> {competition?.referee?.expJudge}</p>
+        </Panel>
+        <Panel header="Danh sách các vòng thi đấu" key="2">
+          {rounds.length > 0 ? (
+            rounds.map((round) => (
+              <p key={round.roundId}>
+                <strong>Round ID:</strong> {round.roundId} | 
+                <strong>Match:</strong> {round.match} | 
+                <strong>Competition ID:</strong> {round.competition_id}
+              </p>
+            ))
+          ) : (
+            <p>Không có thông tin về vòng thi đấu.</p>
+          )}
+        </Panel>
+      </Collapse>
+    </Col>
 
-        </Col>
-      </Row>
-    </Card>
+    <Col span={1}>
+      <Divider type="vertical" style={{ height: '100%', width: '20%' }} />
+    </Col>
+
+    <Col span={11}>
+      <Table
+        columns={matchColumns}
+        dataSource={matches}
+        pagination={false}
+        style={{ marginTop: '20px' }}
+        title={() => <strong><TrophyOutlined /> Bảng thi đấu</strong>}
+      />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <Form layout="vertical" style={{ marginBottom: '20px' }}>
+        <Form.Item label={<><UserOutlined /> Họ và tên</>} required>
+          <Input value={user?.full_name} disabled />
+        </Form.Item>
+        <Form.Item label={<><PhoneOutlined /> Số điện thoại</>} required>
+          <Input value={user?.phone} disabled />
+        </Form.Item>
+        <Form.Item label={<><MailOutlined /> Email</>} required>
+          <Input value={user?.email} disabled />
+        </Form.Item>
+      </Form>
+
+      <Form layout="vertical">
+        <Form.Item label={<> Chọn cá koi</>} >
+          <Select
+            value={selectedKoi?.koi_id || undefined}
+            onChange={handleKoiSelect}
+            placeholder="Chọn một cá koi"
+            style={{ width: '100%' }}
+          >
+            {koiList.map((koi) => (
+              <Option key={koi.koi_id} value={koi.koi_id}>
+                {koi.koi_name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Button
+          type="primary"
+          onClick={fetchKoiScoreDetails}
+          disabled={!selectedKoi}
+          style={{ marginTop: '10px' }}
+        >
+          <CheckCircleOutlined /> Xem điểm cá koi
+        </Button>
+      </Form>
+
+      <Modal
+        title={<> Thông tin điểm cá koi</>}
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        {koiScoreDetails && koiScoreDetails.length > 0 ? (
+          koiScoreDetails.map((detail) => (
+            <div key={detail.score_id}>
+              <h2><strong>Tên cá koi:</strong> {detail?.fishKoi?.koi_name || 'Không có thông tin'}</h2>
+              <p><strong> Loại cá:</strong> {detail?.fishKoi?.koi_variety || 'Không có thông tin'}</p>
+              <p><strong><FieldTimeOutlined /> Kích thước:</strong> {detail?.fishKoi?.koi_size || 'Không có thông tin'}</p>
+              <p><strong><FieldTimeOutlined /> Tuổi:</strong> {detail?.fishKoi?.koi_age || 'Không có thông tin'}</p>
+              <p><strong><TrophyOutlined /> Mã trận đấu:</strong> {detail?.match_id || 'Không có thông tin'}</p>
+              <h2><strong><CheckCircleOutlined /> Điểm:</strong> {detail?.score_koi || 'Không có thông tin'}</h2>
+            </div>
+          ))
+        ) : (
+          <p>Không có thông tin điểm.</p>
+        )}
+      </Modal>
+    </Col>
+  </Row>
+</Card>
+
   );
 }
 

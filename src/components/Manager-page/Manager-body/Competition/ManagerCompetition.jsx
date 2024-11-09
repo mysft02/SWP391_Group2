@@ -1,15 +1,67 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, Input, Modal, notification, DatePicker } from 'antd';
+import { Table, Button, Form, Input, Modal, notification, DatePicker, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import moment from 'moment';
-
+import { Option } from 'antd/es/mentions';
+import { useUser } from '../../../../data/UserContext';
 
 function ManagerCompetition() {
+  const {user} = useUser();
   const [competitions, setCompetitions] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingCompetition, setEditingCompetition] = useState(null);
+  const [koiCategories, setKoiCategories] = useState([]);
+  const [koiFishes, setKoiFishes] = useState([]);
+  const [referees, setReferees] = useState([]);
+  const [awards, setAwards] = useState([]);
   const [form] = Form.useForm();
+  const fetchKoiCategories = async () => {
+    try {
+      const response = await api.get('/api/KoiCategory/Get all KoiCategory');
+      setKoiCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching Koi Categories:', error);
+    }
+  };
+
+  const fetchKoiFishes = async () => {
+    try {
+      const response = await api.post('/api/KoiFish/Get All Koi Fishes',{},{
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+
+      });
+      setKoiFishes(response.data);
+    } catch (error) {
+      console.error('Error fetching Koi Fishes:', error);
+    }
+  };
+
+  const fetchReferees = async () => {
+    try {
+      const response = await api.post('/api/Referees/GetAllReferees',{},{
+        headers: {
+          'Authorization': `Bearer ${user.accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      setReferees(response.data);
+    } catch (error) {
+      console.error('Error fetching Referees:', error);
+    }
+  };
+
+  const fetchAwards = async () => {
+    try {
+      const response = await api.get('/api/Award/Get All Award');
+      setAwards(response.data);
+    } catch (error) {
+      console.error('Error fetching Awards:', error);
+    }
+  };
 
   const fetchCompetitions = async () => {
     try {
@@ -40,6 +92,10 @@ function ManagerCompetition() {
 
   useEffect(() => {
     fetchCompetitions();
+    fetchKoiCategories();
+    fetchKoiFishes();
+    fetchReferees();
+    fetchAwards();
   }, []);
 
   const createCompetition = async (values) => {
@@ -75,18 +131,18 @@ function ManagerCompetition() {
 
   const updateCompetition = async (values) => {
     const params = new URLSearchParams({
-        competition_id: editingCompetition.competition_id,
-        competition_name: values.competition_name,
-        competition_description: values.competition_description,
-        start_time: values.start_time ? values.start_time.toISOString() : '',
-        end_time: values.end_time ? values.end_time.toISOString() : '',
-        status_competition: values.status_competition,
-        koiCategoryId: values.categoryId || "CAT_1",
-        koiFishId: values.koiId || "K1",
-        refereeId: values.refereeId || "REF_1",
-        award_id: values.award_id || "AWD_1",
-        rounds: values.rounds,
-        competition_img: values.competition_img || "haha.jpg",
+        CompetitionId: editingCompetition.competition_id,
+        CompetitionName: values.competition_name,
+        CompetitionDescription: values.competition_description,
+        StartTime: values.start_time ? values.start_time.toISOString() : '',
+        EndTime: values.end_time ? values.end_time.toISOString() : '',
+        StatusCompetition: values.status_competition,
+        KoiCategoryId: values.categoryId || "CAT_1",
+        KoiFishId: values.koiId || "K1",
+        RefereeId: values.refereeId || "REF_1",
+        AwardId: values.award_id || "AWD_1",
+        Round: values.rounds,
+        CompetitionImg: values.competition_img || "haha.jpg",
     });
 
     try {
@@ -105,7 +161,6 @@ function ManagerCompetition() {
         });
     }
 };
-
 
 
   
@@ -262,9 +317,12 @@ function ManagerCompetition() {
           <Form.Item
             name="status_competition"
             label="Status"
-            rules={[{ required: true, message: 'Please input the status!' }]}
+            rules={[{ required: true, message: 'Please select the status!' }]}
           >
-            <Input />
+            <Select placeholder="Select status">
+              <Option value="Active">Active</Option>
+              <Option value="Inactive">Inactive</Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="start_time"
@@ -280,34 +338,38 @@ function ManagerCompetition() {
           >
             <DatePicker showTime />
           </Form.Item>
-          <Form.Item
-            name="categoryId"
-            label="Category ID"
-            rules={[{ required: true, message: 'Please input the category ID!' }]}
-          >
-            <Input />
+          <Form.Item name="categoryId" label="Category" rules={[{ required: true }]}>
+            <Select>
+              {koiCategories.map(category => (
+                <Option key={category.category_id} value={category.category_id}>{category.category_name}</Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item
-            name="koiId"
-            label="Koi ID"
-            rules={[{ required: true, message: 'Please input the koi ID!' }]}
-          >
-            <Input />
+
+          <Form.Item name="koiId" label="Koi Fish" rules={[{ required: true }]}>
+            <Select>
+              {koiFishes.map(koi => (
+                <Option key={koi.koi_id} value={koi.koi_id}>{koi.koi_name}</Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item
-            name="refereeId"
-            label="Referee ID"
-            rules={[{ required: true, message: 'Please input the referee ID!' }]}
-          >
-            <Input />
+
+          <Form.Item name="refereeId" label="Referee" rules={[{ required: true }]}>
+            <Select>
+              {referees.map(referee => (
+                <Option key={referee.refereeId} value={referee.id}>{referee.refereeName}</Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item
-            name="award_id"
-            label="Award ID"
-            rules={[{ required: true, message: 'Please input the award ID!' }]}
-          >
-            <Input />
+
+          <Form.Item name="award_id" label="Award" rules={[{ required: true }]}>
+            <Select>
+              {awards.map(award => (
+                <Option key={award.award_id} value={award.award_id}>{award.award_name}</Option>
+              ))}
+            </Select>
           </Form.Item>
+
           <Form.Item
             name="competition_img"
             label="Competition Image"
