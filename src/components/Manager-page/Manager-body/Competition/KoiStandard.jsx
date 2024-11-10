@@ -220,8 +220,11 @@ function KoiStandard() {
       key: 'action',
       render: (_, record) => (
         <>
-          <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)}>Delete</Button>
+        <div style={{display:'flex', gap:'5px'}}>
+        <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
+        <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.id)}>Delete</Button>
+        </div>
+         
         </>
       ),
     },

@@ -209,7 +209,7 @@ function ManagerCompetition() {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/CompetitionKoi/Delete Competition?competition_id=${id}`);
+      await api.delete(`/api/CompetitionKoi/Delete Competition?competitionId=${id}`);
       notification.success({
         message: 'Delete Success',
         description: 'Competition deleted successfully.',
@@ -267,8 +267,11 @@ function ManagerCompetition() {
       key: 'action',
       render: (_, record) => (
         <>
-          <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
-          <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competition_id)}>Delete</Button>
+        <div style={{display:'flex', gap:'10px'}}>
+        <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
+        <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competition_id)}>Delete</Button>
+        </div>
+          
         </>
       ),
     },

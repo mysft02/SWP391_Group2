@@ -7,6 +7,8 @@ import KoiStandard from '../../components/Manager-page/Manager-body/Competition/
 import ManagerCompetition from '../../components/Manager-page/Manager-body/Competition/ManagerCompetition';
 import ManagementFishKoi from '../../components/Manager-page/Manager-body/FishKoi/ManagementFishKoi';
 import ManagementReferee from '../../components/Manager-page/Manager-body/ManagementReferee/ManagementReferee';
+import RegisterManagement from '../../components/Manager-page/Manager-body/RegisterManagement/RegisterManagement';
+import ManagementAward from '../../components/Manager-page/Manager-body/Award/ManagementAward';
 
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -27,7 +29,7 @@ function DashBoardManager() {
       case 'competition-standard':
         return <KoiStandard />;
       case 'competition-registration':
-        return <div>Registration</div>;
+        return <RegisterManagement/>;
       case 'competition-referee':
         return <ManagementReferee/>;
       case 'fishkoi':
@@ -35,7 +37,7 @@ function DashBoardManager() {
       case 'bet':
         return <div>Bet Component</div>;
       case 'award':
-          return <div>Award</div>;
+          return <ManagementAward/>;
       default:
         return <ManagerProfile />;
     }

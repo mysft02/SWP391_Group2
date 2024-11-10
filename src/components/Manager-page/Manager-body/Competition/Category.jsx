@@ -161,6 +161,7 @@ function Category() {
       key: 'action',
       render: (_, record) => (
         <>
+          <div style={{display:'flex' , gap:'10px'}}>
           <Button 
             type="link" 
             icon={<EditOutlined />} 
@@ -174,6 +175,8 @@ function Category() {
             onClick={() => handleDelete(record.category_id)}>
             Delete
           </Button>
+
+          </div>
         </>
       ),
     },

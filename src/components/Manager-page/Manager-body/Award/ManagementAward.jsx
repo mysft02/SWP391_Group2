@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Modal, Form, Input, notification } from 'antd';
-import { api } from '../../../../config/AxiosConfig'; // Điều chỉnh đường dẫn này theo cấu hình của bạn
+import { Table, Button, Modal, Form, Input, notification, Popconfirm } from 'antd';
+import { api } from '../../../../config/AxiosConfig';
+import { TrophyOutlined, NumberOutlined, EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 function ManagementAward() {
   const [awards, setAwards] = useState([]);
@@ -12,7 +13,7 @@ function ManagementAward() {
   // Fetch all awards
   const fetchAwards = async () => {
     try {
-      const response = await api.get('/api/Award/GetAllAwards');
+      const response = await api.get('/api/Award/Get All Award');
       setAwards(response.data);
     } catch (error) {
       console.error('Error fetching awards:', error);
@@ -26,38 +27,55 @@ function ManagementAward() {
   };
 
   useEffect(() => {
-    fetchAwards(); // Fetch awards when component is mounted
+    fetchAwards();
   }, []);
 
-  // Handle Create or Update Award
-  const handleSaveAward = async (values) => {
+  // Function to add a new award
+  const addAward = async (values) => {
     try {
-      if (editingAward) {
-        // Update award
-        await api.put(`/api/Award/UpdateAward`, { ...values, id: editingAward.id });
-        notification.success({
-          message: 'Award Updated',
-          description: `Award "${values.name}" has been updated.`,
-        });
-      } else {
-        // Create award
-        await api.post('/api/Award/CreateAward', values);
-        notification.success({
-          message: 'Award Created',
-          description: `Award "${values.name}" has been created.`,
-        });
-      }
-      fetchAwards(); // Refresh the list after saving
-      setIsModalOpen(false); // Close modal
-      form.resetFields(); // Reset form
-      setEditingAward(null); // Reset editing state
+      await api.post('/api/Award/Create Award', values);
+      notification.success({
+        message: 'Award Created',
+        description: `Award "${values.award_name}" has been created.`,
+      });
+      fetchAwards();
     } catch (error) {
-      console.error('Error saving award:', error);
+      console.error('Error creating award:', error);
       notification.error({
-        message: 'Save Failed',
-        description: 'Could not save award data.',
+        message: 'Creation Failed',
+        description: 'Could not create award.',
       });
     }
+  };
+
+  // Function to update an existing award
+  const updateAward = async (values) => {
+    try {
+      await api.put('/api/Award/Update Award', { ...values, award_id: editingAward.award_id });
+      notification.success({
+        message: 'Award Updated',
+        description: `Award "${values.award_name}" has been updated.`,
+      });
+      fetchAwards();
+    } catch (error) {
+      console.error('Error updating award:', error);
+      notification.error({
+        message: 'Update Failed',
+        description: 'Could not update award.',
+      });
+    }
+  };
+
+  // Handle Create or Update Award based on editing state
+  const handleSaveAward = async (values) => {
+    if (editingAward) {
+      await updateAward(values);
+    } else {
+      await addAward(values);
+    }
+    setIsModalOpen(false);
+    form.resetFields();
+    setEditingAward(null);
   };
 
   // Open modal for creating a new award or editing an existing one
@@ -65,7 +83,7 @@ function ManagementAward() {
     setEditingAward(award);
     setIsModalOpen(true);
     if (award) {
-      form.setFieldsValue(award); // Fill form with existing award data
+      form.setFieldsValue(award);
     }
   };
 
@@ -76,48 +94,15 @@ function ManagementAward() {
     setEditingAward(null);
   };
 
-  // Table columns configuration
-  const columns = [
-    {
-      title: 'Award ID',
-      dataIndex: 'id',
-      key: 'id',
-    },
-    {
-      title: 'Award Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <>
-          <Button type="link" onClick={() => openModal(record)}>
-            Edit
-          </Button>
-          <Button type="link" onClick={() => handleDelete(record.id)} danger>
-            Delete
-          </Button>
-        </>
-      ),
-    },
-  ];
-
-  // Delete an award
+  // Delete an award with confirmation
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/api/Award/DeleteAward/${id}`); // Giả sử đây là endpoint để xóa award
+      await api.delete(`/api/Award/Delete Award?awardId=${id}`);
       notification.success({
         message: 'Award Deleted',
         description: `Award with ID ${id} has been deleted.`,
       });
-      fetchAwards(); // Refresh the list after deleting
+      fetchAwards();
     } catch (error) {
       console.error('Error deleting award:', error);
       notification.error({
@@ -127,17 +112,76 @@ function ManagementAward() {
     }
   };
 
+  // Table columns configuration
+  const columns = [
+    {
+      title: 'Award ID',
+      dataIndex: 'award_id',
+      key: 'award_id',
+    },
+    {
+      title: 'Award Name',
+      dataIndex: 'award_name',
+      key: 'award_name',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Competition Name',
+      dataIndex: ['competition', 'competition_name'],
+      key: 'competition_name',
+      render: (text, record) => record.competition?.competition_name || 'N/A',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <>
+          <div style={{display:'flex', gap:'5px'}}>
+          <Button type="link" icon={<EditOutlined />} onClick={() => openModal(record)}>
+            Edit
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this award?"
+            onConfirm={() => handleDelete(record.award_id)}
+            okText={<span style={{ display: 'flex', alignItems: 'center' }}>Yes</span>}
+            cancelText={<span style={{ display: 'flex', alignItems: 'center' }}>No</span>}
+            okButtonProps={{
+              style: { marginRight: '5px', display: 'inline-flex', alignItems: 'center' }, // Ensure alignment
+            }}
+            cancelButtonProps={{
+              style: { display: 'inline-flex', alignItems: 'center' }, // Ensure alignment
+            }}
+          >
+            <Button type="link" icon={<DeleteOutlined />} danger>
+              Delete
+            </Button>
+          </Popconfirm>
+          </div>
+        </>
+      ),
+    },
+  ];
+
   return (
     <div>
       <h1>Management Award</h1>
-      <Button type="primary" onClick={() => openModal()} style={{ marginBottom: '20px' }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => openModal()}
+        style={{ marginBottom: '20px' }}
+      >
         Create Award
       </Button>
       <Table
         dataSource={awards}
         columns={columns}
         loading={loading}
-        rowKey="id" // Ensure 'id' is a unique key
+        rowKey="award_id"
       />
 
       {/* Modal for creating/editing an award */}
@@ -151,17 +195,17 @@ function ManagementAward() {
         <Form form={form} layout="vertical" onFinish={handleSaveAward}>
           <Form.Item
             label="Award Name"
-            name="name"
+            name="award_name"
             rules={[{ required: true, message: 'Please enter the award name' }]}
           >
-            <Input />
+            <Input prefix={<TrophyOutlined />} />
           </Form.Item>
           <Form.Item
-            label="Description"
-            name="description"
-            rules={[{ required: true, message: 'Please enter the description' }]}
+            label="Quantity"
+            name="quantity"
+            rules={[{ required: true, message: 'Please enter the quantity of the award' }]}
           >
-            <Input />
+            <Input prefix={<NumberOutlined />} type="number" />
           </Form.Item>
         </Form>
       </Modal>

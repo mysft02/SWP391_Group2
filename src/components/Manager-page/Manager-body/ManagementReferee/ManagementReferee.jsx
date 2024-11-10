@@ -68,31 +68,40 @@ function ManagementReferee() {
       key: 'actions',
       render: (_, record) => (
         <>
+        <div style={{ display: 'flex', gap: '5px' }}>
           <Button
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(record)}
-            style={{ marginRight: 8 }}
-          >
-            Edit
-          </Button>
-          <Popconfirm Style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '15000px', // Optional: adds space between the buttons
-            }}
-            title="Are you sure to delete?"
-            onConfirm={() => handleDelete(record.refereeId)}
-            okText="Yes"
-            cancelText="No"
+                icon={<EditOutlined />}
+                onClick={() => handleEdit(record)}
+                style={{ marginRight: 8 }}
+              >
+                Edit
+              </Button>
 
-            icon={<DeleteOutlined />}
-          >
-            <Button icon={<DeleteOutlined />} type="danger">
-              Delete
-            </Button>
-          </Popconfirm>
-
-
+              <Popconfirm
+                title="Are you sure to delete this referee?"
+                onConfirm={() => handleDelete(record.refereeId)}
+                okText="Yes"
+                cancelText="No"
+                icon={<DeleteOutlined />}
+                okButtonProps={{
+                  style: {
+                    marginRight: '8px', // Optional: adds space between the buttons
+                    display: 'inline-flex', // Ensures the button is inline with the cancel button
+                    alignItems: 'center', // Center align the button content
+                  }
+                }}
+                cancelButtonProps={{
+                  style: {
+                    display: 'inline-flex', // Ensures the button is inline with the ok button
+                    alignItems: 'center', // Center align the button content
+                  }
+                }}
+              >
+                <Button icon={<DeleteOutlined />} type="danger">
+                  Delete
+                </Button>
+              </Popconfirm>
+            </div>
         </>
       ),
     },
