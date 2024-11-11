@@ -1,0 +1,85 @@
+.Manager-profile-container {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    background-color: #f0f2f5;
+    height: 75vh;
+  }
+  .Manager-user-info-section {
+    height:80%;
+    width: 30%;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Manager-profile-section{
+    height:100%;
+    width: 70%;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .avatar-section {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .avatar-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+}
+
+.username {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 8px;
+}
+
+.email {
+    font-size: 16px;
+    color: #666666;
+    margin-bottom: 12px;
+}
+
+.balance {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffd700; /* Màu vàng sang trọng */
+    background-color: #333333;
+    padding: 5px 15px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+.button-Manager{
+    display: flex;
+    justify-content: center;
+}
+
+
+  

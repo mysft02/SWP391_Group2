@@ -4,6 +4,7 @@ import RefereeLayout from '../template/LayoutHome/RefereeLayout'
 import Competition from '../components/Competition/Competition/Competition'
 import Contact from '../components/Referee-page/Referee-header/contact/Contact'
 import ScoreCompetition from '../components/Referee-page/Referee-body/ScoreCompetition/ScoreCompetition'
+import RefereeProfile from '../components/Referee-page/Referee-body/RefeerProfile/RefereeProfile'
 
 function RefereeRouter() {
   return (
@@ -12,6 +13,7 @@ function RefereeRouter() {
         <Route path="/" element={<RefereeLayout/>}>
             <Route index element={<Competition/>}/>
             <Route path="/scoreCompetition" element={<ScoreCompetition />} />
+            <Route path="/refereeProfile" element={<RefereeProfile/>} />
             <Route path="/contact" element={<Contact />} />
         </Route>
     </Routes>

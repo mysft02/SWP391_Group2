@@ -9,6 +9,7 @@ import {
   PhoneOutlined,
   UserOutlined,
   DownOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import ToggleTheme from "./ToggleTheme/ToggleTheme";
 import { useUser } from "../../../data/UserContext"; // Hook lấy user từ context
@@ -28,8 +29,17 @@ const RefereeHeader = () => {
 
   const menuItems = [
     {
+      key: "customerProfile",
+      label: (
+        <Link to="/referee/refereeProfile">
+          <UserOutlined  style={{ marginRight: 8 }} /> Profile
+        </Link>
+      ),
+    },
+    {
       key: "logout",
-      label: <span onClick={handleLogout}>Logout</span>, // Gọi handleLogout để đăng xuất
+      label: <span onClick={handleLogout}>
+        <LogoutOutlined style={{ marginRight: 8 }} />Logout</span>, // Gọi handleLogout để đăng xuất
     },
   ];
 
