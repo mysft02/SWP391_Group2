@@ -9,7 +9,7 @@ import ManagementFishKoi from '../../components/Manager-page/Manager-body/FishKo
 import ManagementReferee from '../../components/Manager-page/Manager-body/ManagementReferee/ManagementReferee';
 import RegisterManagement from '../../components/Manager-page/Manager-body/RegisterManagement/RegisterManagement';
 import ManagementAward from '../../components/Manager-page/Manager-body/Award/ManagementAward';
-
+import './DashBoard.css'
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
@@ -50,7 +50,7 @@ function DashBoardManager() {
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         collapsedWidth={60}
-        style={{ height: '120vh', overflow: 'auto', position: 'relative', color: "#333" }}
+        style={{ height: '100vh', overflow: 'auto', position: 'relative', color: "#333" }}
         
       >
         <Menu

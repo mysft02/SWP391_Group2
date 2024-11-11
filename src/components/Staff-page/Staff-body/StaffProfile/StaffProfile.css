@@ -1,4 +1,4 @@
-.custome-profile-container {
+.Staff-profile-container {
     display: flex;
     gap: 30px;
     padding: 20px;
@@ -6,7 +6,7 @@
     height: 75vh;
   }
   .user-info-section {
-    height:60%;
+    height:80%;
     width: 30%;
     background: #ffffff;
     padding: 20px;
@@ -15,7 +15,7 @@
   }
   
   .profile-section{
-    height:90%;
+    height:100%;
     width: 70%;
     background: #ffffff;
     padding: 20px;
@@ -76,7 +76,7 @@
     border-radius: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
-.button-customer{
+.button-Staff{
     display: flex;
     justify-content: center;
 }

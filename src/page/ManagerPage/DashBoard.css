@@ -28,7 +28,7 @@
   border-radius: 8px;
   max-width: 1000px; /* Độ rộng tối đa của nội dung */
   margin: 50px auto; /* Căn giữa theo chiều ngang */
-  min-height: 300px; /* Chiều cao tối thiểu */
-  background-color: #142b504a; /* Màu nền nhẹ cho nội dung */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+  min-height: 600px; /* Chiều cao tối thiểu */
+  background-color: #d5d5d625; /* Màu nền nhẹ cho nội dung */
+  box-shadow: 5px 5px 12px rgba(1, 11, 36, 0.852); /* Đổ bóng nhẹ */
 }

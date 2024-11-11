@@ -31,7 +31,7 @@ function DashBoardStaff() {
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
         collapsedWidth={60}
-        style={{ height: '120vh', overflow: 'auto', position: 'relative', color: "#333" }}
+        style={{ height: '100vh', overflow: 'auto', position: 'relative', color: "#333" }}
         
       >
         <Menu

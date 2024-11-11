@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, Input, Modal, notification, Select } from 'antd';
+import { Table, Button, Form, Input, Modal, notification, Select, Popconfirm } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; // Đường dẫn tới file cấu hình Axios
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'; // Thêm các icon
 import { UserOutlined, TagsOutlined, AppstoreOutlined } from '@ant-design/icons'; // Icon cho các field
@@ -168,13 +168,28 @@ function Category() {
             onClick={() => showModal(record)}>
             Edit
           </Button>
-          <Button 
-            type="link" 
-            danger 
-            icon={<DeleteOutlined />} 
-            onClick={() => handleDelete(record.category_id)}>
-            Delete
-          </Button>
+          <Popconfirm
+          title="Are you sure you want to delete this category?"
+          onConfirm={() => handleDelete(record.category_id)}
+          okText="Yes"
+          cancelText="No"
+          // Tùy chỉnh các nút trong Popconfirm
+          okButtonProps={{
+            style: {
+              marginRight: '8px', // Optional: adds space between the buttons
+              display: 'inline-flex', // Ensures the button is inline with the cancel button
+              alignItems: 'center', // Center align the button content
+            }
+          }}
+          cancelButtonProps={{
+            style: {
+              display: 'inline-flex', // Ensures the button is inline with the ok button
+              alignItems: 'center', // Center align the button content
+            }
+          }}
+        >
+          <Button type="link" icon={<DeleteOutlined />} danger>Delete</Button>
+        </Popconfirm>
 
           </div>
         </>

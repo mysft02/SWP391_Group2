@@ -9,10 +9,12 @@ import {
   PhoneOutlined,
   UserOutlined,
   DownOutlined,
+  DockerOutlined,
+  
 } from "@ant-design/icons";
 import ToggleTheme from "./ToggleTheme/ToggleTheme";
 import { useUser } from "../../../data/UserContext"; // Hook lấy user từ context
-import { DashboardOutlined, CreditCardOutlined, LogoutOutlined } from '@ant-design/icons';
+import { CreditCardOutlined, LogoutOutlined } from '@ant-design/icons';
 const CustomerHeader = () => {
   const { user, logOut } = useUser(); // Sử dụng logOut từ UserContext
   const navigate = useNavigate();
@@ -28,10 +30,18 @@ const CustomerHeader = () => {
 
   const menuItems = [
     {
-      key: "dashboard",
+      key: "customerProfile",
       label: (
-        <Link to="/member/dashboard">
-          <DashboardOutlined style={{ marginRight: 8 }} /> Dashboard
+        <Link to="/member/customerProfile">
+          <UserOutlined  style={{ marginRight: 8 }} /> Profile
+        </Link>
+      ),
+    },
+    {
+      key: "fish-koi",
+      label: (
+        <Link to="/member/fish-koi">
+          <DockerOutlined  style={{ marginRight: 8 }} /> Fish Koi
         </Link>
       ),
     },

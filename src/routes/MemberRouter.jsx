@@ -5,10 +5,11 @@ import MemberPage from '../page/CustomerPage/MemberPage';
 import Contact from '../components/Customer-Page/Customer-Header/contact/Contact';
 import CompetitionPage from '../page/CompetitionPage/CompetitionPage';
 import NewsPage from '../page/CustomerPage/NewsPage/NewsPage';
-import DashBoardPage from '../page/CustomerPage/DashBoardPage/DashBoardPage';
 import PaymentCustomer from '../components/Customer-Page/Customer-Body/Payment/paymentCustomer';
 import DetailCompetition from '../components/Competition/DetailCompetition/DetailCompetition';
 import BetCompetition from '../components/Competition/BetCompetition/BetCompetition';
+import CustomeProfile from '../components/Customer-Page/Customer-Body/CustomeProfile/CustomeProfile';
+import CustomerFish from '../components/Customer-Page/Customer-Body/CustomerFish/CustomerFish';
 
 function MemberRouter() {
   return (
@@ -20,9 +21,9 @@ function MemberRouter() {
         <Route path="competition" element={<CompetitionPage/>} />
         <Route path="detail-competition" element={<DetailCompetition/>} />
         <Route path="/bet-competition" element={<BetCompetition/>} />
-
         <Route path="/contact" element={<Contact />} />
-        <Route path="/dashboard" element={<DashBoardPage/>} />
+        <Route path="/customerProfile" element={<CustomeProfile/>} />
+        <Route path="/fish-koi" element={<CustomerFish/>} />
         <Route path="/payment" element={<PaymentCustomer/>} />
         
 

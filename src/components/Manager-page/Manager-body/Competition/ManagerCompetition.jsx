@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, Input, Modal, notification, DatePicker, Select } from 'antd';
+import { Table, Button, Form, Input, Modal, notification, DatePicker, Select, Popconfirm } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import moment from 'moment';
@@ -267,10 +267,32 @@ function ManagerCompetition() {
       key: 'action',
       render: (_, record) => (
         <>
-        <div style={{display:'flex', gap:'10px'}}>
+      <div style={{display:'flex', gap:'10px'}}>
         <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
-        <Button type="link" icon={<DeleteOutlined />} danger onClick={() => handleDelete(record.competition_id)}>Delete</Button>
-        </div>
+        
+        <Popconfirm
+          title="Are you sure you want to delete this competition?"
+          onConfirm={() => handleDelete(record.competition_id)}
+          okText="Yes"
+          cancelText="No"
+          // Tùy chỉnh các nút trong Popconfirm
+          okButtonProps={{
+            style: {
+              marginRight: '8px', // Optional: adds space between the buttons
+              display: 'inline-flex', // Ensures the button is inline with the cancel button
+              alignItems: 'center', // Center align the button content
+            }
+          }}
+          cancelButtonProps={{
+            style: {
+              display: 'inline-flex', // Ensures the button is inline with the ok button
+              alignItems: 'center', // Center align the button content
+            }
+          }}
+        >
+          <Button type="link" icon={<DeleteOutlined />} danger>Delete</Button>
+        </Popconfirm>
+      </div>
           
         </>
       ),

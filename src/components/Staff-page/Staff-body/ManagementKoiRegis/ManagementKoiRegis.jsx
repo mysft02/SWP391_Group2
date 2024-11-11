@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../../../config/AxiosConfig';
 import { Table, Button, Modal, Input, message, Select } from 'antd';
-import './ManagementKoiRegis.css'; // Ensure to import your CSS file
+import { EditOutlined, AppstoreAddOutlined, IdcardOutlined, BarcodeOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';  // Import the icons
+import './ManagementKoiRegis.css';
 
 function ManagementKoiRegis() {
   const [koiRegistrations, setKoiRegistrations] = useState([]);
@@ -27,35 +28,33 @@ function ManagementKoiRegis() {
   const showUpdateModal = (registration) => {
     setSelectedRegistration(registration);
     setFormData({
-        
       registrationId: registration.registrationId,
       koiId: registration.koiId,
       competitionId: registration.competitionId,
       categoryId: registration.categoryId,
       statusRegistration: registration.statusRegistration || 'Pending', // Default value
-      // Remove unnecessary fields like koi_name, competitionName, etc.
     });
     setIsModalVisible(true);
   };
-  
+
   const handleUpdate = async () => {
     try {
       // Prepare the body with only the necessary fields
       const requestBody = {
         registrationId: formData.registrationId,
-        koiId: selectedRegistration.koiId, // Ensure this is correctly set
+        koiId: selectedRegistration.koiId,
         competitionId: formData.competitionId,
         statusRegistration: formData.statusRegistration,
         categoryId: formData.categoryId,
       };
-  
+
       console.log('Updating Koi Registration with data:', requestBody);
-  
+
       await api.put('/api/KoiRegistration/Update KoiRegistration', requestBody);
-  
+
       message.success('Registration updated successfully');
       setIsModalVisible(false);
-      
+
       // Refresh the list
       const response = await api.get('/api/KoiRegistration/Get All KoiRegistration');
       setKoiRegistrations(response.data);
@@ -64,8 +63,6 @@ function ManagementKoiRegis() {
       console.error(error);
     }
   };
-  
-  
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -73,17 +70,17 @@ function ManagementKoiRegis() {
 
   const columns = [
     {
-      title: 'Code Registration',
+      title: <span><IdcardOutlined /> Code Registration</span>,  // Icon added
       dataIndex: 'registrationId',
       key: 'registrationId',
     },
     {
-      title: 'Competition ID',
+      title: <span><AppstoreAddOutlined /> Competition ID</span>,  // Icon added
       dataIndex: 'competitionId',
       key: 'competitionId',
     },
     {
-      title: 'Code Category',
+      title: <span><BarcodeOutlined /> Code Category</span>,  // Icon added
       dataIndex: 'categoryId',
       key: 'categoryId',
     },
@@ -91,17 +88,25 @@ function ManagementKoiRegis() {
       title: 'Status',
       dataIndex: 'statusRegistration',
       key: 'statusRegistration',
+      render: (status) => (
+        <span>
+          {status === 'Accepted' && (
+            <CheckCircleOutlined style={{ color: 'green',marginRight: 8 }} /> // Accepted icon
+          )}
+          {status === 'Pending' && (
+            <ClockCircleOutlined style={{ color: 'orange' ,marginRight: 8}} /> // Pending icon
+          )}
+          {status}
+        </span>
+      ),
     },
     {
-      title: 'Registration Fee',
-      dataIndex: 'registrationFee',
-      key: 'registrationFee',
-    },
-    {
-      title: 'Action',
+      title: <span><EditOutlined /> Action</span>,  // Icon added
       key: 'action',
       render: (text, record) => (
-        <Button onClick={() => showUpdateModal(record)}>Update</Button>
+        <Button icon={<EditOutlined />} onClick={() => showUpdateModal(record)}>
+          Update
+        </Button>
       ),
     },
   ];
@@ -116,16 +121,14 @@ function ManagementKoiRegis() {
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={
-            <div className='fish-modal-footer'>
+          <div className='fish-modal-footer'>
             <Button key="submit" type="primary" onClick={handleUpdate}>
-                Update
-            </Button>,
+              Update
+            </Button>
             <Button key="back" onClick={handleCancel}>
-                Cancel
-            </Button>,
-
-            </div>
-
+              Cancel
+            </Button>
+          </div>
         }
         className="custom-modal"
       >
@@ -156,7 +159,6 @@ function ManagementKoiRegis() {
           <Select.Option value="Pending">Pending</Select.Option>
           <Select.Option value="Accepted">Accepted</Select.Option>
         </Select>
-
       </Modal>
     </div>
   );
