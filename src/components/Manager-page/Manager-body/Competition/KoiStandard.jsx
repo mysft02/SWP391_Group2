@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Form, Input, Modal, notification, Popconfirm } from 'antd';
+import { Table, Button, Form, Input, Modal, notification, Popconfirm, Select } from 'antd';
 import { api } from '../../../../config/AxiosConfig'; 
 import {
   EditOutlined,
@@ -176,6 +176,11 @@ function KoiStandard() {
       key: 'id',
     },
     {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
       title: 'Color',
       dataIndex: 'color',
       key: 'color',
@@ -205,11 +210,7 @@ function KoiStandard() {
       dataIndex: 'variety',
       key: 'variety',
     },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
+
     {
       title: 'Gender',
       dataIndex: 'gender',
@@ -273,51 +274,111 @@ function KoiStandard() {
             label="Name"
             rules={[{ required: true, message: 'Please input the name of the Koi standard!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+            <Input/>
           </Form.Item>
           <Form.Item
             name="color_koi"
             label="Color"
-            rules={[{ required: true, message: 'Please input the color of the Koi!' }]}
+            rules={[{ required: true, message: 'Please select the color of the Koi!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+            <Select>
+              <Select.Option value="White (Shiro)">White</Select.Option>
+              <Select.Option value="Red (Aka)">Red</Select.Option>
+              <Select.Option value="Black (Sumi)">Black</Select.Option>
+              <Select.Option value="Yellow (Ki)">Yellow</Select.Option>
+              <Select.Option value="Orange (Orenji)">Orange</Select.Option>
+              <Select.Option value="Blue (Asagi)">Blue</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item
             name="pattern_koi"
             label="Pattern"
-            rules={[{ required: true, message: 'Please input the pattern of the Koi!' }]}
+            rules={[{ required: true, message: 'Please select the pattern of the Koi!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+            <Select>
+              <Select.Option value="Kohaku">Kohaku</Select.Option>
+              <Select.Option value="Sanke">Sanke</Select.Option>
+              <Select.Option value="Showa">Showa</Select.Option>
+              <Select.Option value="Tancho">Tancho</Select.Option>
+              <Select.Option value="Utsurimono">Utsurimono</Select.Option>
+              <Select.Option value="Asagi">Asagi</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item
-            name="size_koi"
-            label="Size"
-          >
-            <Input prefix={<CheckOutlined />} />
-          </Form.Item>
-          <Form.Item
-            name="age_koi"
-            label="Age"
-          >
-            <Input prefix={<CheckOutlined />} />
-          </Form.Item>
+              name="size_koi"
+              label="Size"
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Please input the size of the Koi!' 
+                },
+                {
+                  validator: (_, value) => {
+                    if (value < 50 || value > 100) {
+                      return Promise.reject('Koi size must be between 50 and 100 cm!');
+                    }
+                    return Promise.resolve();
+                  }
+                }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="age_koi"
+              label="Age"
+              rules={[
+                { 
+                  required: true, 
+                  message: 'Please input the age of the Koi!' 
+                },
+                {
+                  validator: (_, value) => {
+                    if (value < 1 || value > 50) {
+                      return Promise.reject('Koi age must be between 1 and 50 years!');
+                    }
+                    return Promise.resolve();
+                  }
+                }
+              ]}
+            >
+              <Input />
+            </Form.Item>
           <Form.Item
             name="bodyshape_koi"
             label="Body Shape"
+            rules={[{ required: true, message: 'Please input the body shape of the Koi!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+          <Input/>
+
           </Form.Item>
           <Form.Item
             name="variety_koi"
             label="Variety"
+            rules={[{ required: true, message: 'Please input the variety of the Koi!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+            <Select >
+              
+              <Select.Option value="Kohaku">Kohaku</Select.Option>
+              <Select.Option value="Sanke">Sanke</Select.Option>
+              <Select.Option value="Showa">Showa</Select.Option>
+              <Select.Option value="Tancho">Tancho</Select.Option>
+              <Select.Option value="Asagi">Asagi</Select.Option>
+              <Select.Option value="Shusui">Shusui</Select.Option>
+
+            </Select>
+
           </Form.Item>
           <Form.Item
             name="gender"
             label="Gender"
+            rules={[{ required: true, message: 'Please select the gender of the Koi!' }]}
           >
-            <Input prefix={<CheckOutlined />} />
+            <Select>
+              <Select.Option value="male">Male</Select.Option>
+              <Select.Option value="female">Female</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
