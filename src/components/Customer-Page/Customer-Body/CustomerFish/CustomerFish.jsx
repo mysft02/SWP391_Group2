@@ -4,6 +4,7 @@ import { useUser } from '../../../../data/UserContext';
 import { Form, Input, Button, Table, message, Modal } from 'antd';
 import { UserOutlined, TagOutlined, ExpandOutlined, CalendarOutlined, PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import './CustomerFish.css'; // Import CSS
+import TypedInputNumber from 'antd/es/input-number';
 
 function CustomerFish() {
   const { user } = useUser();
@@ -20,7 +21,7 @@ function CustomerFish() {
 
   // Phân trang
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 2; // Số cá hiển thị trên mỗi trang
+  const pageSize = 3; // Số cá hiển thị trên mỗi trang
 
   // Khởi tạo form
   const [form] = Form.useForm();
@@ -166,12 +167,14 @@ function CustomerFish() {
       key: 'action',
       render: (_, record) => (
         <>
+          <div style={{display:'flex', gap:'5px'}}>
           <Button type="link" icon={<EditOutlined />} onClick={() => handleSelectFish(record)}>
             Cập nhật
           </Button>
           <Button type="link" icon={<DeleteOutlined />} onClick={() => confirmDelete(record.koi_id)}>
             Xóa
           </Button>
+          </div>
         </>
       ),
     },
@@ -184,28 +187,114 @@ function CustomerFish() {
       <div className="customer-fish-form">
         <h2>Tạo cá Koi</h2>
         <Form form={form} layout="vertical">
-          <Form.Item label="Tên cá">
-            <Input value={fishData.koi_name} onChange={handleChange} name="koi_name" prefix={<UserOutlined />} />
-          </Form.Item>
-          <Form.Item label="Loài cá">
-            <Input value={fishData.koi_variety} onChange={handleChange} name="koi_variety" prefix={<TagOutlined />} />
-          </Form.Item>
-          <Form.Item label="Kích thước cá">
-            <Input value={fishData.koi_size} onChange={handleChange} name="koi_size" prefix={<ExpandOutlined />} />
-          </Form.Item>
-          <Form.Item label="Tuổi cá">
-            <Input value={fishData.koi_age} onChange={handleChange} name="koi_age" prefix={<CalendarOutlined />} />
-          </Form.Item>
-          <Button type="primary" icon={<PlusOutlined />} onClick={createFish}>
-            Tạo cá Koi
-          </Button>
-        </Form>
-      </div>
+            <Form.Item
+              label="Tên cá"
+              name="koi_name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập tên cá!',
+                },
+              ]}
+            >
+              <Input
+                value={fishData.koi_name}
+                onChange={handleChange}
+                name="koi_name"
+                prefix={<UserOutlined />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Loài cá"
+              name="koi_variety"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập loài cá!',
+                },
+              ]}
+            >
+              <Input
+                value={fishData.koi_variety}
+                onChange={handleChange}
+                name="koi_variety"
+                prefix={<TagOutlined />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Kích thước cá"
+              name="koi_size"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập kích thước cá!',
+                },
+              ]}
+            >
+              <Input
+                value={fishData.koi_size}
+                onChange={handleChange}
+                name="koi_size"
+                prefix={<ExpandOutlined />}
+              />
+            </Form.Item>
+
+            <Form.Item
+              label="Tuổi cá"
+              name="koi_age"
+              rules={[
+                {
+                  required: true,
+                  message: 'Vui lòng nhập tuổi cá!',
+                },
+                {
+                  validator: (_, value) => {
+                    if (value && !isNaN(Number(value))) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject('Tuổi cá phải là một số hợp lệ!');
+                  },
+                },
+              ]}
+            >
+              <Input
+                value={fishData.koi_age}
+                onChange={(e) => setFishData({ ...fishData, koi_age: e.target.value })}
+                name="koi_age"
+                prefix={<CalendarOutlined />}
+                style={{ width: '100%' }}
+              />
+            </Form.Item>
+
+
+
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={async () => {
+                try {
+                  await form.validateFields();
+                  createFish();  // Nếu validate thành công, gọi hàm tạo cá Koi
+                } catch (error) {
+                  // Xử lý khi validate không thành công
+                  message.error('Vui lòng kiểm tra lại các giá trị!');
+                }
+              }}
+            >
+              Tạo cá Koi
+            </Button>
+          </Form>
+
+        </div>
 
       <div className="divider"></div>
 
       <div className="customer-fish-table">
-        <h2>Danh sách cá Koi</h2>
+        <div className="table-title">
+          <h2>Danh Sách Cá Koi</h2>
+        </div>
         <Table
           dataSource={paginatedData}
           columns={columns}
@@ -242,7 +331,7 @@ function CustomerFish() {
       {/* Modal cập nhật */}
       <Modal
         title="Cập nhật cá Koi"
-        visible={isModalVisible}
+        open={isModalVisible}
         footer={
           <div className="fish-modal-footer">
           <Button key="update" type="primary" onClick={updateFish}>

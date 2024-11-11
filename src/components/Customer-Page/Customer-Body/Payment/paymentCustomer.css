@@ -1,0 +1,58 @@
+.payment-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: 100vh;
+  }
+  
+  .form-section {
+    background-color: #f4f6fd;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .payment-form {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .transaction-history {
+    flex: 0.5; /* Tăng chiều rộng của transaction-history */
+    background-color: #1c1c1c;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-y: auto; /* Giúp danh sách cuộn nếu có quá nhiều giao dịch */
+  }
+  
+  .payment-form h2, .transaction-history h2 {
+    color: #8a7913;
+    text-align: center;
+  }
+  
+  .payment-form .ant-input, .transaction-history .ant-input {
+    border-radius: 5px;
+  }
+  
+  .payment-form .ant-btn, .transaction-history .ant-btn {
+    background-color: #8a7913;
+    border-color: #8a7913;
+    border-radius: 5px;
+  }
+  
+  .payment-form .ant-divider, .transaction-history .ant-divider {
+    border-color: #8a7913;
+  }
+  
+  .transaction-history .ant-list-item-meta {
+    color: #fff;
+  }
+  
+  .transaction-history .ant-list-item-meta span {
+    color: #8a7913;
+  }
+  
+  .transaction-history .ant-list-item-meta p {
+    color: #fff;
+  }
+  

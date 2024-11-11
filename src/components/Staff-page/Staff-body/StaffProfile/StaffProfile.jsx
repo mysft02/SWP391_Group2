@@ -106,7 +106,7 @@ function StaffProfile() {
     <div className="Staff-profile-container">
       {/* Left Section - Update Profile */}
       
-      <div className="profile-section">
+      <div className="staff-profile-section">
         <Form layout="vertical" onFinish={handleSubmit}>
           <h2 className="section-title">Cập nhật hồ sơ</h2>
           <Form.Item label="Họ và Tên" required>
@@ -148,7 +148,7 @@ function StaffProfile() {
       </div>
 
       {/* Right Section - User Info & Change Password */}
-      <div className="user-info-section">
+      <div className="staff-user-info-section">
         <div className="avatar-section">
           <img src={avatar} alt="avatar" className="avatar" />
           <div className="user-info">
