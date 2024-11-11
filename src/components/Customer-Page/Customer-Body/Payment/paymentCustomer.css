@@ -3,56 +3,72 @@
     justify-content: space-between;
     padding: 20px;
     height: 100vh;
-  }
-  
-  .form-section {
+}
+
+.form-section {
     background-color: #f4f6fd;
     padding: 20px;
     border-radius: 8px;
-  }
-  
-  .payment-form {
+}
+
+.payment-form {
     flex: 1;
     margin-right: 20px;
-  }
-  
-  .transaction-history {
-    flex: 0.5; /* Tăng chiều rộng của transaction-history */
+}
+
+.transaction-history {
+    flex: 0.5;
     background-color: #1c1c1c;
     color: white;
     padding: 20px;
     border-radius: 8px;
-    overflow-y: auto; /* Giúp danh sách cuộn nếu có quá nhiều giao dịch */
-  }
-  
-  .payment-form h2, .transaction-history h2 {
-    color: #8a7913;
+    overflow-y: auto;
+}
+
+.payment-form h2 {
+    color: #65580d;
     text-align: center;
-  }
-  
-  .payment-form .ant-input, .transaction-history .ant-input {
+}
+
+.transaction-history h2 {
+    color: #d3c679;
+    text-align: center;
+}
+
+.transaction-history .ant-list-item-meta-title,
+.transaction-history .ant-list-item-meta-description p {
+    display: flex;
+    align-items: center;
+}
+
+.transaction-history .ant-list-item-meta-title span,
+.transaction-history .ant-list-item-meta-description span {
+    color: #cdc077;
+}
+
+.transaction-history .ant-list-item-meta-description p {
+    color: #d3c679;
+}
+
+/* Hover effect with wider appearance */
+.transaction-history .ant-list-item {
+    padding: 10px 16px;
     border-radius: 5px;
-  }
-  
-  .payment-form .ant-btn, .transaction-history .ant-btn {
-    background-color: #8a7913;
-    border-color: #8a7913;
-    border-radius: 5px;
-  }
-  
-  .payment-form .ant-divider, .transaction-history .ant-divider {
-    border-color: #8a7913;
-  }
-  
-  .transaction-history .ant-list-item-meta {
-    color: #fff;
-  }
-  
-  .transaction-history .ant-list-item-meta span {
+    transition: background-color 0.3s ease, padding 0.3s ease;
+}
+
+.transaction-history .ant-list-item:hover {
+    background-color: #2c2c2c;
+    padding: 12px 20px; /* Increase padding for wider effect */
+    border-radius: 8px; /* Make hover effect more pronounced */
+    border: 1px solid #8a7913; /* Optional border to accentuate the hover */
+}
+
+.transaction-history .ant-list-item-meta-description p svg {
+    margin-right: 8px;
     color: #8a7913;
-  }
-  
-  .transaction-history .ant-list-item-meta p {
-    color: #fff;
-  }
-  
+}
+
+.transaction-history .ant-divider {
+    border-color: #8a7913;
+}

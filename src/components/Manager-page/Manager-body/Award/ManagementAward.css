@@ -1,0 +1,120 @@
+/* Container styles */
+.management-award-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+  
+/* Title styling */
+.management-award-container h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+  
+/* Create Award Button styling */
+.create-award-button {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+  
+.create-award-button .ant-btn {
+    background-color: #1890ff;
+    color: white;
+    font-weight: 600;
+    border: none;
+}
+  
+.create-award-button .ant-btn:hover {
+    background-color: #40a9ff;
+}
+  
+/* Table styles */
+.ant-table {
+    background: #f9f9f9;
+}
+  
+.ant-table-thead > tr > th {
+    background-color: #fafafa;
+    font-weight: 600;
+    color: #555;
+}
+  
+.ant-table-tbody > tr > td {
+    font-size: 14px;
+    color: #444;
+}
+  
+/* Action buttons styling */
+.action-buttons {
+    display: flex;            /* Sử dụng flexbox để sắp xếp các phần tử theo chiều ngang */
+    justify-content: flex-start;  /* Sắp xếp các nút từ trái sang phải */
+    gap: 10px;                /* Khoảng cách giữa các nút */
+  }
+  
+  .action-buttons button {
+    margin: 0;                /* Đảm bảo không có margin dư thừa */
+  }
+  
+  
+.action-buttons .ant-btn-link {
+    color: #1890ff;
+    font-weight: 500;
+}
+  
+.action-buttons .ant-btn-link.danger {
+    color: #ff4d4f;
+}
+  
+.action-buttons .ant-btn-link:hover {
+    color: #40a9ff;
+}
+  
+/* Popconfirm buttons styling */
+/* Popconfirm buttons styling */
+
+
+/* Modal styling */
+.ant-modal-content {
+    border-radius: 8px;
+}
+  
+.ant-modal-header {
+    border-bottom: none;
+}
+  
+.ant-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+  
+.ant-modal-footer .ant-btn-primary {
+    background-color: #52c41a;
+    border-color: #52c41a;
+}
+  
+.ant-modal-footer .ant-btn-primary:hover {
+    background-color: #73d13d;
+    border-color: #73d13d;
+}
+  
+.ant-modal-footer .ant-btn-default:hover {
+    color: #ff4d4f;
+    border-color: #ff4d4f;
+}
+  
+/* Form styles */
+.ant-form-item-label > label {
+    font-weight: 600;
+}
+  
+.ant-input-affix-wrapper {
+    border-radius: 6px;
+}
+  
+.ant-input-affix-wrapper:hover {
+    border-color: #40a9ff;
+}

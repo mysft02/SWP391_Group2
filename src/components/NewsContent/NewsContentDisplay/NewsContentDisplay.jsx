@@ -108,7 +108,7 @@ function NewsContentDisplay({ filteredNews }) {
       console.log("Payload đăng ký:", {
         koi_id: formData.koi_id,
         koi_name: formData.koi_name,
-        competition_id: formData.competition_id,
+        CompetitionId: formData.competition_id,
         competition_name: formData.competition_name,
         categoryId: formData.categoryId,
         categoryName: formData.categoryName,
@@ -119,7 +119,7 @@ function NewsContentDisplay({ filteredNews }) {
       await api.post('/api/KoiRegistration/Create KoiRegistration', {
         koiId: formData.koi_id,
         koiName: formData.koi_name,
-        competition_id: formData.competition_id,
+        CompetitionId: formData.competition_id,
         competition_name: formData.competition_name,
         categoryId: formData.categoryId,
         categoryName: formData.categoryName,

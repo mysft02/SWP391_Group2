@@ -14,8 +14,6 @@ function BetCompetition() {
   const [error, setError] = useState('');
   const [rounds, setRounds] = useState([]);
   const [matches, setMatches] = useState([]);
-  const [koiScoreDetails, setKoiScoreDetails] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const location = useLocation();
   const { competition } = location.state || {};
 
@@ -66,23 +64,6 @@ function BetCompetition() {
     setSelectedKoi(selectedFish);
   };
 
-  const fetchKoiScoreDetails = async () => {
-    if (!selectedKoi) return;
-  
-    try {
-      const response = await api.get(`/api/KoiScore/Get KoiScore By KoiId?koiId=${selectedKoi.koi_id}`);
-      setKoiScoreDetails(response.data);
-      setIsModalVisible(true);
-    } catch (error) {
-      setKoiScoreDetails(null);  // Nếu có lỗi, clear dữ liệu trong modal
-      setError('Không thể tải thông tin điểm cá koi. Vui lòng thử lại sau.');
-    }
-  };
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    setKoiScoreDetails(null);
-  };
 
   const matchColumns = [
     { title: 'Match ID', dataIndex: 'match_id', key: 'match_id' },
@@ -122,7 +103,7 @@ function BetCompetition() {
               <p><strong>Referee:</strong> {competition?.referee?.refereeName}</p>
               <p><strong>Experience:</strong> {competition?.referee?.expJudge}</p>
             </Panel>
-            <Panel header="Danh sách các vòng thi đấu" key="2">
+            {/* <Panel header="Danh sách các vòng thi đấu" key="2">
               {rounds.length > 0 ? (
                 rounds.map((round) => (
                   <p key={round.roundId}>
@@ -134,7 +115,7 @@ function BetCompetition() {
               ) : (
                 <p>Không có thông tin về vòng thi đấu.</p>
               )}
-            </Panel>
+            </Panel> */}
           </Collapse>
         </Col>
 
@@ -165,6 +146,9 @@ function BetCompetition() {
           </Form>
 
           <Form layout="vertical">
+          <Form.Item label="Tiền" required>
+              <Input value={user?.email}  />
+            </Form.Item>
             <Form.Item label="Chọn cá koi">
               <Select
                 value={selectedKoi?.koi_id || undefined}
@@ -179,37 +163,17 @@ function BetCompetition() {
                 ))}
               </Select>
             </Form.Item>
+
             <Button
               type="primary"
               onClick={fetchKoiScoreDetails}
               disabled={!selectedKoi}
               style={{ marginTop: '10px' }}
             >
-              Xem điểm cá koi
+              Bet Koi 
             </Button>
           </Form>
           
-          <Modal
-      title="Thông tin điểm cá koi"
-      open={isModalVisible}
-      onCancel={handleModalClose}
-      footer={null}
-    >
-      {koiScoreDetails && koiScoreDetails.length > 0 ? (
-        koiScoreDetails.map((detail) => (
-          <div key={detail.score_id}>
-            <h2><strong>Tên cá koi:</strong> {detail?.fishKoi?.koi_name || 'Không có thông tin'}</h2>
-            <p><strong>Loại cá:</strong> {detail?.fishKoi?.koi_variety || 'Không có thông tin'}</p>
-            <p><strong>Kích thước:</strong> {detail?.fishKoi?.koi_size || 'Không có thông tin'}</p>
-            <p><strong>Tuổi:</strong> {detail?.fishKoi?.koi_age || 'Không có thông tin'}</p>
-            <p><strong>Mã trận đấu:</strong> {detail?.match_id || 'Không có thông tin'}</p>
-            <h2><strong>Điểm:</strong> {detail?.score_koi || 'Không có thông tin'}</h2>
-          </div>
-        ))
-      ) : (
-        <p>Không có thông tin điểm.</p> // Fallback message when koiScoreDetails is empty or null
-      )}
-    </Modal>
 
         </Col>
       </Row>
