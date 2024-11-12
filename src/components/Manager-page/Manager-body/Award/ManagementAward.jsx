@@ -182,6 +182,7 @@ function ManagementAward() {
         columns={columns}
         loading={loading}
         rowKey="award_id"
+        pagination={{ pageSize: 3 }}
       />
 
       {/* Modal for creating/editing an award */}

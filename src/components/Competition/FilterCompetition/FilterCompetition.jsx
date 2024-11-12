@@ -1,179 +1,146 @@
-import React, { useEffect, useState } from "react";
-import { Select, Button, Form } from "antd";
-import { FilterOutlined, TagsOutlined, BgColorsOutlined, PictureOutlined, 
-         LineHeightOutlined, ColumnWidthOutlined, ManOutlined, WomanOutlined } from "@ant-design/icons";
-import { api } from "../../../config/AxiosConfig"; 
+import React from "react";
+import { Form, Select, Button, DatePicker, Slider } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
-function FilterCompetitions({ competitions, onFilter }) {
-  const [filters, setFilters] = useState({
-    category_name: "",
-    color_koi: "",
-    pattern_koi: "",
-    size_koi: "",
-    bodyshape_koi: "",
-    variety_koi: "",
-    gender: ""
-  });
+function FilterKoi({ competitions, onFilter }) {
+  const [form] = Form.useForm();
 
-  const [categories, setCategories] = useState([]);
-  const [standards, setStandards] = useState({
-    colors: [],
-    patterns: [],
-    sizes: [],          // Thêm trường sizes
-    bodyshapes: [],    // Thêm trường bodyshapes
-    genders: []        // Thêm trường genders
-  });
+  // Dữ liệu tĩnh cho các trường
+  const colors = [
+    "White (Shiro)", "Red (Aka)", "Black (Sumi)", "Yellow (Ki)",
+    "Orange (Orenji)", "Blue (Asagi)"
+  ];
 
-  // Lấy dữ liệu từ API khi component được mount
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch Koi Categories
-        const categoryResponse = await api.get("/api/KoiCategory/Get all KoiCategory");
-        setCategories(categoryResponse.data);
-  
-        // Fetch Koi Standards
-        const standardsResponse = await api.get("/api/KoiStandard/Get All KoiStandard");
-        console.log("Koi Standards API Response:", standardsResponse.data); // Log the response data
-        const standardsData = standardsResponse.data;
-  
-        // Create unique sets for each filterable standard
-        const colorSet = new Set();
-        const patternSet = new Set();
-        const sizeSet = new Set();
-        const bodyshapeSet = new Set();
-        const genderSet = new Set();
-  
-        standardsData.forEach((standard) => {
-          if (standard.color_koi) colorSet.add(standard.color_koi);
-          if (standard.pattern_koi) patternSet.add(standard.pattern_koi);
-          if (standard.size_koi) sizeSet.add(standard.size_koi);
-          if (standard.bodyshape_koi) bodyshapeSet.add(standard.bodyshape_koi);
-          if (standard.gender) genderSet.add(standard.gender);
-        });
-  
-        // Update the standards state with unique values
-        setStandards({
-          colors: [...colorSet],
-          patterns: [...patternSet],
-          sizes: [...sizeSet],
-          bodyshapes: [...bodyshapeSet],
-          genders: [...genderSet],
-        });
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
+  const patterns = [
+    "Kohaku", "Sanke", "Showa", "Tancho", "Utsurimono", "Asagi"
+  ];
 
+  const varieties = [
+    "Kohaku", "Sanke", "Showa", "Tancho", "Asagi", "Shusui"
+  ];
 
-  // Thay đổi bộ lọc
-  const handleFilterChange = (value, name) => {
-    setFilters({
-      ...filters,
-      [name]: value
+  const bodyShapes = [
+    "Standard", "Sakura", "Butterfly Koi", "Gin Rin Koi", "Tategoi", 
+    "Kinrin", "Doitsu Koi", "Kiwagoi"
+  ];
+
+  const genders = [
+    "Male", "Female"
+  ];
+
+  // Bộ lọc thời gian
+  const handleDateRangeChange = (dates, dateStrings) => {
+    console.log("Selected time range: ", dates, dateStrings);
+  };
+
+  const handleSubmit = (values) => {
+    console.log(values);  // Kiểm tra dữ liệu đầu vào của người dùng
+    
+    const filtered = competitions.filter((comp) => {
+      const startDate = values.time_range ? values.time_range[0] : null;
+      const endDate = values.time_range ? values.time_range[1] : null;
+  
+      return (
+        // Kiểm tra màu sắc (hoặc để trống sẽ không lọc theo màu)
+        (!values.color_koi || values.color_koi === "All" || comp.category.koiStandard.color_koi === values.color_koi) &&
+        
+        // Kiểm tra hoa văn
+        (!values.pattern_koi || values.pattern_koi === "All" || comp.category.koiStandard.pattern_koi === values.pattern_koi) &&
+        
+        // Kiểm tra kích thước
+
+        // Kiểm tra hình dạng cơ thể
+        (!values.bodyshape_koi || values.bodyshape_koi === "All" || comp.category.koiStandard.bodyshape_koi === values.bodyshape_koi) &&
+        
+        // Kiểm tra giống Koi
+        (!values.variety_koi || values.variety_koi === "All" || comp.category.koiStandard.variety_koi === values.variety_koi) &&
+        
+        // Kiểm tra giới tính
+        (!values.gender || values.gender === "All" || comp.category.koiStandard.gender === values.gender) &&
+        
+        // Kiểm tra khoảng thời gian
+        (!startDate || new Date(comp.start_time) >= new Date(startDate)) &&
+        (!endDate || new Date(comp.end_time) <= new Date(endDate))
+      );
     });
+  
+    onFilter(filtered); // Cập nhật danh sách cuộc thi đã lọc
   };
+  
 
-  // Áp dụng bộ lọc
-  const handleApplyFilter = () => {
-    const filteredCompetitions = competitions.filter((comp) =>
-      Object.keys(filters).every((key) => {
-        return filters[key] === "" || comp[key]?.toString().includes(filters[key]);
-      })
-    );
-    onFilter(filteredCompetitions);
-  };
+  
+  
 
   return (
-    <div style={{ width: "250px", padding: "20px", height: "120vh" }}>
-      <h3><FilterOutlined /> Filter Competitions</h3>
+    <div style={{ padding: "20px" }}>
+      <h3><FilterOutlined /> Filter Koi</h3>
 
-      <Form layout="vertical">
-        <Form.Item label={<span style={{ color: '#FFD700' }}><TagsOutlined /> Category</span>}>
-          <Select
-            placeholder="Select Category"
-            value={filters.category_name}
-            onChange={(value) => handleFilterChange(value, "category_name")}
-          >
-            <Option value="">All</Option>
-            {categories.map((category) => (
-              <Option key={category.category_id} value={category.category_name}>{category.category_name}</Option>
-            ))}
-          </Select>
+      <Form form={form} onFinish={handleSubmit} layout="vertical">
+      <Form.Item name="time_range" label="Time Range">
+          <DatePicker.RangePicker
+            format="YYYY-MM-DD"
+            onChange={handleDateRangeChange}
+          />
         </Form.Item>
-
-        <Form.Item label={<span style={{ color: '#FFD700' }}><BgColorsOutlined /> Color Koi</span>}>
-          <Select
-            placeholder="Select Color"
-            value={filters.color_koi}
-            onChange={(value) => handleFilterChange(value, "color_koi")}
-          >
-            <Option value="">All</Option>
-            {standards.colors.map((color, index) => (
+        {/* Màu sắc Koi */}
+        <Form.Item name="color_koi" label="Color">
+          <Select defaultValue="All">
+            <Option value="All">All</Option>
+            {colors.map((color, index) => (
               <Option key={index} value={color}>{color}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span style={{ color: '#FFD700' }}><PictureOutlined /> Pattern Koi</span>}>
-          <Select
-            placeholder="Select Pattern"
-            value={filters.pattern_koi}
-            onChange={(value) => handleFilterChange(value, "pattern_koi")}
-          >
-            <Option value="">All</Option>
-            {standards.patterns.map((pattern, index) => (
+        {/* Hoa văn Koi */}
+        <Form.Item name="pattern_koi" label="Pattern">
+          <Select defaultValue="All">
+            <Option value="All">All</Option>
+            {patterns.map((pattern, index) => (
               <Option key={index} value={pattern}>{pattern}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span style={{ color: '#FFD700' }}><ColumnWidthOutlined /> Size Koi</span>}>
-          <Select
-            placeholder="Select Size"
-            value={filters.size_koi}
-            onChange={(value) => handleFilterChange(value, "size_koi")}
-          >
-            <Option value="">All</Option>
-            {standards.sizes.map((size, index) => (
-              <Option key={index} value={size}>{size}</Option>
+        {/* Kích thước Koi */}
+
+
+        {/* Hình dạng cơ thể Koi */}
+        <Form.Item name="bodyshape_koi" label="Body Shape">
+          <Select defaultValue="All">
+            <Option value="All">All</Option>
+            {bodyShapes.map((shape, index) => (
+              <Option key={index} value={shape}>{shape}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span style={{ color: '#FFD700' }}><LineHeightOutlined /> Bodyshape Koi</span>}>
-          <Select
-            placeholder="Select Bodyshape"
-            value={filters.bodyshape_koi}
-            onChange={(value) => handleFilterChange(value, "bodyshape_koi")}
-          >
-            <Option value="">All</Option>
-            {standards.bodyshapes.map((bodyshape, index) => (
-              <Option key={index} value={bodyshape}>{bodyshape}</Option>
+        {/* Giống Koi */}
+        <Form.Item name="variety_koi" label="Variety">
+          <Select defaultValue="All">
+            <Option value="All">All</Option>
+            {varieties.map((variety, index) => (
+              <Option key={index} value={variety}>{variety}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label={<span style={{ color: '#FFD700' }}>{filters.gender === "Male" ? <ManOutlined /> : <WomanOutlined />} Gender</span>}>
-          <Select
-            placeholder="Select Gender"
-            value={filters.gender}
-            onChange={(value) => handleFilterChange(value, "gender")}
-          >
-            <Option value="">All</Option>
-            {standards.genders.map((gender, index) => (
+        {/* Giới tính Koi */}
+        <Form.Item name="gender" label="Gender">
+          <Select defaultValue="All">
+            <Option value="All">All</Option>
+            {genders.map((gender, index) => (
               <Option key={index} value={gender}>{gender}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Button type="primary" onClick={handleApplyFilter}>
+        {/* Bộ lọc thời gian */}
+
+
+        <Button type="primary" htmlType="submit">
           Apply Filter
         </Button>
       </Form>
@@ -181,4 +148,4 @@ function FilterCompetitions({ competitions, onFilter }) {
   );
 }
 
-export default FilterCompetitions;
+export default FilterKoi;

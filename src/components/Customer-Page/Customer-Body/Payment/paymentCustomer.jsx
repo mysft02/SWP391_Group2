@@ -27,8 +27,7 @@ const PaymentCustomer = () => {
         const status = urlParams.get('vnp_ResponseCode');
         if (status) {
             if (status === '00') {
-                processVnPay();
-                antdMessage.success('Thanh toán thành công!');
+                processVnPay();                
             } else {
                 antdMessage.error('Thanh toán thất bại. Vui lòng thử lại.');
             }
@@ -42,16 +41,25 @@ const PaymentCustomer = () => {
                 UserName: urlParams.get('vnp_OrderInfo'),
                 Amount: parseFloat(urlParams.get('vnp_Amount')) / 100,
             };
-            await api.post('/api/VNPay/Process-Payment', processVnPayDTO, {
+            
+            const response = await api.post('/api/VNPay/Process-Payment', processVnPayDTO, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
+            
+            // Kiểm tra nếu phản hồi có chứa tin nhắn thành công
+            if (response.data) {
+                antdMessage.success(response.data);  // Hiển thị nội dung từ server nếu có
+            } else {
+                antdMessage.success('Thanh toán thành công!');
+            }
         } catch (error) {
-            console.error('Error process VnPay:', error);
+            console.error('Error processing VnPay:', error);
             antdMessage.error('Thanh toán thất bại. Vui lòng thử lại.');
         }
     };
+    
 
     useEffect(() => {
         const fetchTransactionHistory = async () => {

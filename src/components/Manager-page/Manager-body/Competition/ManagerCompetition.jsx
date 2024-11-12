@@ -134,8 +134,8 @@ function ManagerCompetition() {
         CompetitionId: editingCompetition.competition_id,
         CompetitionName: values.competition_name,
         CompetitionDescription: values.competition_description,
-        StartTime: values.start_time ? values.start_time.toISOString() : '',
-        EndTime: values.end_time ? values.end_time.toISOString() : '',
+        // StartTime: values.start_time ? values.start_time.toISOString() : '',
+        // EndTime: values.end_time ? values.end_time.toISOString() : '',
         StatusCompetition: values.status_competition,
         KoiCategoryId: values.categoryId || "CAT_1",
         KoiFishId: values.koiId || "K1",
@@ -310,7 +310,7 @@ function ManagerCompetition() {
       >
         Add Competition
       </Button>
-      <Table dataSource={competitions} columns={columns} rowKey="competition_id" />
+      <Table dataSource={competitions} columns={columns} rowKey="competition_id"   pagination={{ pageSize: 3 }}/>
 
       <Modal
         title={editingCompetition ? "Edit Competition" : "Add Competition"}

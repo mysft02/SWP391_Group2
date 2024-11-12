@@ -345,14 +345,23 @@ function KoiStandard() {
             >
               <Input />
             </Form.Item>
-          <Form.Item
-            name="bodyshape_koi"
-            label="Body Shape"
-            rules={[{ required: true, message: 'Please input the body shape of the Koi!' }]}
-          >
-          <Input/>
+            <Form.Item
+              name="bodyshape_koi"
+              label="Body Shape"
+              rules={[{ required: true, message: 'Please select the body shape of the Koi!' }]}
+            >
+              <Select placeholder="Select body shape">
+                <Select.Option value="Standard">Standard</Select.Option>
+                <Select.Option value="Sakura">Sakura</Select.Option>
+                <Select.Option value="Butterfly Koi">Butterfly Koi</Select.Option>
+                <Select.Option value="Gin Rin Koi">Gin Rin Koi</Select.Option>
+                <Select.Option value="Tategoi">Tategoi</Select.Option>
+                <Select.Option value="Kinrin">Kinrin</Select.Option>
+                <Select.Option value="Doitsu Koi">Doitsu Koi</Select.Option>
+                <Select.Option value="Kiwagoi">Kiwagoi</Select.Option>
+              </Select>
+            </Form.Item>
 
-          </Form.Item>
           <Form.Item
             name="variety_koi"
             label="Variety"
