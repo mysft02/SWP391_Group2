@@ -37,16 +37,7 @@ function DetailCompetition() {
       }
     };
 
-    const fetchCompetitionRounds = async () => {
-      try {
-        const response = await api.get('/api/CompetitionRound/Get All CompetitionRound');
-        setRounds(response.data);
-        const allMatches = response.data.flatMap(round => round.matches || []);
-        setMatches(allMatches);
-      } catch (error) {
-        setError('Không thể tải danh sách các vòng thi đấu.');
-      }
-    };
+
 
     const fetchCompetitionMatches = async () => {
       try {
@@ -58,7 +49,6 @@ function DetailCompetition() {
     };
 
     fetchKoiFish();
-    fetchCompetitionRounds();
     fetchCompetitionMatches();
   }, [user, competition]);
 
@@ -121,7 +111,7 @@ function DetailCompetition() {
   ];
 
   return (
-    <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500, margin: '20px auto' }}>
+    <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500 }}>
       <Row gutter={16}>
         <Col span={12}>
           <img src={competition.competition_img} alt="Competition" style={{ width: '100%' }} />
@@ -134,18 +124,17 @@ function DetailCompetition() {
               <p><strong><UserOutlined /> Referee:</strong> {competition?.referee?.refereeName}</p>
               <p><strong><UserOutlined /> Experience:</strong> {competition?.referee?.expJudge}</p>
             </Panel>
-            <Panel header="Danh sách các vòng thi đấu" key="2">
-              {rounds.length > 0 ? (
-                rounds.map((round) => (
-                  <p key={round.roundId}>
-                    <strong>Round ID:</strong> {round.roundId} |
-                    <strong>Match:</strong> {round.match} |
-                    <strong>Competition ID:</strong> {round.competition_id}
-                  </p>
-                ))
-              ) : (
-                <p>Không có thông tin về vòng thi đấu.</p>
-              )}
+            <Panel header="Đặc tính của Koi" key="2">
+              <p><strong><InfoCircleOutlined /> Category:</strong> {competition?.category?.category_name || "Không có thông tin"}</p>
+              <p><strong><TrophyOutlined /> Color:</strong> {competition?.category?.koiStandard?.color_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Size:</strong> {competition?.category?.koiStandard?.size_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Age:</strong> {competition?.category?.koiStandard?.age_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Body Shape:</strong> {competition?.category?.koiStandard?.bodyshape_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Variety:</strong> {competition?.category?.koiStandard?.variety_koi || "Không có thông tin"}</p>
+            </Panel>
+            <Panel header="Giải thưởng" key="3">
+              <p><strong><TrophyOutlined /> Award:</strong> {competition?.award?.award_name || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Quantity:</strong> {competition?.award?.quantity || "Không có thông tin"}</p>
             </Panel>
           </Collapse>
         </Col>

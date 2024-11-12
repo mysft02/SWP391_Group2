@@ -3,6 +3,7 @@ import { Button, Form, Input, Select, Card, Row, Col, Divider, Table, Collapse, 
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import { useLocation } from 'react-router-dom';
+import { CheckCircleOutlined, FieldTimeOutlined, InfoCircleOutlined, TrophyOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const { Panel } = Collapse;
@@ -13,22 +14,37 @@ function ScoreCompetition() {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState('');
   const [matchId, setMatchId] = useState('');
+  const [koiList, setKoiList] = useState([]);
   const [score, setScore] = useState('');
   const location = useLocation();
   const { competition } = location.state || {};
 
   // Fetch Competition Matches
   useEffect(() => {
+    const fetchKoiFish = async () => {
+      if (!user?.user_id) {
+        setError('User ID không tồn tại.');
+        return;
+      }
+      try {
+        const payload = { user_id: user.user_id };
+        const response = await api.post('/api/KoiFish/Get Koi Fish By User Id', payload);
+        setKoiList(response.data);
+        setError('');
+      } catch (error) {
+        setError('Không thể tải danh sách cá koi. Vui lòng thử lại sau.');
+      }
+    };
     const fetchCompetitionMatches = async () => {
       try {
-        const response = await api.get('/api/CompetitionMatch/Get All CompetitionMatch');
+        const response = await api.get(`/api/CompetitionMatch/Get Competition By CompeId?competitionMatchId=${competition.competition_id}`);
         console.log('Competition Matches:', response.data);
         setMatches(response.data);
       } catch (error) {
         setError('Không thể tải danh sách các trận đấu.');
       }
     };
-
+    fetchKoiFish();
     fetchCompetitionMatches();
   }, [user]);
 
@@ -84,9 +100,34 @@ function ScoreCompetition() {
   // Define match columns for the table
   const matchColumns = [
     { title: 'Match ID', dataIndex: 'match_id', key: 'match_id' },
-    { title: 'Koi 1 ID', dataIndex: 'first_koiId1', key: 'first_koiId1' },
-    { title: 'Koi 2 ID', dataIndex: 'first_koiId2', key: 'first_koiId2' },
-    { title: 'Result', dataIndex: 'result', key: 'result' },
+    {
+      title: 'Koi Name 1',
+      dataIndex: 'firstKoi',
+      key: 'firstKoi.koi_name',
+      render: (firstKoi) => firstKoi ? firstKoi.koi_name : 'Không có thông tin',
+    },
+    {
+      title: 'Koi Name 2',
+      dataIndex: 'secondKoi',
+      key: 'secondKoi.koi_name',
+      render: (secondKoi) => secondKoi ? secondKoi.koi_name : 'Không có thông tin',
+    },
+    {
+      title: 'Result',
+      key: 'result',
+      render: (_, record) => {
+        // Split result into Koi ID and Score
+        const [koiId, score] = record.result.split('_');
+        const koi = koiList.find(koi => koi.koi_id === koiId);
+
+        return (
+          <>
+            <p><strong>Koi Name:</strong> {koi ? koi.koi_name : 'Không có thông tin'}</p>
+            <p><strong>Score:</strong> {score || 'Chưa có điểm'}</p>
+          </>
+        );
+      },
+    },
   ];
 
   return (
@@ -95,13 +136,25 @@ function ScoreCompetition() {
         <Col span={12}>
           <img src={competition.competition_img} alt="Competition" style={{ width: '100%' }} />
           <Collapse defaultActiveKey={['1']}>
-            <Panel header="Thông tin cuộc thi" key="1">
-              <p><strong>Detail:</strong> {competition?.competition_description}</p>
-              <p><strong>Name Competition:</strong> {competition?.competition_name || "Không có thông tin"}</p>
-              <p><strong>Round:</strong> {competition?.rounds}</p>
-              <p><strong>Status:</strong> {competition?.status_competition}</p>
-              <p><strong>Referee:</strong> {competition?.referee?.refereeName}</p>
-              <p><strong>Experience:</strong> {competition?.referee?.expJudge}</p>
+          <Panel header="Thông tin cuộc thi" key="1">
+              <p><strong><InfoCircleOutlined /> Detail:</strong> {competition?.competition_description}</p>
+              <p><strong><TrophyOutlined /> Name Competition:</strong> {competition?.competition_name || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Round:</strong> {competition?.rounds}</p>
+              <p><strong><CheckCircleOutlined /> Status:</strong> {competition?.status_competition}</p>
+              <p><strong><UserOutlined /> Referee:</strong> {competition?.referee?.refereeName}</p>
+              <p><strong><UserOutlined /> Experience:</strong> {competition?.referee?.expJudge}</p>
+            </Panel>
+            <Panel header="Đặc tính của Koi" key="2">
+              <p><strong><InfoCircleOutlined /> Category:</strong> {competition?.category?.category_name || "Không có thông tin"}</p>
+              <p><strong><TrophyOutlined /> Color:</strong> {competition?.category?.koiStandard?.color_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Size:</strong> {competition?.category?.koiStandard?.size_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Age:</strong> {competition?.category?.koiStandard?.age_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Body Shape:</strong> {competition?.category?.koiStandard?.bodyshape_koi || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Variety:</strong> {competition?.category?.koiStandard?.variety_koi || "Không có thông tin"}</p>
+            </Panel>
+            <Panel header="Giải thưởng" key="3">
+              <p><strong><TrophyOutlined /> Award:</strong> {competition?.award?.award_name || "Không có thông tin"}</p>
+              <p><strong><FieldTimeOutlined /> Quantity:</strong> {competition?.award?.quantity || "Không có thông tin"}</p>
             </Panel>
           </Collapse>
         </Col>

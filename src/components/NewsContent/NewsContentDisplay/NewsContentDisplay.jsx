@@ -142,7 +142,7 @@ function NewsContentDisplay({ filteredNews }) {
         filteredNews.map((news) => (
           <div key={news.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
             <h4>{news.competition_name}</h4>
-            <p>Rank: {news.category.category_name}</p>
+            <p>Category: {news.category.category_name}</p>
             <p>Award: {news.award.award_name}</p>
             <p>Created At: {new Date(news.start_time).toLocaleDateString()}</p>
             <div style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
@@ -167,7 +167,7 @@ function NewsContentDisplay({ filteredNews }) {
       >
         {selectedNews && (
           <div>
-            <p>Rank: {selectedNews.category.category_name}</p>
+            <p>Category: {selectedNews.category.category_name}</p>
             <p>Detail: {selectedNews.competition_description}</p>
             <p>Award: {selectedNews.award.award_name}</p>
             <p>Start: {new Date(selectedNews.start_time).toLocaleDateString()}</p>

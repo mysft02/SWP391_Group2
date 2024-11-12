@@ -32,7 +32,8 @@ function CompetitionDisplay({ filteredCompetitions }) {  // Nhận filteredCompe
   };
 
   const handleBet = (competition) => {
-    navigate("/member/bet-com", { state: { competition } });
+    console.log("Bet competition:", competition);
+    navigate("/member/bet-competition", { state: { competition } });
   };
 
   const isUserRegistered = (comp) => {
