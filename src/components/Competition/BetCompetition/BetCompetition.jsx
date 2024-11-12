@@ -1,4 +1,3 @@
-// BetCompetition.js
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Divider, message } from 'antd';
 import { api } from '../../../config/AxiosConfig';
@@ -15,12 +14,10 @@ function BetCompetition() {
   const [koiList, setKoiList] = useState([]);
   const [error, setError] = useState('');
   const [matches, setMatches] = useState([]);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [countdown, setCountdown] = useState('');
   const location = useLocation();
   const { competition } = location.state || {};
 
-  // Fetch initial data
+  // Lấy dữ liệu ban đầu
   useEffect(() => {
     const fetchKoiFish = async () => {
       if (!user?.user_id) {
@@ -39,7 +36,6 @@ function BetCompetition() {
     const fetchCompetitionMatches = async () => {
       try {
         const response = await api.get(`/api/CompetitionMatch/Get Competition By CompeId?competitionMatchId=${competition.competition_id}`);
-        console.log("Competition matches data:", response.data);  // Log the fetched matches to check
         setMatches(response.data);
       } catch (error) {
         setError('Không thể tải danh sách các trận đấu.');
@@ -47,68 +43,31 @@ function BetCompetition() {
       }
     };
   
-    // Initial fetch
+    // Lấy dữ liệu ban đầu
     fetchKoiFish();
     fetchCompetitionMatches();
   
-    // Polling interval to fetch matches every 10 seconds
+    // Lặp lại việc lấy dữ liệu trận đấu mỗi giây
     const intervalId = setInterval(() => {
       fetchCompetitionMatches();
-    }, 1000);
+    }, 30000);
   
-    // Clear interval on component unmount
+    // Dọn dẹp khi component bị hủy
     return () => clearInterval(intervalId);
   }, [user, competition]);
-  
-  useEffect(() => {
-    const start = new Date(competition?.betting_start || competition.start_time);
-    const end = new Date(competition?.betting_end || competition.end_time);
 
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-
-      if (currentTime < start) {
-        const timeRemaining = start - currentTime;
-        setCountdown(`Bắt đầu sau ${formatCountdown(timeRemaining)}`);
-      } else if (currentTime >= start && currentTime <= end) {
-        const timeRemaining = end - currentTime;
-        setCountdown(`Còn ${formatCountdown(timeRemaining)} để đặt cược`);
-      } else {
-        setCountdown("Hết thời gian đặt cược");
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [competition, currentTime]);
-
-  const formatCountdown = (time) => {
-    const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    return `${hours}h ${minutes}m ${seconds}s`;
-  };
-
-  const handlePlaceBet = async () => {
-    if (!selectedKoi) {
-      message.error("Vui lòng chọn một cá koi để đặt cược.");
-      return;
-    }
-
+  const handlePlaceBet = async (betData) => {
     try {
-      await api.post('/api/KoiBet/Place Bet', {
-        user_id: user.user_id,
-        koi_id: selectedKoi.koi_id,
-        competition_id: competition.competition_id,
-      });
+      await api.post('/api/KoiBet/Place Bet', betData);  // Sử dụng betData để gửi yêu cầu
       message.success("Đặt cược thành công!");
     } catch (error) {
       message.error("Đặt cược thất bại, vui lòng thử lại.");
     }
   };
+  
 
-  const canBet = competition?.betting_start && competition?.betting_end 
-                 && currentTime >= new Date(competition.betting_start || competition.start_time) 
-                 && currentTime <= new Date(competition.betting_end || competition.end_time);
+  // Bỏ điều kiện kiểm tra thời gian
+  const canBet = true;  // Không cần kiểm tra thời gian nữa
 
   return (
     <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500}}>
@@ -122,7 +81,7 @@ function BetCompetition() {
         <Col span={11}>
           <MatchTable matches={matches} koiList={koiList} />
           <Divider />
-          <BetForm user={user} koiList={koiList} selectedKoi={selectedKoi} setSelectedKoi={setSelectedKoi} handlePlaceBet={handlePlaceBet} canBet={canBet} countdown={countdown} />
+          <BetForm user={user} competition={competition} koiList={koiList} selectedKoi={selectedKoi} setSelectedKoi={setSelectedKoi} handlePlaceBet={handlePlaceBet} matches={matches}/>
         </Col>
       </Row>
       {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}

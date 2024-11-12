@@ -201,8 +201,8 @@ function DetailCompetition() {
                 <div key={detail.score_id}>
                   <h2><strong>Tên cá koi:</strong> {detail?.fishKoi?.koi_name || 'Không có thông tin'}</h2>
                   <p><strong> Loại cá:</strong> {detail?.fishKoi?.koi_variety || 'Không có thông tin'}</p>
-                  <p><strong><FieldTimeOutlined /> Kích cỡ:</strong> {detail?.fishKoi?.size || 'Không có thông tin'}</p>
-                  <p><strong><CheckCircleOutlined /> Điểm tổng:</strong> {detail?.total_score || 'Chưa có điểm'}</p>
+                  <p><strong><FieldTimeOutlined /> Kích cỡ:</strong> {detail?.fishKoi?.koi_size || 'Không có thông tin'}</p>
+                  <p><strong><CheckCircleOutlined /> Điểm tổng:</strong> {detail?.score_koi || 'Chưa có điểm'}</p>
                 </div>
               ))
             ) : (
