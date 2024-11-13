@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 import { UserOutlined, DollarOutlined} from '@ant-design/icons';
 import UserManagement from '../../components/Admin-page/Admin-body/DashBoard/UserManagement';
 import AdminProfile from '../../components/Admin-page/Admin-body/AdminProfile.jsx/AdminProfile';
+import AdminBet from '../../components/Admin-page/Admin-body/AdminBet/AdminBet';
 
 
 const { Sider, Content } = Layout;
@@ -19,8 +20,10 @@ function DashBoardAdmin() {
         return <AdminProfile />;
       case 'management-user':
         return <UserManagement/>;
+      case 'competition':
+          return <UserManagement/>;
       case 'bet':
-        return <div>Bet Component</div>;
+        return <AdminBet/>;
       default:
         return <AdminProfile />;
     }
@@ -42,12 +45,16 @@ function DashBoardAdmin() {
           mode="inline"
           onClick={(e) => setActiveComponent(e.key)}
         >
-
+          <Menu.Item key="dashboard" icon={<DollarOutlined />}>
+            DashBoard
+          </Menu.Item>
           <SubMenu key="user" icon={<UserOutlined />} title="User">
           <Menu.Item key="profile">Profile</Menu.Item>
             <Menu.Item key="management-user">Manager User</Menu.Item>
           </SubMenu>
-
+          <Menu.Item key="competition" icon={<DollarOutlined />}>
+            Competition
+          </Menu.Item>
           <Menu.Item key="bet" icon={<DollarOutlined />}>
             Bet
           </Menu.Item>
