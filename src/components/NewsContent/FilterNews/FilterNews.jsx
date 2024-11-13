@@ -1,43 +1,88 @@
-import React from 'react';
-import './FilterNews.css'; // Import CSS
+import React, { useState, useEffect } from 'react';
+import { api } from '../../../config/AxiosConfig';
+import { Input, Select, Button } from 'antd';
+import { CalendarOutlined, SearchOutlined, ClearOutlined, FilterOutlined } from '@ant-design/icons';  // Import icon
+import './FilterNews.css';
 
-function FilterNews({ selectedRank, setSelectedRank, selectedTime, setSelectedTime, selectedAward, setSelectedAward }) {
-  
+function FilterNews({ selectedCategory, setSelectedCategory, selectedStartDate, setSelectedStartDate, selectedEndDate, setSelectedEndDate }) {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/api/KoiCategory/Get all KoiCategory');
+        setCategories(response.data); // Assume response.data is an array of category objects
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Function to clear selected filters
+  const handleClearFilters = () => {
+    setSelectedCategory('');
+    setSelectedStartDate('');
+    setSelectedEndDate('');
+  };
+
   return (
     <div className="filter-container">
-      <h3>Filter News</h3>
+      <h3><FilterOutlined style={{marginRight:'5px'}}/>Filter News</h3>
       
-      {/* Filter theo Rank */}
-      <div>
+      {/* Filter by Category */}
+      <div className='form-filter'>
         <label>Category:</label>
-        <select value={selectedRank} onChange={(e) => setSelectedRank(e.target.value)}>
-          <option value="">All</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-        </select>
+        <Select
+          value={selectedCategory}
+          onChange={(value) => setSelectedCategory(value)}
+          placeholder="Select Category"
+          suffixIcon={<SearchOutlined />}  // Add Search icon
+          style={{ width: '100%' }}
+        >
+          <Select.Option value="">All</Select.Option>
+          {categories.map((category) => (
+            <Select.Option key={category.category_id} value={category.category_name}>
+              {category.category_name}
+            </Select.Option>
+          ))}
+        </Select>
       </div>
 
-      {/* Filter theo Thời gian */}
+      {/* Filter by Start Date */}
       <div>
-        <label>Time</label>
-        <input
+        <label>Start Date:</label>
+        <Input
           type="date"
-          value={selectedTime}
-          onChange={(e) => setSelectedTime(e.target.value)}
+          value={selectedStartDate}
+          onChange={(e) => setSelectedStartDate(e.target.value)}
+          addonBefore={<CalendarOutlined />}  // Add Calendar icon
+          style={{ width: '100%' }}
         />
       </div>
 
-      {/* Filter theo Giải thưởng */}
+      {/* Filter by End Date */}
       <div>
-        <label>Award</label>
-        <select value={selectedAward} onChange={(e) => setSelectedAward(e.target.value)}>
-          <option value="">All</option>
-          <option value="10.000.000 Vnd">10.000.000 Vnd</option>
-          <option value="5.000.000 Vnd">5.000.000 Vnd</option>
-          <option value="1.000.000 Vnd">1.000.000 Vnd</option>
-        </select>
+        <label>End Date:</label>
+        <Input
+          type="date"
+          value={selectedEndDate}
+          onChange={(e) => setSelectedEndDate(e.target.value)}
+          addonBefore={<CalendarOutlined />}  // Add Calendar icon
+          style={{ width: '100%' }}
+        />
       </div>
+
+      {/* Clear Button */}
+      <Button
+          onClick={handleClearFilters}
+          icon={<ClearOutlined />}  // Add Clear icon
+          type="default"
+
+        >
+          Clear
+        </Button>
     </div>
   );
 }

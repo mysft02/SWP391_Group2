@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../../config/AxiosConfig';
 import FilterNews from '../FilterNews/FilterNews';
-import NewsContentDisplay from '../NewsContentDisplay/NewsContentDisplay'; // Component hiển thị news
+import NewsContentDisplay from '../NewsContentDisplay/NewsContentDisplay';
 
 function NewsContent() {
   const [newsData, setNewsData] = useState([]);
-  const [selectedRank, setSelectedRank] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [selectedAward, setSelectedAward] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedStartDate, setSelectedStartDate] = useState('');
+  const [selectedEndDate, setSelectedEndDate] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,7 +15,7 @@ function NewsContent() {
     const fetchNewsData = async () => {
       try {
         const response = await api.get('/api/CompetitionKoi/Get all CompetitionKoi');
-        setNewsData(response.data); // Giả sử response.data là mảng chứa các item tin tức
+        setNewsData(response.data);
         setLoading(false);
       } catch (error) {
         setError(error);
@@ -26,12 +26,20 @@ function NewsContent() {
     fetchNewsData();
   }, []);
 
-  // Hàm lọc news theo các bộ lọc đã chọn
+  // Lọc dữ liệu theo category và thời gian
   const filteredNews = newsData.filter((item) => {
-    const rankMatch = selectedRank ? item.rank === selectedRank : true;
-    const timeMatch = selectedTime ? item.created_at.includes(selectedTime) : true;
-    const awardMatch = selectedAward ? item.award === selectedAward : true;
-    return rankMatch && timeMatch && awardMatch;
+    const categoryMatch = selectedCategory ? item.category.category_name === selectedCategory : true;
+
+    const startDate = new Date(item.start_time); // Chuyển start_time của item thành đối tượng Date
+    const endDate = new Date(item.end_time); // Chuyển end_time của item thành đối tượng Date
+
+    // Kiểm tra nếu có chọn start date
+    const startDateMatch = selectedStartDate ? startDate >= new Date(selectedStartDate) : true;
+
+    // Kiểm tra nếu có chọn end date
+    const endDateMatch = selectedEndDate ? endDate <= new Date(selectedEndDate) : true;
+
+    return categoryMatch && startDateMatch && endDateMatch;
   });
 
   if (loading) return <p>Loading...</p>;
@@ -39,17 +47,14 @@ function NewsContent() {
 
   return (
     <div style={{ display: 'flex' }}>
-      {/* Component FilterNews */}
       <FilterNews
-        selectedRank={selectedRank}
-        setSelectedRank={setSelectedRank}
-        selectedTime={selectedTime}
-        setSelectedTime={setSelectedTime}
-        selectedAward={selectedAward}
-        setSelectedAward={setSelectedAward}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedStartDate={selectedStartDate}
+        setSelectedStartDate={setSelectedStartDate}
+        selectedEndDate={selectedEndDate}
+        setSelectedEndDate={setSelectedEndDate}
       />
-      
-      {/* Hiển thị kết quả news sau khi lọc */}
       <NewsContentDisplay filteredNews={filteredNews} />
     </div>
   );

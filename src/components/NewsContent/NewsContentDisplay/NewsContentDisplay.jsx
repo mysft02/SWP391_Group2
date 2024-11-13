@@ -1,40 +1,45 @@
 import React, { useState } from 'react';
-import { Modal, Button, Input, message, Select } from 'antd';
-import { UserOutlined, TrophyOutlined, DollarOutlined } from '@ant-design/icons'; // Import icon
+import { Modal, Button, Input, message, Select, Collapse } from 'antd';
+import { UserOutlined, TrophyOutlined, DollarOutlined } from '@ant-design/icons';
 import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext';
 import { useNavigate } from 'react-router-dom';
-import { Option } from 'antd/es/mentions';
+
+const { Option } = Select;
+const { Panel } = Collapse;
 
 function NewsContentDisplay({ filteredNews }) {
   const [isRankDetailModalVisible, setIsRankDetailModalVisible] = useState(false);
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
   const [selectedNews, setSelectedNews] = useState(null);
-  const { user } = useUser();
-  const navigate = useNavigate(); // Khai báo useNavigate để chuyển trang
-
   const [userFishList, setUserFishList] = useState([]);
   const [formData, setFormData] = useState({
     koi_name: '',
     competition_name: '',
     categoryName: '',
-    registrationFee: 5, // Default value, can be changed
+    registrationFee: 5,
     koi_id: '',
     competition_id: '',
     categoryId: '',
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const { user } = useUser();
+  const navigate = useNavigate();
 
+  // Open Rank Detail Modal
   const showRankDetailModal = (news) => {
     setSelectedNews(news);
     setIsRankDetailModalVisible(true);
   };
 
+  // Open Register Modal and fetch Koi Fish list
   const showRegisterModal = async (news) => {
+    if (!user) {
+      message.error("Bạn cần đăng nhập để thực hiện hành động này.");
+      setTimeout(() => navigate('/sign-in'), 500);
+      return;
+    }
+
     setSelectedNews(news);
     setFormData({
       koi_name: news.koi_name,
@@ -46,7 +51,7 @@ function NewsContentDisplay({ filteredNews }) {
       categoryId: news.category.category_id,
     });
 
-    await fetchUserFishList(); // Lấy danh sách cá Koi của người dùng
+    await fetchUserFishList();
     setIsRegisterModalVisible(true);
   };
 
@@ -55,25 +60,11 @@ function NewsContentDisplay({ filteredNews }) {
     setIsRegisterModalVisible(false);
   };
 
-  const handleRegisterClick = () => {
-    message.error("Bạn cần đăng nhập để thực hiện hành động này.");
-    setTimeout(() => {
-      navigate('/sign-in'); // Chuyển hướng tới trang đăng nhập sau khi hiện thông báo
-    }, 500); // 1500ms để chờ message hiện trước khi chuyển hướng
-  };
-
   const fetchUserFishList = async () => {
     try {
-      if (!user || !user.user_id) {
-        message.error('Người dùng không hợp lệ');
-        return;
-      }
-
-      const payload = {
-        user_id: user.user_id,
-      };
+      const payload = { user_id: user.user_id };
       const response = await api.post('/api/KoiFish/Get Koi Fish By User Id', payload);
-      if (response.data && Array.isArray(response.data)) {
+      if (Array.isArray(response.data)) {
         setUserFishList(response.data);
       } else {
         message.error('Không có dữ liệu cá Koi');
@@ -87,35 +78,21 @@ function NewsContentDisplay({ filteredNews }) {
   const handleKoiSelectChange = (value) => {
     const selectedFish = userFishList.find(fish => fish.koi_id === value);
     if (selectedFish) {
-      console.log("Selected Koi ID:", selectedFish.koi_id);
-      console.log("Selected Koi Name:", selectedFish.koi_name);
       setFormData(prevState => ({
         ...prevState,
         koi_id: selectedFish.koi_id,
-        koi_name: selectedFish.koi_name
+        koi_name: selectedFish.koi_name,
       }));
     }
   };
 
   const handleSubmit = async () => {
+    if (user.balance < formData.registrationFee) {
+      message.warning("Tài khoản của bạn không đủ. Vui lòng nạp thêm tiền để đăng ký.");
+      return;
+    }
+
     try {
-      // Check if user balance is below 10 or equal to 0
-      if (user.balance < 10 || user.balance === 0) {
-        message.warning("Tài khoản của bạn không đủ. Vui lòng nạp thêm tiền để đăng ký.");
-        return;
-      }
-  
-      console.log("Payload đăng ký:", {
-        koi_id: formData.koi_id,
-        koi_name: formData.koi_name,
-        CompetitionId: formData.competition_id,
-        competition_name: formData.competition_name,
-        categoryId: formData.categoryId,
-        categoryName: formData.categoryName,
-        registrationFee: formData.registrationFee,
-      }); // Print payload to console for debugging
-  
-      // Proceed with registration if balance is sufficient
       await api.post('/api/KoiRegistration/Create KoiRegistration', {
         koiId: formData.koi_id,
         koiName: formData.koi_name,
@@ -125,16 +102,15 @@ function NewsContentDisplay({ filteredNews }) {
         categoryName: formData.categoryName,
         registrationFee: formData.registrationFee,
       });
-      
-      message.success("Registration successful!");
+      message.success("Đăng ký thành công!");
       handleCancel();
     } catch (error) {
-      message.error("Failed to register. Please try again.");
+      message.error("Đăng ký thất bại. Vui lòng thử lại.");
       console.error(error);
     }
   };
 
-  // Filter news items to only show those with "Active" status_competition
+  // Filter active competitions
   const activeNews = filteredNews.filter(news => news.status_competition === "Active");
 
   return (
@@ -149,11 +125,7 @@ function NewsContentDisplay({ filteredNews }) {
             <p>Created At: {new Date(news.start_time).toLocaleDateString()}</p>
             <div style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
               <Button onClick={() => showRankDetailModal(news)}>Detail Rank</Button>
-              {user ? (
-                <Button onClick={() => showRegisterModal(news)}>Register Competition</Button>
-              ) : (
-                <Button onClick={handleRegisterClick}>Register Competition</Button>
-              )}
+              <Button onClick={() => showRegisterModal(news)}>Register Competition</Button>
             </div>
           </div>
         ))
@@ -163,24 +135,45 @@ function NewsContentDisplay({ filteredNews }) {
 
       <Modal
         title="Detail Rank"
-        open={isRankDetailModalVisible}
+        visible={isRankDetailModalVisible}
         onCancel={handleCancel}
         footer={[<Button key="back" onClick={handleCancel}>Close</Button>]}
       >
         {selectedNews && (
           <div>
-            <p>Category: {selectedNews.category.category_name}</p>
-            <p>Detail: {selectedNews.competition_description}</p>
-            <p>Award: {selectedNews.award.award_name}</p>
-            <p>Start: {new Date(selectedNews.start_time).toLocaleDateString()}</p>
-            <p>End: {new Date(selectedNews.end_time).toLocaleDateString()}</p>
+            <Collapse>
+              <Panel header="Category Details" style={{ marginBottom: '15px' }}>
+                <p><strong>Category Name:</strong> {selectedNews.category.category_name}</p>
+                <p><strong>Color:</strong> {selectedNews.category.koiStandard?.color_koi || 'N/A'}</p>
+                <p><strong>Pattern:</strong> {selectedNews.category.koiStandard?.pattern_koi || 'N/A'}</p>
+                <p><strong>Size:</strong> {selectedNews.category.koiStandard?.size_koi || 'N/A'}</p>
+                <p><strong>Age:</strong> {selectedNews.category.koiStandard?.age_koi || 'N/A'}</p>
+                <p><strong>Body Shape:</strong> {selectedNews.category.koiStandard?.bodyshape_koi || 'N/A'}</p>
+                <p><strong>Variety:</strong> {selectedNews.category.koiStandard?.variety_koi || 'N/A'}</p>
+              </Panel>
+
+              <Panel header="Referee Details" style={{ marginBottom: '15px' }}>
+                <p><strong>Name:</strong> {selectedNews.referee?.refereeName || 'N/A'}</p>
+                <p><strong>Experience:</strong> {selectedNews.referee?.expJudge || 'N/A'}</p>
+                <p><strong>Full Name:</strong> {selectedNews.referee?.user?.full_name || 'N/A'}</p>
+                <p><strong>Email:</strong> {selectedNews.referee?.user?.email || 'N/A'}</p>
+                <p><strong>Phone:</strong> {selectedNews.referee?.user?.phone || 'N/A'}</p>
+              </Panel>
+
+              <Panel header="Award Details" style={{ marginBottom: '15px' }}>
+                <p><strong>Award Name:</strong> {selectedNews.award?.award_name || 'N/A'}</p>
+                <p><strong>Quantity:</strong> {selectedNews.award?.quantity || 'N/A'}</p>
+                <p><strong>Number of Attendees:</strong> {selectedNews.number_attendees || 'N/A'}</p>
+              </Panel>
+            </Collapse>
           </div>
         )}
       </Modal>
 
+      {/* Register Modal */}
       <Modal
         title="Register Competition"
-        open={isRegisterModalVisible}
+        visible={isRegisterModalVisible}
         onCancel={handleCancel}
         footer={null}
       >
@@ -189,7 +182,7 @@ function NewsContentDisplay({ filteredNews }) {
             placeholder="Select Koi"
             onChange={handleKoiSelectChange}
             style={{ width: '100%' }}
-            suffixIcon={<UserOutlined />} // Thêm icon vào Select
+            suffixIcon={<UserOutlined />}
           >
             {userFishList.map((fish) => (
               <Option key={fish.koi_id} value={fish.koi_id}>
@@ -202,28 +195,28 @@ function NewsContentDisplay({ filteredNews }) {
             name="competition_name"
             placeholder="Competition Name"
             value={formData.competition_name}
-            onChange={handleInputChange}
-            prefix={<TrophyOutlined />} // Thêm icon vào Input
+            readOnly
+            prefix={<TrophyOutlined />}
           />
           <Input
             name="categoryName"
             placeholder="Category Name"
             value={formData.categoryName}
-            onChange={handleInputChange}
-            prefix={<UserOutlined />} // Thêm icon vào Input
+            readOnly
+            prefix={<DollarOutlined />}
           />
           <Input
             name="registrationFee"
             placeholder="Registration Fee"
             value={formData.registrationFee}
-            onChange={handleInputChange}
-            type="number"
-            prefix={<DollarOutlined />} // Thêm icon vào Input
+            readOnly
+            prefix={<DollarOutlined />}
           />
-        </div>
-        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-          <Button onClick={handleCancel}>Close</Button>
-          <Button type="primary" onClick={handleSubmit}>Submit</Button>
+          <div>
+            <Button type="primary" onClick={handleSubmit} block>
+              Register
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>
