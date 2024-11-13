@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Select, Button, DatePicker, Slider } from "antd";
+import { Form, Select, Button, DatePicker } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -49,8 +49,6 @@ function FilterKoi({ competitions, onFilter }) {
         // Kiểm tra hoa văn
         (!values.pattern_koi || values.pattern_koi === "All" || comp.category.koiStandard.pattern_koi === values.pattern_koi) &&
         
-        // Kiểm tra kích thước
-
         // Kiểm tra hình dạng cơ thể
         (!values.bodyshape_koi || values.bodyshape_koi === "All" || comp.category.koiStandard.bodyshape_koi === values.bodyshape_koi) &&
         
@@ -68,22 +66,19 @@ function FilterKoi({ competitions, onFilter }) {
   
     onFilter(filtered); // Cập nhật danh sách cuộc thi đã lọc
   };
-  
-
-  
-  
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="filter-koi-container" style={{ padding: "20px" }}>
       <h3><FilterOutlined /> Filter Koi</h3>
 
-      <Form form={form} onFinish={handleSubmit} layout="vertical">
-      <Form.Item name="time_range" label="Time Range">
+      <Form form={form} onFinish={handleSubmit} layout="vertical" className="filter-form">
+        <Form.Item name="time_range" label="Time Range">
           <DatePicker.RangePicker
             format="YYYY-MM-DD"
             onChange={handleDateRangeChange}
           />
         </Form.Item>
+        
         {/* Màu sắc Koi */}
         <Form.Item name="color_koi" label="Color">
           <Select defaultValue="All">
@@ -103,9 +98,6 @@ function FilterKoi({ competitions, onFilter }) {
             ))}
           </Select>
         </Form.Item>
-
-        {/* Kích thước Koi */}
-
 
         {/* Hình dạng cơ thể Koi */}
         <Form.Item name="bodyshape_koi" label="Body Shape">
@@ -136,9 +128,6 @@ function FilterKoi({ competitions, onFilter }) {
             ))}
           </Select>
         </Form.Item>
-
-        {/* Bộ lọc thời gian */}
-
 
         <Button type="primary" htmlType="submit">
           Apply Filter

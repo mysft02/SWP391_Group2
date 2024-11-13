@@ -1,0 +1,27 @@
+/* filter-koi-container */
+.filter-koi-container {
+    background-color: #312f2f;
+    border-radius: 3px;
+    box-shadow: 0 4px 8px rgba(47, 1, 1, 0.447);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .filter-form {
+    margin-top: 20px;
+  }
+  
+  .filter-form .ant-form-item {
+    margin-bottom: 20px;
+  }
+  
+  .filter-form .ant-form-item-label {
+    font-weight: bold;
+  }
+  
+  .filter-form .ant-btn {
+    width: 100%;
+    font-size: 16px;
+    margin:0;
+  }
+  

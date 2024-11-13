@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, message, Select, Collapse } from 'antd';
-import { UserOutlined, TrophyOutlined, DollarOutlined } from '@ant-design/icons';
+import { UserOutlined, TrophyOutlined, DollarOutlined, LoginOutlined, AppstoreAddOutlined } from '@ant-design/icons'; // Added more icons
 import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -124,8 +124,8 @@ function NewsContentDisplay({ filteredNews }) {
             <p>Award: {news.award.award_name}</p>
             <p>Created At: {new Date(news.start_time).toLocaleDateString()}</p>
             <div style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-              <Button onClick={() => showRankDetailModal(news)}>Detail Rank</Button>
-              <Button onClick={() => showRegisterModal(news)}>Register Competition</Button>
+              <Button onClick={() => showRankDetailModal(news)} icon={<TrophyOutlined />}>Detail Rank</Button>
+              <Button onClick={() => showRegisterModal(news)} icon={<AppstoreAddOutlined />}>Register Competition</Button>
             </div>
           </div>
         ))
@@ -137,7 +137,7 @@ function NewsContentDisplay({ filteredNews }) {
         title="Detail Rank"
         visible={isRankDetailModalVisible}
         onCancel={handleCancel}
-        footer={[<Button key="back" onClick={handleCancel}>Close</Button>]}
+        footer={[<Button key="back" onClick={handleCancel} icon={<LoginOutlined />}>Close</Button>]}
       >
         {selectedNews && (
           <div>
@@ -212,11 +212,10 @@ function NewsContentDisplay({ filteredNews }) {
             readOnly
             prefix={<DollarOutlined />}
           />
-          <div>
-            <Button type="primary" onClick={handleSubmit} block>
-              Register
-            </Button>
-          </div>
+        </div>
+
+        <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={handleSubmit} type="primary" icon={<AppstoreAddOutlined />}>Register</Button>
         </div>
       </Modal>
     </div>
