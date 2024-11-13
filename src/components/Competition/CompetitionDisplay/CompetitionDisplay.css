@@ -12,7 +12,7 @@
     display: flex; /* Sử dụng flexbox để quản lý các card */
     flex-wrap: wrap; /* Không cho phép card xuống hàng trừ khi không đủ không gian */
     width: 250%; /* Chiếm toàn bộ chiều rộng của container */
-    max-width: 1200px; /* Đặt chiều rộng tối đa cho hàng card */
+    max-width: 1000px; /* Đặt chiều rộng tối đa cho hàng card */
     margin: 0 auto; /* Căn giữa hàng card trong container */
     gap: 20px; /* Khoảng cách giữa các card */
 }

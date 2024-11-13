@@ -10,6 +10,7 @@ import ManagementReferee from '../../components/Manager-page/Manager-body/Manage
 import RegisterManagement from '../../components/Manager-page/Manager-body/RegisterManagement/RegisterManagement';
 import ManagementAward from '../../components/Manager-page/Manager-body/Award/ManagementAward';
 import './DashBoard.css'
+import ManagementBet from '../../components/Manager-page/Manager-body/BetCompetition/ManagementBet';
 const { Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
@@ -35,7 +36,7 @@ function DashBoardManager() {
       case 'fishkoi':
           return <ManagementFishKoi/>;
       case 'bet':
-        return <div>Bet Component</div>;
+        return <ManagementBet/>;
       case 'award':
           return <ManagementAward/>;
       default:

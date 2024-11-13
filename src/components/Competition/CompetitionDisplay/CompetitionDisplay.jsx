@@ -108,13 +108,15 @@ function CompetitionDisplay({ filteredCompetitions }) {  // Nhận filteredCompe
                   >
                     {isUserRegistered(comp) ? "Join In" : "Not yet registered"}
                   </Button>
-                  <Button
-                    type="default"
-                    icon={<DollarOutlined />}
-                    onClick={() => handleBet(comp)}
-                  >
-                    Bet
-                  </Button>
+                  {user?.roleId !== "R3" && (
+                    <Button
+                      type="default"
+                      icon={<DollarOutlined />}
+                      onClick={() => handleBet(comp)}
+                    >
+                      Bet
+                    </Button>
+                  )}
                 </div>
               </Card>
             ))}
