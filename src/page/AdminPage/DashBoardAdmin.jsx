@@ -1,9 +1,10 @@
 import  { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { UserOutlined, DollarOutlined} from '@ant-design/icons';
+import { UserOutlined, DollarOutlined, TrophyOutlined, DashboardOutlined} from '@ant-design/icons';
 import UserManagement from '../../components/Admin-page/Admin-body/DashBoard/UserManagement';
 import AdminProfile from '../../components/Admin-page/Admin-body/AdminProfile.jsx/AdminProfile';
 import AdminBet from '../../components/Admin-page/Admin-body/AdminBet/AdminBet';
+import AdminCompetition from '../../components/Admin-page/Admin-body/AdminCompetition/AdminCompetition';
 
 
 const { Sider, Content } = Layout;
@@ -21,7 +22,7 @@ function DashBoardAdmin() {
       case 'management-user':
         return <UserManagement/>;
       case 'competition':
-          return <UserManagement/>;
+          return <AdminCompetition/>;
       case 'bet':
         return <AdminBet/>;
       default:
@@ -45,14 +46,14 @@ function DashBoardAdmin() {
           mode="inline"
           onClick={(e) => setActiveComponent(e.key)}
         >
-          <Menu.Item key="dashboard" icon={<DollarOutlined />}>
+          <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
             DashBoard
           </Menu.Item>
           <SubMenu key="user" icon={<UserOutlined />} title="User">
           <Menu.Item key="profile">Profile</Menu.Item>
             <Menu.Item key="management-user">Manager User</Menu.Item>
           </SubMenu>
-          <Menu.Item key="competition" icon={<DollarOutlined />}>
+          <Menu.Item key="competition" icon={<TrophyOutlined  />}>
             Competition
           </Menu.Item>
           <Menu.Item key="bet" icon={<DollarOutlined />}>
