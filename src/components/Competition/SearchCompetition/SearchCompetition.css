@@ -1,0 +1,12 @@
+.search-container {
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    align-items: center;      /* Căn giữa theo chiều dọc */
+    height: 100%;   
+    width: 1180px;          /* Đảm bảo chiều cao của container đủ lớn để căn giữa */
+    flex-direction: column;   /* Nếu muốn đặt tiêu đề ở trên thanh tìm kiếm */
+    gap: 10px;  
+    margin-left: 245px;
+            /* Khoảng cách giữa tiêu đề và thanh tìm kiếm */
+  }
+  

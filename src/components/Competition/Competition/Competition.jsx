@@ -3,6 +3,8 @@ import { Row, Col } from "antd";
 import FilterCompetitions from "../FilterCompetition/FilterCompetition";
 import CompetitionDisplay from "../CompetitionDisplay/CompetitionDisplay";
 import { api } from "../../../config/AxiosConfig";
+import SearchCompetition from "../SearchCompetition/SearchCompetition"; // Import SearchCompetition
+import { TrophyOutlined } from "@ant-design/icons";
 
 function Competition() {
   const [competitions, setCompetition] = useState([]); // Khởi tạo là một mảng rỗng
@@ -23,12 +25,18 @@ function Competition() {
   }, []); // Chỉ gọi API một lần khi component mount
 
   return (
-    <div style={{ display: "flex" }}>
-      {/* Bộ lọc nằm bên trái, chiếm 1/4 chiều rộng */}
-      <FilterCompetitions competitions={competitions} onFilter={setFilteredCompetitions} />
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
 
-      {/* Hiển thị danh sách cuộc thi nằm bên phải, chiếm 3/4 chiều rộng */}
-      <CompetitionDisplay filteredCompetitions={filteredCompetitions} />
+      {/* Thêm SearchCompetition vào */}
+      <SearchCompetition competitions={competitions} onFilter={setFilteredCompetitions} />
+      
+      <div style={{ display: "flex" }}>
+        {/* Bộ lọc nằm bên trái, chiếm 1/4 chiều rộng */}
+        <FilterCompetitions competitions={competitions} onFilter={setFilteredCompetitions} />
+
+        {/* Hiển thị danh sách cuộc thi nằm bên phải, chiếm 3/4 chiều rộng */}
+        <CompetitionDisplay filteredCompetitions={filteredCompetitions} />
+      </div>
     </div>
   );
 }

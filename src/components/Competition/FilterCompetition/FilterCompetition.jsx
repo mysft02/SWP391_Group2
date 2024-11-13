@@ -1,9 +1,8 @@
 import React from "react";
 import { Form, Select, Button, DatePicker } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
-
 const { Option } = Select;
-
+import './FilterKoi.css'
 function FilterKoi({ competitions, onFilter }) {
   const [form] = Form.useForm();
 
@@ -68,71 +67,73 @@ function FilterKoi({ competitions, onFilter }) {
   };
 
   return (
-    <div className="filter-koi-container" style={{ padding: "20px" }}>
-      <h3><FilterOutlined /> Filter Koi</h3>
+    <div className="filter-koi-wrapper" style={{ padding: "20px", display: "flex", justifyContent: "center" }}>
+      <div className="filter-koi-container" style={{ width: "100%", maxWidth: "600px" }}>
+        <h3><FilterOutlined /> Filter Koi</h3>
 
-      <Form form={form} onFinish={handleSubmit} layout="vertical" className="filter-form">
-        <Form.Item name="time_range" label="Time Range">
-          <DatePicker.RangePicker
-            format="YYYY-MM-DD"
-            onChange={handleDateRangeChange}
-          />
-        </Form.Item>
-        
-        {/* Màu sắc Koi */}
-        <Form.Item name="color_koi" label="Color">
-          <Select defaultValue="All">
-            <Option value="All">All</Option>
-            {colors.map((color, index) => (
-              <Option key={index} value={color}>{color}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+        <Form form={form} onFinish={handleSubmit} layout="vertical" className="filter-form">
+          <Form.Item name="time_range" label="Time Range">
+            <DatePicker.RangePicker
+              format="YYYY-MM-DD"
+              onChange={handleDateRangeChange}
+            />
+          </Form.Item>
+          
+          {/* Màu sắc Koi */}
+          <Form.Item name="color_koi" label="Color" >
+            <Select defaultValue="All">
+              <Option value="All">All</Option>
+              {colors.map((color, index) => (
+                <Option key={index} value={color}>{color}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        {/* Hoa văn Koi */}
-        <Form.Item name="pattern_koi" label="Pattern">
-          <Select defaultValue="All">
-            <Option value="All">All</Option>
-            {patterns.map((pattern, index) => (
-              <Option key={index} value={pattern}>{pattern}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+          {/* Hoa văn Koi */}
+          <Form.Item name="pattern_koi" label="Pattern">
+            <Select defaultValue="All">
+              <Option value="All">All</Option>
+              {patterns.map((pattern, index) => (
+                <Option key={index} value={pattern}>{pattern}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        {/* Hình dạng cơ thể Koi */}
-        <Form.Item name="bodyshape_koi" label="Body Shape">
-          <Select defaultValue="All">
-            <Option value="All">All</Option>
-            {bodyShapes.map((shape, index) => (
-              <Option key={index} value={shape}>{shape}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+          {/* Hình dạng cơ thể Koi */}
+          <Form.Item name="bodyshape_koi" label="Body Shape">
+            <Select defaultValue="All">
+              <Option value="All">All</Option>
+              {bodyShapes.map((shape, index) => (
+                <Option key={index} value={shape}>{shape}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        {/* Giống Koi */}
-        <Form.Item name="variety_koi" label="Variety">
-          <Select defaultValue="All">
-            <Option value="All">All</Option>
-            {varieties.map((variety, index) => (
-              <Option key={index} value={variety}>{variety}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+          {/* Giống Koi */}
+          <Form.Item name="variety_koi" label="Variety">
+            <Select defaultValue="All">
+              <Option value="All">All</Option>
+              {varieties.map((variety, index) => (
+                <Option key={index} value={variety}>{variety}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        {/* Giới tính Koi */}
-        <Form.Item name="gender" label="Gender">
-          <Select defaultValue="All">
-            <Option value="All">All</Option>
-            {genders.map((gender, index) => (
-              <Option key={index} value={gender}>{gender}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+          {/* Giới tính Koi */}
+          <Form.Item name="gender" label="Gender">
+            <Select defaultValue="All">
+              <Option value="All">All</Option>
+              {genders.map((gender, index) => (
+                <Option key={index} value={gender}>{gender}</Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <Button type="primary" htmlType="submit">
-          Apply Filter
-        </Button>
-      </Form>
+          <Button type="primary" htmlType="submit">
+            Apply Filter
+          </Button>
+        </Form>
+      </div>
     </div>
   );
 }

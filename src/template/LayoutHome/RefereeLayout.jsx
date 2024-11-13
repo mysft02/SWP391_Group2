@@ -6,15 +6,13 @@ import { Outlet } from 'react-router-dom'
 function RefereeLayout() {
   return (
     <div>
-      <div className='Refeer-header'>
         <RefeerHeader/>
-      </div>
+
       <div className='Refeer-body'>
         <Outlet/>
       </div>
-      <div className='Refeer-footer'>
         <RefeerFooter/>
-      </div>
+
     </div>
   )
 }

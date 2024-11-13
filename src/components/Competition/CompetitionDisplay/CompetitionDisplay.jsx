@@ -13,6 +13,7 @@ import {
   CheckCircleOutlined,
   LoginOutlined,
   DollarOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../data/UserContext";
@@ -48,6 +49,7 @@ function CompetitionDisplay({ filteredCompetitions }) {  // Nhận filteredCompe
 
   return (
     <div className="competition-container">
+
       {filteredCompetitions.length > 0 ? (
         <div className="competition-row">
           {filteredCompetitions

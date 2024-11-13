@@ -169,14 +169,16 @@ function RefereeProfile() {
           title="Đổi mật khẩu"
           visible={isModalVisible}
           onCancel={() => setIsModalVisible(false)}
-          footer={[
-            <Button key="cancel" onClick={() => setIsModalVisible(false)}>
-              Hủy
-            </Button>,
-            <Button key="submit" type="primary" onClick={handleChangePassword}>
-              Đổi mật khẩu
-            </Button>,
-          ]}
+          footer={
+            <div className='fish-modal-footer'>
+              <Button key="submit" type="primary" onClick={handleChangePassword}>
+                Đổi mật khẩu
+              </Button>,
+              <Button key="cancel" onClick={() => setIsModalVisible(false)}>
+                Hủy
+              </Button>,
+            </div>
+          }
         >
           <Form layout="vertical">
             <Form.Item label="Mật khẩu cũ" required>

@@ -5,6 +5,7 @@ import UserManagement from '../../components/Admin-page/Admin-body/DashBoard/Use
 import AdminProfile from '../../components/Admin-page/Admin-body/AdminProfile.jsx/AdminProfile';
 import AdminBet from '../../components/Admin-page/Admin-body/AdminBet/AdminBet';
 import AdminCompetition from '../../components/Admin-page/Admin-body/AdminCompetition/AdminCompetition';
+import AdminDashBoard from '../../components/Admin-page/Admin-body/AdminDashBoard/AdminDashBoard';
 
 
 const { Sider, Content } = Layout;
@@ -17,6 +18,8 @@ function DashBoardAdmin() {
   // Hàm render component
   const renderComponent = () => {
     switch (activeComponent) {
+      case 'dashboard':
+        return <AdminDashBoard/>;
       case 'profile':
         return <AdminProfile />;
       case 'management-user':
@@ -46,9 +49,7 @@ function DashBoardAdmin() {
           mode="inline"
           onClick={(e) => setActiveComponent(e.key)}
         >
-          <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
-            DashBoard
-          </Menu.Item>
+
           <SubMenu key="user" icon={<UserOutlined />} title="User">
           <Menu.Item key="profile">Profile</Menu.Item>
             <Menu.Item key="management-user">Manager User</Menu.Item>
