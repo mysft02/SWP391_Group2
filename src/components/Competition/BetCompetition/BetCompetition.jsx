@@ -10,7 +10,6 @@ import BetForm from './BetForm';
 
 function BetCompetition() {
   const { user } = useUser();
-  const [selectedKoi, setSelectedKoi] = useState(null);
   const [koiList, setKoiList] = useState([]);
   const [error, setError] = useState('');
   const [matches, setMatches] = useState([]);
@@ -66,8 +65,7 @@ function BetCompetition() {
   };
   
 
-  // Bỏ điều kiện kiểm tra thời gian
-  const canBet = true;  // Không cần kiểm tra thời gian nữa
+
 
   return (
     <Card title={`Name Competition: ${competition?.competition_name}`} style={{ maxWidth: 1500}}>
@@ -81,7 +79,7 @@ function BetCompetition() {
         <Col span={11}>
           <MatchTable matches={matches} koiList={koiList} />
           <Divider />
-          <BetForm user={user} competition={competition} koiList={koiList} selectedKoi={selectedKoi} setSelectedKoi={setSelectedKoi} handlePlaceBet={handlePlaceBet} matches={matches}/>
+          <BetForm user={user} competition={competition} koiList={koiList} handlePlaceBet={handlePlaceBet} matches={matches}/>
         </Col>
       </Row>
       {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}

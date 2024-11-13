@@ -9,7 +9,7 @@ function FilterNews({ selectedRank, setSelectedRank, selectedTime, setSelectedTi
       
       {/* Filter theo Rank */}
       <div>
-        <label>Rank</label>
+        <label>Category:</label>
         <select value={selectedRank} onChange={(e) => setSelectedRank(e.target.value)}>
           <option value="">All</option>
           <option value="A">A</option>

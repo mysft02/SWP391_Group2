@@ -61,9 +61,9 @@ function DetailCompetition() {
   // Fetch koi score details
   const fetchKoiScoreDetails = async () => {
     if (!selectedKoi) return;
-
+    
     try {
-      const response = await api.get(`/api/KoiScore/Get KoiScore By KoiId?koiId=${selectedKoi.koi_id}`);
+      const response = await api.get(`/api/KoiScore/Get KoiScore By KoiId And CompeId?koiId=${selectedKoi.koi_id}&competitionId=${competition.competition_id}`);
       setKoiScoreDetails(response.data);
       setIsModalVisible(true);
     } catch (error) {

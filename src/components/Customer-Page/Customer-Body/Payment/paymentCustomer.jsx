@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { Form, Input, Button, message as antdMessage, List } from 'antd';
 import { UserOutlined, DollarOutlined, CalendarOutlined, TransactionOutlined, CommentOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
@@ -11,6 +11,12 @@ const PaymentCustomer = () => {
     const { user } = useUser();
     const [transactionHistory, setTransactionHistory] = useState([]);
     const [hasDisplayedError, setHasDisplayedError] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [hasProcessed, setHasProcessed] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    // Define URL parameters once at the top level
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('vnp_ResponseCode');
 
     useEffect(() => {
         if (user) {
@@ -23,58 +29,70 @@ const PaymentCustomer = () => {
     }, [user, form]);
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('vnp_ResponseCode');
-        if (status) {
-            if (status === '00') {
-                processVnPay();                
-            } else {
-                antdMessage.error('Thanh toán thất bại. Vui lòng thử lại.');
-            }
+        if (status && !hasProcessed && status === '00') {
+            console.log('Thanh toán status:', status);
+            processVnPay(); // Gọi hàm xử lý thanh toán
+            setHasProcessed(true); // Đánh dấu đã xử lý
+        } else if (status && status !== '00' && !hasDisplayedError) {
+            antdMessage.error('Thanh toán thất bại. Vui lòng thử lại.');
+            setHasDisplayedError(true); // Đánh dấu đã hiển thị lỗi
         }
-    }, []);
+    }, [status, hasProcessed, hasDisplayedError]);
 
     const processVnPay = async () => {
+        if (isProcessing) return; // Ngăn không cho gọi lại nếu đang xử lý
+        setIsProcessing(true);
+
         try {
-            const urlParams = new URLSearchParams(window.location.search);
             const processVnPayDTO = {
                 UserName: urlParams.get('vnp_OrderInfo'),
                 Amount: parseFloat(urlParams.get('vnp_Amount')) / 100,
             };
-            
+
+            console.log('Processing VnPay với dữ liệu:', processVnPayDTO);
             const response = await api.post('/api/VNPay/Process-Payment', processVnPayDTO, {
-                headers: {
+                headers: { 
+                    'Authorization': `Bearer ${user.accessToken}`,
                     'Content-Type': 'application/json',
+
                 },
             });
-            
-            // Kiểm tra nếu phản hồi có chứa tin nhắn thành công
+
             if (response.data) {
-                antdMessage.success(response.data);  // Hiển thị nội dung từ server nếu có
-            } else {
-                antdMessage.success('Thanh toán thành công!');
+                console.log('Kết quả thanh toán:', response.data);
+                antdMessage.success(response.data);
             }
         } catch (error) {
-            console.error('Error processing VnPay:', error);
+            console.error('Lỗi khi xử lý VnPay:', error);
             antdMessage.error('Thanh toán thất bại. Vui lòng thử lại.');
+        } finally {
+            setIsProcessing(false);
         }
     };
-    
 
     useEffect(() => {
         const fetchTransactionHistory = async () => {
             try {
-                const response = await api.post('/api/VNPay/Get-Transactions',{}, {
+                const response = await api.post('/api/VNPay/Get-Transactions', {}, {
                     headers: {
                         'Authorization': `Bearer ${user.accessToken}`,
                         'Content-Type': 'application/json',
                     },
                 });
+
                 if (response.data) {
-                    setTransactionHistory(response.data);
+                    // Sắp xếp theo thời gian (mới nhất trước), sau đó sắp xếp theo số tiền (lớn nhất trước)
+                    const sortedData = response.data.sort((a, b) => {
+                        const timeComparison = new Date(b.transactions_time) - new Date(a.transactions_time);
+                        if (timeComparison !== 0) return timeComparison;
+                        return b.amount - a.amount;
+                    });
+
+                    setTransactionHistory(sortedData);
+                    console.log('Transaction data:', sortedData);
                 }
             } catch (error) {
-                console.error('Error fetching transaction history:', error);
+                console.error('Lỗi khi lấy lịch sử giao dịch:', error);
                 if (!hasDisplayedError) {
                     antdMessage.error('Không thể lấy lịch sử giao dịch. Vui lòng thử lại.');
                     setHasDisplayedError(true);
@@ -82,12 +100,18 @@ const PaymentCustomer = () => {
             }
         };
 
-        if (user) {
+        // Đảm bảo chỉ fetch khi có user và transactionHistory chưa có dữ liệu
+        if (user && transactionHistory.length === 0) {
+            console.log('Fetching transaction history for user:', user);
             fetchTransactionHistory();
         }
-    }, [user, hasDisplayedError]);
+    }, [user, transactionHistory.length, hasDisplayedError]);
 
     const handleSubmit = async (values) => {
+        if (isSubmitting) return; // Ngăn không cho gửi lại nếu đã đang gửi
+    
+        setIsSubmitting(true);  // Đánh dấu đang gửi
+    
         try {
             const response = await api.post('/api/VNPay/Get-Payment-Url', values, {
                 headers: {
@@ -95,7 +119,7 @@ const PaymentCustomer = () => {
                     'Content-Type': 'application/json',
                 },
             });
-
+    
             if (response.data && response.data.url) {
                 window.location.href = response.data.url;
             } else {
@@ -104,6 +128,8 @@ const PaymentCustomer = () => {
         } catch (error) {
             console.error('Lỗi khi nạp tiền:', error);
             antdMessage.error('Không thể nạp tiền. Vui lòng thử lại.');
+        } finally {
+            setIsSubmitting(false); // Cho phép submit lại sau khi hoàn thành
         }
     };
 

@@ -5,19 +5,17 @@ const { Option } = Select;
 
 function BetForm({
   user,
-  koiList = [],
-  competition,
-  matches,
-  selectedKoi,
-  setSelectedKoi,
-  handlePlaceBet
+  koiList = [],  // List of koi available for the user
+  competition,  // Competition data
+  matches,  // List of matches
+  handlePlaceBet,  // Function to place bet
 }) {
   const [betAmount, setBetAmount] = useState(0);
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [selectedKoiId, setSelectedKoiId] = useState(null); // Only store koi_id
 
   const handleKoiSelect = (value) => {
-    const selectedFish = koiList.find(koi => koi.koi_id === value);
-    setSelectedKoi(selectedFish);
+    setSelectedKoiId(value); // Store only koi_id
   };
 
   const handleMatchSelect = (value) => {
@@ -29,10 +27,10 @@ function BetForm({
   };
 
   const handleSubmitBet = () => {
-    console.log("Competition Data:", competition);  // In ra toàn bộ đối tượng competition
-    console.log("Koi Registrations:", competition.koiRegistrations);  // In ra mảng koiRegistrations
+    console.log("Competition Data:", competition);
+    console.log("Koi Registrations:", competition.koiRegistrations);  // Display koiRegistrations array
   
-    if (!selectedKoi || !selectedMatch || betAmount <= 0) {
+    if (!selectedKoiId || !selectedMatch || betAmount <= 0) {
       message.error("Vui lòng chọn cá koi, trận đấu và số tiền đặt cược hợp lệ.");
       return;
     }
@@ -42,35 +40,28 @@ function BetForm({
       return;
     }
   
-    // Tìm kiếm phần tử KoiRegistration tương ứng từ mảng koiRegistrations
-    const selectedKoiRegistration = competition.koiRegistrations.find(koi => koi.koi_id === selectedKoi.koi_id);
+    // Find the corresponding KoiRegistration
+    const selectedKoiRegistration = competition.koiRegistrations.find(koi => koi.koi_id === selectedKoiId);
     
-    // Kiểm tra nếu tìm thấy KoiRegistration
     if (!selectedKoiRegistration) {
       message.error("Không tìm thấy cá koi hợp lệ.");
       return;
     }
   
-    // Tạo dữ liệu gửi đi trong request body
+    // Create bet data to send in the request
     const betData = {
-      userId: user.user_id,                               // Lấy userId từ user prop
-      registrationId: selectedKoiRegistration.registrationId,  // Lấy registrationId từ KoiRegistration đã chọn
-      competitionId: selectedKoiRegistration.competition_id,    // Lấy competitionId từ KoiRegistration
-      matchId: selectedMatch,                              // Lấy matchId từ state
-      koiId: selectedKoi.koi_id,                  // Lấy koi_id từ KoiRegistration
-      betAmount: betAmount                                       // Số tiền đặt cược
+      userId: user.user_id,
+      registrationId: selectedKoiRegistration.registrationId,  // registrationId from selected koi registration
+      competitionId: selectedKoiRegistration.competition_id,    // competitionId from selected koi registration
+      matchId: selectedMatch,
+      koiId: selectedKoiRegistration.koi_id,                  // koi_id from selected koi registration
+      betAmount: betAmount,
     };
-    console.log("data bet:",betData)
-
+    console.log("Bet Data:", betData);
   
-    // Gọi hàm handlePlaceBet với betData
+    // Call handlePlaceBet with the bet data
     handlePlaceBet(betData);
   };
-  
-  
-
-  // Kiểm tra và log dữ liệu của `matches`
-  console.log("Matches data:", matches);
 
   return (
     <Form layout="vertical" style={{ marginBottom: '20px' }}>
@@ -78,16 +69,19 @@ function BetForm({
         <Input value={user?.full_name} disabled />
       </Form.Item>
 
+      {/* Koi Selection - Displaying koi registered for the competition */}
       <Form.Item label="Chọn cá koi">
         <Select
-          value={selectedKoi?.koi_id || undefined}
+          value={selectedKoiId || undefined}
           onChange={handleKoiSelect}
           placeholder="Chọn một cá koi"
           style={{ width: '100%' }}
         >
-          {koiList && koiList.length > 0 ? (
-            koiList.map((koi) => (
-              <Option key={koi.koi_id} value={koi.koi_id}>{koi.koi_name}</Option>
+          {competition && competition.koiRegistrations && competition.koiRegistrations.length > 0 ? (
+            competition.koiRegistrations.map((registration) => (
+              <Option key={registration.koi_id} value={registration.koi_id}>
+                {registration.fishKoi.koi_name} 
+              </Option>
             ))
           ) : (
             <Option disabled>No koi available</Option>
@@ -95,6 +89,7 @@ function BetForm({
         </Select>
       </Form.Item>
 
+      {/* Match Selection */}
       <Form.Item label="Chọn trận đấu">
         <Select
           value={selectedMatch || undefined}
@@ -112,6 +107,7 @@ function BetForm({
         </Select>
       </Form.Item>
 
+      {/* Bet Amount */}
       <Form.Item label="Số tiền đặt cược" required>
         <InputNumber
           value={betAmount}
@@ -122,16 +118,15 @@ function BetForm({
         />
       </Form.Item>
 
+      {/* Place Bet Button */}
       <Button
         type="primary"
         onClick={handleSubmitBet}
-        disabled={!selectedKoi || !selectedMatch || betAmount <= 0}
+        disabled={!selectedKoiId || !selectedMatch || betAmount <= 0}
         style={{ marginTop: '10px' }}
       >
         Đặt Cược
       </Button>
-
-      {/* Bỏ countdown và phần kiểm tra canBet */}
     </Form>
   );
 }

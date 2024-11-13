@@ -133,13 +133,15 @@ function NewsContentDisplay({ filteredNews }) {
       console.error(error);
     }
   };
-  
+
+  // Filter news items to only show those with "Active" status_competition
+  const activeNews = filteredNews.filter(news => news.status_competition === "Active");
 
   return (
     <div style={{ flex: 1, padding: '20px', height: '850px', overflowY: 'auto' }}>
       <h3>News List</h3>
-      {filteredNews.length > 0 ? (
-        filteredNews.map((news) => (
+      {activeNews.length > 0 ? (
+        activeNews.map((news) => (
           <div key={news.id} style={{ borderBottom: '1px solid #ddd', padding: '10px 0' }}>
             <h4>{news.competition_name}</h4>
             <p>Category: {news.category.category_name}</p>
@@ -156,7 +158,7 @@ function NewsContentDisplay({ filteredNews }) {
           </div>
         ))
       ) : (
-        <p>No news found matching the selected filters.</p>
+        <p>No active news found matching the selected filters.</p>
       )}
 
       <Modal
