@@ -80,6 +80,7 @@ function ManagerCompetition() {
         koi_id: item.koi_id,
         referee_id: item.referee_id,
         award_id: item.award_id,
+        number_attendees: item.number_attendees
       }));
       setCompetitions(formattedData);
     } catch (error) {
@@ -108,12 +109,13 @@ function ManagerCompetition() {
       status_competition: values.status_competition,
       category_id: values.categoryId || "CAT_1",
       koi_id: values.koiId || "K1",
-      referee_id: values.refereeId || "REF_1",
+      referee_id: values.refereeId || "REF_1",  // Giá trị này có thể gây lỗi nếu referee không có sẵn
       award_id: values.award_id || "AWD_1",
       rounds: values.rounds,
+      number_attendees: values.number_attendees,
       competition_img: values.competition_img || "haha.jpg",
     };
-    
+  
     try {
       await api.post('/api/CompetitionKoi/Create CompetitionKoi', payload);
       notification.success({
@@ -122,13 +124,19 @@ function ManagerCompetition() {
       });
       fetchCompetitions();
     } catch (error) {
-      console.error('Error creating competition:', error);
+      console.error('Error creating competition:', error.response?.data || error.message);
+  
+      // Hiển thị thông báo lỗi từ API nếu có
+      const errorMessage = error.response?.data || 'Could not create competition.';
+  
+      // Hiển thị thông báo lỗi với lý do từ API
       notification.error({
         message: 'Create Failed',
-        description: 'Could not create competition.',
+        description: errorMessage,
       });
     }
   };
+  
 
   const updateCompetition = async (values) => {
     const params = new URLSearchParams({
@@ -139,10 +147,11 @@ function ManagerCompetition() {
         // EndTime: values.end_time ? values.end_time.toISOString() : '',
         StatusCompetition: values.status_competition,
         KoiCategoryId: values.categoryId || "CAT_1",
-        KoiFishId: values.koiId || "K1",
+        // KoiFishId: values.koiId || "K1",
         RefereeId: values.refereeId || "REF_1",
         AwardId: values.award_id || "AWD_1",
-        Round: values.rounds,
+        // Round: values.rounds,
+        number_attendees:values.number_attendees,
         CompetitionImg: values.competition_img || "haha.jpg",
     });
 
@@ -155,10 +164,10 @@ function ManagerCompetition() {
         });
         fetchCompetitions(); // Tải lại danh sách
     } catch (error) {
-        console.error('Lỗi khi cập nhật cuộc thi:', error);
+        console.error('Lỗi khi cập nhật cuộc thi:', error.response?.data || error.message);
         notification.error({
             message: 'Cập nhật thất bại',
-            description: 'Không thể cập nhật cuộc thi.',
+            description: error.response?.data || 'Could not update competition.',
         });
     }
 };
@@ -191,6 +200,7 @@ function ManagerCompetition() {
         koiId: competition.koi_id || '',
         refereeId: competition.referee_id || '',
         award_id: competition.award_id || '',
+        number_attendees:competition.number_attendees,
         competition_img: competition.competition_img || '',
       });
     } else {
@@ -262,6 +272,12 @@ function ManagerCompetition() {
       dataIndex: 'end_time',
       key: 'end_time',
       render: (text) => new Date(text).toLocaleString(),
+    },
+    {
+      title: 'Number Attendees',
+      dataIndex: 'number_attendees',
+      key: 'number_attendees',
+      render: (Number) => Number || 0, // Hiển thị 0 nếu giá trị bị thiếu
     },
     {
       title: 'Action',
@@ -380,7 +396,7 @@ function ManagerCompetition() {
             </Select>
           </Form.Item>
 
-          <Form.Item name="koiId" label="Koi Fish" rules={[{ required: true }]}>
+          <Form.Item name="koiId" label="Koi Fish" rules={[{ required: false }]}>
             <Select>
               {koiFishes.map(koi => (
                 <Option key={koi.koi_id} value={koi.koi_id}>{koi.koi_name}</Option>
@@ -401,6 +417,19 @@ function ManagerCompetition() {
               {awards.map(award => (
                 <Option key={award.award_id} value={award.award_id}>{award.award_name}</Option>
               ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="number_attendees"
+            label="Number Attendees"
+            rules={[{ required: true, message: 'Please select the status!' }]}
+          >
+            <Select placeholder="Select status">
+              <Option value="2">2 people </Option>
+              <Option value="4">4 people </Option>
+              <Option value="8">8 people </Option>
+              <Option value="10">10 people </Option>
+              <Option value="12">12 people </Option>
             </Select>
           </Form.Item>
 
