@@ -139,6 +139,8 @@ function ManagerCompetition() {
   
 
   const updateCompetition = async (values) => {
+
+  
     const params = new URLSearchParams({
         CompetitionId: editingCompetition.competition_id,
         CompetitionName: values.competition_name,
@@ -151,13 +153,13 @@ function ManagerCompetition() {
         RefereeId: values.refereeId || "REF_1",
         AwardId: values.award_id || "AWD_1",
         // Round: values.rounds,
-        number_attendees:values.number_attendees,
+        number_attendees: values.number_attendees,
         CompetitionImg: values.competition_img || "haha.jpg",
     });
-
+    console.log('Payload:', params.toString());
     try {
         // Gọi API với query string
-        await api.post(`/api/CompetitionKoi/Update Competition?${params.toString()}`);
+        await api.post(`/api/CompetitionKoi/Update Competition?${params}`);
         notification.success({
             message: 'Cập nhật thành công',
             description: 'Cập nhật cuộc thi thành công.',
@@ -422,14 +424,14 @@ function ManagerCompetition() {
           <Form.Item
             name="number_attendees"
             label="Number Attendees"
-            rules={[{ required: true, message: 'Please select the status!' }]}
+            rules={[{ required: true, message: 'Please select the numbers people!' }]}
           >
-            <Select placeholder="Select status">
-              <Option value="2">2 people </Option>
-              <Option value="4">4 people </Option>
-              <Option value="8">8 people </Option>
-              <Option value="10">10 people </Option>
-              <Option value="12">12 people </Option>
+            <Select placeholder="Select numbers people">
+              <Option value={2}>2 people </Option>
+              <Option value={4}>4 people </Option>
+              <Option value={8}>8 people </Option>
+              <Option value={10}>10 people </Option>
+              <Option value={12}>12 people </Option>
             </Select>
           </Form.Item>
 
