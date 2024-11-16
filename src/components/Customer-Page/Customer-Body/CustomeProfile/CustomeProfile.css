@@ -3,10 +3,10 @@
     gap: 30px;
     padding: 20px;
     background-color: #f0f2f5;
-    height: 75vh;
+    height: 120vh;
   }
   .user-info-section {
-    height:60%;
+    height:50%;
     width: 30%;
     background: #ffffff;
     padding: 20px;
@@ -80,6 +80,10 @@
     display: flex;
     justify-content: center;
 }
+.history-bet-section {
+  padding:0;
+}
+
 
 
   

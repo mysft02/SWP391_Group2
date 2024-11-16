@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, message, Modal } from 'antd';
+import { Form, Input, Button, message, Modal, Col, Divider } from 'antd';
 import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, DollarOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import './CustomeProfile.css';
 import avatar from '../../../../assets/img/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg';
+import HistoryBet from '../Customer-HistoryBet/HistoryBet';
 
 function CustomeProfile() {
   const { user, setUser } = useUser();
@@ -144,9 +145,14 @@ function CustomeProfile() {
               Cập nhật hồ sơ
             </Button>
           </Form.Item>
+          <Divider style={{ margin: '5px ',borderWidth: '3px' }} />
+          <div className="history-bet-section">
+            <HistoryBet />
+          </div>
+
         </Form>
       </div>
-
+      
       {/* Right Section - User Info & Change Password */}
       <div className="user-info-section">
         <div className="avatar-section">
@@ -155,14 +161,18 @@ function CustomeProfile() {
             <div className="username">{user.username}</div>
             <div className="email">{user.email}</div>
             <div className="balance">Balance: ${user.balance}</div>
+            
           </div>
+          
         </div>
-
+        
         <div className='button-customer'>
           <Button type="default" icon={<LockOutlined />} onClick={() => setIsModalVisible(true)}>
             Đổi mật khẩu
           </Button>
         </div>
+        
+
 
         {/* Change Password Modal */}
         <Modal
@@ -193,7 +203,9 @@ function CustomeProfile() {
             </Form.Item>
           </Form>
         </Modal>
+
       </div>
+
     </div>
   );
 }

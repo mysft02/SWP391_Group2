@@ -5,6 +5,7 @@ import { api } from '../../../../config/AxiosConfig';
 import moment from 'moment';
 import { Option } from 'antd/es/mentions';
 import { useUser } from '../../../../data/UserContext';
+import SearchMatch from './SearchMatch';
 
 function ManagerCompetition() {
   const {user} = useUser();
@@ -302,14 +303,22 @@ function ManagerCompetition() {
   return (
     <div>
       <h1>Competition Management</h1>
-      <Button 
-        type="primary" 
-        icon={<PlusOutlined />} 
-        onClick={() => showModal(null)} 
-        style={{ marginBottom: '20px' }}
-      >
-        Add Competition
-      </Button>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          {/* Nút Add Competition */}
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => showModal(null)}
+          >
+            Add Competition
+          </Button>
+
+          {/* Thanh tìm kiếm */}
+          <div className="search-match" style={{ display: 'flex',justifyContent:'flex-end' }}>
+            <SearchMatch />
+          </div>
+        </div>
       <Table dataSource={competitions} columns={columns} rowKey="competition_id"   pagination={{ pageSize: 3 }}/>
 
       <Modal

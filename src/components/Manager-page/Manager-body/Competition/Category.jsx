@@ -210,7 +210,7 @@ function Category() {
         Add Koi Category
       </Button>
 
-      <Table dataSource={categories} columns={columns} rowKey="category_id" />
+      <Table dataSource={categories} columns={columns} rowKey="category_id" pagination={{ pageSize: 4 }} />
 
       <Modal
         title={editingCategory ? "Edit Koi Category" : "Add Koi Category"}
