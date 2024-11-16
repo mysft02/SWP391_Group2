@@ -289,7 +289,7 @@ function ManagerCompetition() {
       <div style={{display:'flex', gap:'10px'}}>
         <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
         
-        <Popconfirm
+        {/* <Popconfirm
           title="Are you sure you want to delete this competition?"
           onConfirm={() => handleDelete(record.competition_id)}
           okText="Yes"
@@ -310,7 +310,7 @@ function ManagerCompetition() {
           }}
         >
           <Button type="link" icon={<DeleteOutlined />} danger>Delete</Button>
-        </Popconfirm>
+        </Popconfirm> */}
       </div>
           
         </>
@@ -430,8 +430,7 @@ function ManagerCompetition() {
               <Option value={2}>2 people </Option>
               <Option value={4}>4 people </Option>
               <Option value={8}>8 people </Option>
-              <Option value={10}>10 people </Option>
-              <Option value={12}>12 people </Option>
+
             </Select>
           </Form.Item>
 
