@@ -6,6 +6,7 @@ import { useUser } from '../../../../data/UserContext';
 import './CustomeProfile.css';
 import avatar from '../../../../assets/img/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg';
 import HistoryBet from '../Customer-HistoryBet/HistoryBet';
+import HistoryRegisKoi from '../Customer-HistoryRegistration/HistoryRegisKoi';
 
 function CustomeProfile() {
   const { user, setUser } = useUser();
@@ -148,6 +149,11 @@ function CustomeProfile() {
           <Divider style={{ margin: '5px ',borderWidth: '3px' }} />
           <div className="history-bet-section">
             <HistoryBet />
+          </div>
+          <Divider style={{ margin: '5px ',borderWidth: '3px' }} />
+
+          <div>
+            <HistoryRegisKoi/>
           </div>
 
         </Form>
