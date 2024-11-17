@@ -44,11 +44,7 @@ function ManagementBet() {
       dataIndex: ['competitionKoi', 'competition_name'],
       key: 'competition_name',
     },
-    {
-      title: <><BarcodeOutlined /> Koi Name</>,
-      dataIndex: ['competitionKoi', 'koi_id'],
-      key: 'koi_id',
-    },
+
     {
       title: <><FileDoneOutlined /> Status</>,
       dataIndex: ['koiRegistration', 'statusRegistration'],
