@@ -6,10 +6,13 @@ import moment from 'moment';
 import { Option } from 'antd/es/mentions';
 import { useUser } from '../../../../data/UserContext';
 import SearchMatch from './SearchMatch';
+import ProcessMatch from './ProcessMatch';
 
 function ManagerCompetition() {
   const {user} = useUser();
   const [competitions, setCompetitions] = useState([]);
+  const [competitionId] = useState(null); // Giá trị khởi tạo mặc định
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingCompetition, setEditingCompetition] = useState(null);
   const [koiCategories, setKoiCategories] = useState([]);
@@ -287,8 +290,8 @@ function ManagerCompetition() {
       render: (_, record) => (
         <>
       <div style={{display:'flex', gap:'10px'}}>
-        <Button type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
-        
+        <Button  type="link" icon={<EditOutlined />} onClick={() => showModal(record)}>Edit</Button>
+        <ProcessMatch competitionId={record.competition_id}/>
         {/* <Popconfirm
           title="Are you sure you want to delete this competition?"
           onConfirm={() => handleDelete(record.competition_id)}

@@ -21,6 +21,7 @@ function MatchTable({ matches, koiList }) {
       title: 'Result',
       key: 'result',
       render: (_, record) => {
+        // Split result into Koi ID and Score
         const [koiId, score] = record.result.split('_');
         const koi = koiList.find(koi => koi.koi_id === koiId);
 

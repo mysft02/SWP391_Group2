@@ -117,23 +117,25 @@ function ManagementFishKoi() {
   return (
     <div>
       <h1>Management Fish Koi</h1>
-      <Button 
-        type="primary" 
-        icon={<ReloadOutlined />} // Thêm icon cho nút refresh
-        onClick={fetchFishes} // Gọi hàm fetchFishes khi nhấn nút
-        style={{ marginBottom: '20px', marginLeft: '10px' }}
-      >
-        Refresh
-      </Button>
+      <div style={{display:'flex'}}>
+        <Button 
+          type="primary" 
+          icon={<ReloadOutlined />} // Thêm icon cho nút refresh
+          onClick={fetchFishes} // Gọi hàm fetchFishes khi nhấn nút
+          style={{ marginBottom: '20px', marginLeft: '10px' }}
+        >
+          Refresh
+        </Button>
 
-      {/* Ô tìm kiếm */}
-      <Input
-        placeholder="Search fish by name"
-        value={searchText}
-        onChange={handleSearch}
-        prefix={<SearchOutlined />} // Thêm icon vào ô tìm kiếm
-        style={{ marginBottom: '20px', width: '300px' }}
-      />
+        {/* Ô tìm kiếm */}
+        <Input
+          placeholder="Search fish by name"
+          value={searchText}
+          onChange={handleSearch}
+          prefix={<SearchOutlined />} // Thêm icon vào ô tìm kiếm
+          style={{ marginLeft: 750 ,marginBottom: '20px', width: '300px' }}
+        />
+      </div>
 
       <Table
         dataSource={filteredFishes}
