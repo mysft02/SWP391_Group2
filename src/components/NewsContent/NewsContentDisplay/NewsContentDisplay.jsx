@@ -105,7 +105,7 @@ function NewsContentDisplay({ filteredNews }) {
       message.success("Đăng ký thành công!");
       handleCancel();
     } catch (error) {
-      message.error("Đăng ký thất bại. Vui lòng thử lại.");
+      message.error(error.response.data);
       console.error(error);
     }
   };

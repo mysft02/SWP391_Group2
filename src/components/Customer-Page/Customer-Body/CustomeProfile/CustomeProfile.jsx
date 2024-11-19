@@ -7,6 +7,7 @@ import './CustomeProfile.css';
 import avatar from '../../../../assets/img/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg';
 import HistoryBet from '../Customer-HistoryBet/HistoryBet';
 import HistoryRegisKoi from '../Customer-HistoryRegistration/HistoryRegisKoi';
+import CompetitionResult from '../CustomerCompetition/CompetitionResult';
 
 function CustomeProfile() {
   const { user, setUser } = useUser();
@@ -177,7 +178,7 @@ function CustomeProfile() {
             Đổi mật khẩu
           </Button>
         </div>
-        
+
 
 
         {/* Change Password Modal */}

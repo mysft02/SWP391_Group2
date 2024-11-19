@@ -8,9 +8,11 @@ import {
   CalendarOutlined,
   CheckCircleOutlined,
   DockerOutlined,
+  TrophyOutlined,
 } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
+import CompetitionResult from '../CustomerCompetition/CompetitionResult';
 
 const { Title } = Typography;
 
@@ -19,6 +21,7 @@ function HistoryRegisKoi() {
   const [loading, setLoading] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null); // Lưu bản ghi được chọn
   const [isModalVisible, setIsModalVisible] = useState(false); // Trạng thái modal
+
   const { user } = useUser(); // Lấy thông tin user (nếu cần truyền userId vào API)
 
   useEffect(() => {
@@ -64,9 +67,9 @@ function HistoryRegisKoi() {
       key: 'koi_name',
     },
     {
-      title: <><DockerOutlined style={{ color: '#faad14' }} /> Loại Koi</>,
-      dataIndex: ['fishKoi', 'koi_variety'],
-      key: 'koi_variety',
+      title: <><TrophyOutlined style={{ color: '#faad14' }} /> Trận đấu </>,
+      dataIndex: 'competition_id',
+      key: 'competition_id',
     },
     {
       title: <><CheckCircleOutlined style={{ color: '#389e0d' }} /> Trạng Thái</>,
@@ -83,6 +86,7 @@ function HistoryRegisKoi() {
       title: <><EyeOutlined style={{ color: '#722ed1' }} /> Hành Động</>,
       key: 'actions',
       render: (_, record) => (
+        <div style={{display:'flex', gap: 5}}>
         <Button
           type="primary"
           icon={<EyeOutlined />}
@@ -90,6 +94,10 @@ function HistoryRegisKoi() {
         >
           Xem
         </Button>
+        <CompetitionResult competitionId={record.competition_id} koiId = {record.fishKoi.koi_id}/>
+        </div>
+        
+        
       ),
     },
   ];

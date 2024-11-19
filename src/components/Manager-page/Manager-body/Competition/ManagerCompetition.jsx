@@ -362,13 +362,13 @@ function ManagerCompetition() {
           >
             <Input.TextArea />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             name="rounds"
             label="rounds"
             rules={[{ required: true, message: 'Please input the rounds!' }]}
           >
             <Input />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name="status_competition"
             label="Status"
@@ -400,14 +400,14 @@ function ManagerCompetition() {
               ))}
             </Select>
           </Form.Item>
-
+{/* 
           <Form.Item name="koiId" label="Koi Fish" rules={[{ required: false }]}>
             <Select>
               {koiFishes.map(koi => (
                 <Option key={koi.koi_id} value={koi.koi_id}>{koi.koi_name}</Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item name="refereeId" label="Referee" rules={[{ required: true }]}>
             <Select>

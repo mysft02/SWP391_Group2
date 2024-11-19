@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, message } from 'antd';
 import { api } from '../../../../config/AxiosConfig';
+import { CheckCircleOutlined, LoadingOutlined } from '@ant-design/icons';
 function ProcessMatch({ competitionId }) {
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,8 @@ function ProcessMatch({ competitionId }) {
   return (
     <div >
       <Button type="primary" onClick={handleOpenModal}>
-        Process Match
+      <LoadingOutlined style={{ marginRight: 8 }} />
+       Match
       </Button>
 
       <Modal
