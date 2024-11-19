@@ -8,6 +8,7 @@ import avatar from '../../../../assets/img/user-sign-icon-person-symbol-human-av
 import HistoryBet from '../Customer-HistoryBet/HistoryBet';
 import HistoryRegisKoi from '../Customer-HistoryRegistration/HistoryRegisKoi';
 import CompetitionResult from '../CustomerCompetition/CompetitionResult';
+import CustomerResetPassword from '../Customer-Password/CustomerResetPassword';
 
 function CustomeProfile() {
   const { user, setUser } = useUser();
@@ -18,10 +19,6 @@ function CustomeProfile() {
     phone: '',
   });
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -71,39 +68,6 @@ function CustomeProfile() {
     }
   };
 
-  const handleChangePassword = async () => {
-    if (newPassword !== confirmPassword) {
-      message.error('Mật khẩu mới không khớp.');
-      return;
-    }
-
-    if (!user || !user.accessToken) {
-      message.error('Không tìm thấy token, vui lòng đăng nhập lại.');
-      return;
-    }
-
-    try {
-      const payload = {
-        oldPassword: oldPassword,
-        newPassword: newPassword,
-      };
-
-      await api.post('/api/User/ChangePassword', payload, {
-        headers: {
-          Authorization: `Bearer ${user.accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      message.success('Mật khẩu đã được cập nhật thành công!');
-      setIsModalVisible(false);
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (error) {
-      message.error('Đã xảy ra lỗi khi thay đổi mật khẩu.');
-      console.error(error);
-    }
-  };
 
   return (
     <div className="custome-profile-container">
@@ -174,42 +138,10 @@ function CustomeProfile() {
         </div>
         
         <div className='button-customer'>
-          <Button type="default" icon={<LockOutlined />} onClick={() => setIsModalVisible(true)}>
-            Đổi mật khẩu
-          </Button>
+          <CustomerResetPassword/>
+          <CompetitionResult/>
         </div>
 
-
-
-        {/* Change Password Modal */}
-        <Modal
-          title="Đổi mật khẩu"
-          visible={isModalVisible}
-          onCancel={() => setIsModalVisible(false)}
-          footer={
-            <div className="fish-modal-footer">
-            <Button key="submit" type="primary" onClick={handleChangePassword}>
-              Đổi mật khẩu
-            </Button>,
-            <Button key="cancel" onClick={() => setIsModalVisible(false)}>
-              Hủy
-            </Button>,
-
-            </div>
-          }
-        >
-          <Form layout="vertical">
-            <Form.Item label="Mật khẩu cũ" required>
-              <Input.Password value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
-            </Form.Item>
-            <Form.Item label="Mật khẩu mới" required>
-              <Input.Password value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-            </Form.Item>
-            <Form.Item label="Xác nhận mật khẩu" required>
-              <Input.Password value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-            </Form.Item>
-          </Form>
-        </Modal>
 
       </div>
 

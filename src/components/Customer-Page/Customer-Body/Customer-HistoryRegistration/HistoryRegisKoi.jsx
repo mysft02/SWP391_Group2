@@ -12,7 +12,6 @@ import {
 } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
-import CompetitionResult from '../CustomerCompetition/CompetitionResult';
 
 const { Title } = Typography;
 
@@ -94,7 +93,6 @@ function HistoryRegisKoi() {
         >
           Xem
         </Button>
-        <CompetitionResult competitionId={record.competition_id} koiId = {record.fishKoi.koi_id}/>
         </div>
         
         

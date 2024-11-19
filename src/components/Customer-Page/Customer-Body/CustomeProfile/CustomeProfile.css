@@ -76,10 +76,30 @@
     border-radius: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
-.button-customer{
-    display: flex;
-    justify-content: center;
+.button-customer {
+  display: flex;
+  flex-direction: column; /* Đặt các phần tử theo chiều dọc */
+  align-items: center; /* Căn giữa theo chiều ngang */
+  gap: 15px; /* Khoảng cách giữa các phần tử */
 }
+
+.button-customer h3 {
+  font-size: 20px; /* Điều chỉnh kích thước chữ */
+  color: #333; /* Đặt màu chữ */
+  margin-bottom: 10px; /* Thêm khoảng cách dưới tiêu đề */
+  text-transform: uppercase; /* Viết hoa toàn bộ chữ */
+  letter-spacing: 1px; /* Tạo khoảng cách giữa các ký tự */
+}
+
+.button-customer button {
+  width: 150px; /* Đặt chiều rộng cho nút */
+  height: 40px; /* Đặt chiều cao cho nút */
+  font-weight: bold; /* Tăng độ đậm chữ */
+  text-align: center; /* Căn chữ giữa */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  border-radius: 5px; /* Bo tròn góc */
+}
+
 .history-bet-section {
   padding:0;
 }

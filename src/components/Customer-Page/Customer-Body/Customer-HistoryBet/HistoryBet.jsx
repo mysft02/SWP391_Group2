@@ -3,7 +3,7 @@ import { Table } from "antd";
 import { api } from "../../../../config/AxiosConfig";
 import { useUser } from "../../../../data/UserContext";
 // Import các icon từ Ant Design
-import { CalendarOutlined, TrophyOutlined, MoneyCollectOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, DollarCircleOutlined } from '@ant-design/icons';
+import { CalendarOutlined, TrophyOutlined, MoneyCollectOutlined, CheckCircleOutlined, CloseCircleOutlined, LoadingOutlined, DollarCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 function HistoryBet() {
   // State lưu dữ liệu bet history
@@ -110,8 +110,8 @@ function HistoryBet() {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>History Bet</h2>
+    <div >
+      <h2> <InfoCircleOutlined style={{ marginRight: 8, color: '#FFD700' }} />History Bet</h2>
       <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 3 }} />
     </div>
   );
