@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../../../config/AxiosConfig';
 import { Table, Button, Modal, Input, message, Select, Popconfirm } from 'antd';
-import { IdcardOutlined, TrophyOutlined, TagOutlined, DollarOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { IdcardOutlined, TrophyOutlined, TagOutlined, DollarOutlined, EditOutlined, DeleteOutlined, UserOutlined, DockerOutlined } from '@ant-design/icons';
 
 function RegisterManagement() {
   const [koiRegistrations, setKoiRegistrations] = useState([]);
@@ -83,6 +83,16 @@ function RegisterManagement() {
       title: 'Competition ID',
       dataIndex: 'competitionId',
       key: 'competitionId',
+    },
+    {
+      title: <span><UserOutlined />User</span>,  // Icon added
+      dataIndex: ['user','username'],
+      key: 'username',
+    },
+    {
+      title: <span><DockerOutlined />Koi Name</span>,  // Icon added
+      dataIndex: ['koiFish','koi_name'],
+      key: 'koi_name',
     },
     {
       title: 'Code Category',

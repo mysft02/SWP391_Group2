@@ -18,19 +18,7 @@ function BetCompetition() {
 
   // Lấy dữ liệu ban đầu
   useEffect(() => {
-    const fetchKoiFish = async () => {
-      if (!user?.user_id) {
-        setError('User ID không tồn tại.');
-        return;
-      }
-      try {
-        const response = await api.post('/api/KoiFish/Get Koi Fish By User Id', { user_id: user.user_id });
-        setKoiList(response.data);
-        setError('');
-      } catch (error) {
-        setError('Không thể tải danh sách cá koi. Vui lòng thử lại sau.');
-      }
-    };
+
   
     const fetchCompetitionMatches = async () => {
       try {
@@ -43,7 +31,6 @@ function BetCompetition() {
     };
   
     // Lấy dữ liệu ban đầu
-    fetchKoiFish();
     fetchCompetitionMatches();
   
     // Lặp lại việc lấy dữ liệu trận đấu mỗi giây

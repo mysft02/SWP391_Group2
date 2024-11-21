@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../../../config/AxiosConfig';
 import { Table, Button, Modal, Input, message, Select } from 'antd';
-import { EditOutlined, AppstoreAddOutlined, IdcardOutlined, BarcodeOutlined, CheckCircleOutlined, ClockCircleOutlined } from '@ant-design/icons';  // Import the icons
+import { EditOutlined, AppstoreAddOutlined, IdcardOutlined, BarcodeOutlined, CheckCircleOutlined, ClockCircleOutlined, UserOutlined, DockerOutlined } from '@ant-design/icons';  // Import the icons
 import './ManagementKoiRegis.css';
 
 function ManagementKoiRegis() {
@@ -75,6 +75,16 @@ function ManagementKoiRegis() {
       key: 'registrationId',
     },
     {
+      title: <span><UserOutlined />User</span>,  // Icon added
+      dataIndex: ['user','username'],
+      key: 'username',
+    },
+    {
+      title: <span><DockerOutlined />Koi Name</span>,  // Icon added
+      dataIndex: ['koiFish','koi_name'],
+      key: 'koi_name',
+    },
+    {
       title: <span><AppstoreAddOutlined /> Competition ID</span>,  // Icon added
       dataIndex: 'competitionId',
       key: 'competitionId',
@@ -114,7 +124,7 @@ function ManagementKoiRegis() {
   return (
     <div>
       <h2>Koi Registrations Management</h2>
-      <Table dataSource={koiRegistrations} columns={columns} rowKey="koi_id" pagination={{ pageSize: 3 }}/>
+      <Table dataSource={koiRegistrations} columns={columns} rowKey="koi_id" pagination={{ pageSize: 5 }}/>
 
       <Modal
         title={<div className="modal-title">Update Koi Registration</div>}

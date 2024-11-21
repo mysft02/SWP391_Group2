@@ -13,12 +13,13 @@ function BetForm({
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [selectedKoiId, setSelectedKoiId] = useState(null); // Only store koi_id
 
-  const handleKoiSelect = (value) => {
-    setSelectedKoiId(value); // Store only koi_id
+  const handleMatchSelect = (value) => {
+    setSelectedMatch(value); // Cập nhật trận đấu đã chọn
+    setSelectedKoiId(null); // Reset koi đã chọn khi thay đổi trận đấu
   };
 
-  const handleMatchSelect = (value) => {
-    setSelectedMatch(value);
+  const handleKoiSelect = (value) => {
+    setSelectedKoiId(value); // Cập nhật koi đã chọn
   };
 
   const handleBetAmountChange = (value) => {
@@ -76,7 +77,7 @@ function BetForm({
         >
           {matches && matches.length > 0 ? (
             matches
-              .filter((match) => match.result === "Pending") // Lọc các trận đấu có result === "pending"
+              .filter((match) => match.result === 'Pending') // Lọc các trận đấu có result === "Pending"
               .map((match) => (
                 <Option key={match.match_id} value={match.match_id}>
                   {match.match_id}
@@ -88,25 +89,30 @@ function BetForm({
         </Select>
       </Form.Item>
 
-      {/* Koi Selection - Displaying koi registered for the competition */}
+      {/* Koi Selection - Hiển thị koi đã đăng ký cho trận đấu */}
       <Form.Item label="Chọn cá koi">
         <Select
           value={selectedKoiId || undefined}
           onChange={handleKoiSelect}
           placeholder="Chọn một cá koi"
           style={{ width: '100%' }}
+          disabled={!selectedMatch} // Disable nếu không có trận đấu được chọn
         >
-          {competition && competition.koiRegistrations && competition.koiRegistrations.length > 0 ? (
-            competition.koiRegistrations.map((registration) => (
-              <Option key={registration.koi_id} value={registration.koi_id}>
-                {registration.fishKoi.koi_name} 
+          {selectedMatch && matches
+            .filter((match) => match.match_id === selectedMatch) // Lọc trận đấu đã chọn
+            .map((match) => [
+              match.firstKoi, // Lấy firstKoi từ trận đấu
+              match.secondKoi, // Lấy secondKoi từ trận đấu
+            ])
+            .flat()
+            .map((koi) => (
+              <Option key={koi.koi_id} value={koi.koi_id}>
+                {koi.koi_name} {/* Hiển thị tên cá koi */}
               </Option>
-            ))
-          ) : (
-            <Option disabled>No koi available</Option>
-          )}
+            ))}
         </Select>
       </Form.Item>
+
 
       {/* Match Selection */}
 

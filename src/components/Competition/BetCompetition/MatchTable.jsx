@@ -22,12 +22,12 @@ function MatchTable({ matches, koiList }) {
       key: 'result',
       render: (_, record) => {
         // Split result into Koi ID and Score
-        const [koiId, score] = record.result.split('_');
-        const koi = koiList.find(koi => koi.koi_id === koiId);
-
+        const [koiName, score] = record.result.split('_');
+        /*const koi = koiList.find(koi => koi.koi_id === koiId);*/
+      
         return (
           <>
-            <p><strong>Koi Name:</strong> {koi ? koi.koi_name : 'Không có thông tin'}</p>
+            <p><strong>Koi Name:</strong> {koiName || 'Không có thông tin'}</p>
             <p><strong>Score:</strong> {score || 'Chưa có điểm'}</p>
           </>
         );
