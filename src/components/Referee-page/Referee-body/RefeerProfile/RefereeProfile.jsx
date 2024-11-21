@@ -5,6 +5,7 @@ import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import './RefereeProfile.css';
 import avatar from '../../../../assets/img/user-sign-icon-person-symbol-human-avatar-vector-12693195.jpg';
+import HistoryScore from '../HistoryScore/HistoryScore';
 
 function RefereeProfile() {
   const { user, setUser } = useUser();
@@ -144,6 +145,7 @@ function RefereeProfile() {
               Cập nhật hồ sơ
             </Button>
           </Form.Item>
+          <HistoryScore/>
         </Form>
       </div>
 
