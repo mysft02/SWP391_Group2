@@ -101,7 +101,7 @@ function ResultMatch() {
       <Button
         type="primary"
         onClick={() => setIsModalVisible(true)}
-        style={{ marginBottom: '20px' }}
+        style={{ color: '#FFD700' }}
         icon={<SearchOutlined />} // Thêm icon vào nút
       >
         Tìm Kiếm

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Modal, Col, Divider } from 'antd';
-import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, DollarOutlined } from '@ant-design/icons';
+import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, DollarOutlined, PlusOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import './CustomeProfile.css';
@@ -10,8 +10,10 @@ import HistoryRegisKoi from '../Customer-HistoryRegistration/HistoryRegisKoi';
 import CompetitionResult from '../CustomerCompetition/CompetitionResult';
 import CustomerResetPassword from '../Customer-Password/CustomerResetPassword';
 import ResultMatch from '../CustomerCompetition/ResultMatch';
+import { useNavigate } from 'react-router-dom';
 
 function CustomeProfile() {
+  const navigate = useNavigate(); // Khởi tạo useNavigate
   const { user, setUser } = useUser();
   const [formData, setFormData] = useState({
     user_name: '',
@@ -31,7 +33,10 @@ function CustomeProfile() {
       });
     }
   }, [user]);
-
+  const handlePaymentClick = () => {
+    // Điều hướng đến trang Payment khi nhấn vào nút "+"
+    navigate('/member/payment');
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -132,13 +137,19 @@ function CustomeProfile() {
           <div className="user-info">
             <div className="username">{user.username}</div>
             <div className="email">{user.email}</div>
-            <div className="balance">Balance: ${user.balance}</div>
+            <div className="balance">
+              Balance: {user.balance} $
+            </div>
             
           </div>
           
         </div>
         
         <div className='button-customer'>
+          <Button type="primary" htmlType="submit" onClick={handlePaymentClick} style={{color: '#FFD700'}}>
+          <PlusOutlined />
+            Nạp Tiền
+          </Button>
           <CustomerResetPassword/>
           <CompetitionResult/>
           <ResultMatch/>

@@ -102,7 +102,7 @@ function HistoryScore() {
         columns={columns}
         dataSource={data}
         rowKey="score_id" // Sử dụng `score_id` làm key cho từng hàng
-        pagination={{ pageSize: 5 }} // Hiển thị 5 hàng mỗi trang
+        pagination={{ pageSize: 3 }} // Hiển thị 5 hàng mỗi trang
       />
     </div>
   );

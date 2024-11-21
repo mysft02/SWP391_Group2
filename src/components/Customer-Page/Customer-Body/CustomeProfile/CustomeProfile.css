@@ -105,5 +105,10 @@
 }
 
 
+.balance button:hover {
+  opacity: 0.8; /* Màu nhạt hơn khi hover */
+}
+
+
 
   

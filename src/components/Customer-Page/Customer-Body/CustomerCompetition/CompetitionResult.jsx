@@ -99,7 +99,7 @@ function CompetitionResult({ koiId, competitionId }) {
   return (
     <div>
       {/* Nút xem kết quả */}
-      <Button type="primary" icon={<AppstoreAddOutlined />} onClick={fetchCompetitionResults} loading={loading}>
+      <Button type="primary" icon={<AppstoreAddOutlined />} onClick={fetchCompetitionResults} loading={loading} style={{color: '#FFD700'}}>
         Xem Kết Quả
       </Button>
 

@@ -5,7 +5,9 @@ import UserManagement from '../../components/Admin-page/Admin-body/DashBoard/Use
 import AdminProfile from '../../components/Admin-page/Admin-body/AdminProfile.jsx/AdminProfile';
 import AdminBet from '../../components/Admin-page/Admin-body/AdminBet/AdminBet';
 import AdminCompetition from '../../components/Admin-page/Admin-body/AdminCompetition/AdminCompetition';
-import AdminDashBoard from '../../components/Admin-page/Admin-body/AdminDashBoard/AdminDashBoard';
+import StaticsBet from '../../components/Admin-page/Admin-body/AdminDashBoard/StaticsBet';
+import StaticsUser from '../../components/Admin-page/Admin-body/AdminDashBoard/StaticsUser';
+import StaticsCompetition from '../../components/Admin-page/Admin-body/AdminDashBoard/StaticsCompetition';
 
 
 const { Sider, Content } = Layout;
@@ -18,8 +20,12 @@ function DashBoardAdmin() {
   // Hàm render component
   const renderComponent = () => {
     switch (activeComponent) {
-      case 'dashboard':
-        return <AdminDashBoard/>;
+      case 'StatisticsUser':
+        return <StaticsUser/>;
+      case 'StatisticsCompetition':
+          return <StaticsCompetition/>;
+      case 'StatisticsBet':
+        return <StaticsBet/>;
       case 'profile':
         return <AdminProfile />;
       case 'management-user':
@@ -49,9 +55,13 @@ function DashBoardAdmin() {
           mode="inline"
           onClick={(e) => setActiveComponent(e.key)}
         >
-
+          <SubMenu key="dashboard" icon={<UserOutlined />} title="DashBoard">
+            <Menu.Item key="StatisticsUser">Statistics User</Menu.Item>
+            <Menu.Item key="StatisticsCompetition">Statistics Competition</Menu.Item>
+            <Menu.Item key="StatisticsBet">Statistics Bet</Menu.Item>
+          </SubMenu>
           <SubMenu key="user" icon={<UserOutlined />} title="User">
-          <Menu.Item key="profile">Profile</Menu.Item>
+            <Menu.Item key="profile">Profile</Menu.Item>
             <Menu.Item key="management-user">Manager User</Menu.Item>
           </SubMenu>
           <Menu.Item key="competition" icon={<TrophyOutlined  />}>

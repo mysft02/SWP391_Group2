@@ -60,7 +60,7 @@ function CustomerResetPassword() {
   return (
     <div>
       {/* Button mở modal */}
-      <Button type="primary" icon={<LockOutlined />} onClick={handleOpen}>
+      <Button type="primary" icon={<LockOutlined />} onClick={handleOpen} style={{color: '#FFD700'}}>
         Đổi mật khẩu
       </Button>
 
