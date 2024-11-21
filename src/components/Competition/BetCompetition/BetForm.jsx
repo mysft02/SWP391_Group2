@@ -5,7 +5,6 @@ const { Option } = Select;
 
 function BetForm({
   user,
-  koiList = [],  // List of koi available for the user
   competition,  // Competition data
   matches,  // List of matches
   handlePlaceBet,  // Function to place bet
@@ -68,6 +67,26 @@ function BetForm({
       <Form.Item label="Họ và tên" required>
         <Input value={user?.full_name} disabled />
       </Form.Item>
+      <Form.Item label="Chọn trận đấu">
+        <Select
+          value={selectedMatch || undefined}
+          onChange={handleMatchSelect}
+          placeholder="Chọn trận đấu"
+          style={{ width: '100%' }}
+        >
+          {matches && matches.length > 0 ? (
+            matches
+              .filter((match) => match.result === "Pending") // Lọc các trận đấu có result === "pending"
+              .map((match) => (
+                <Option key={match.match_id} value={match.match_id}>
+                  {match.match_id}
+                </Option>
+              ))
+          ) : (
+            <Option disabled>Không có trận đấu khả dụng</Option>
+          )}
+        </Select>
+      </Form.Item>
 
       {/* Koi Selection - Displaying koi registered for the competition */}
       <Form.Item label="Chọn cá koi">
@@ -90,22 +109,7 @@ function BetForm({
       </Form.Item>
 
       {/* Match Selection */}
-      <Form.Item label="Chọn trận đấu">
-        <Select
-          value={selectedMatch || undefined}
-          onChange={handleMatchSelect}
-          placeholder="Chọn trận đấu"
-          style={{ width: '100%' }}
-        >
-          {matches && matches.length > 0 ? (
-            matches.map((match) => (
-              <Option key={match.match_id} value={match.match_id}>{match.match_id}</Option>
-            ))
-          ) : (
-            <Option disabled>No matches available</Option>
-          )}
-        </Select>
-      </Form.Item>
+
 
       {/* Bet Amount */}
       <Form.Item label="Số tiền đặt cược" required>

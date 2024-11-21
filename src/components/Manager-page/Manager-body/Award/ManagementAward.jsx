@@ -192,6 +192,17 @@ function ManagementAward() {
         onCancel={handleCancel}
         onOk={() => form.submit()}
         okText={editingAward ? 'Update' : 'Create'}
+        footer={
+          <div style={{display:'flex', justifyContent:'space-between'}}>
+          <Button key="submit" type="primary" onClick={() => form.submit()}>
+            {editingAward ? 'Update' : 'Create'}
+          </Button>,
+            <Button key="cancel" onClick={handleCancel}>
+              Cancel
+            </Button>,
+          </div>
+
+        }
       >
         <Form form={form} layout="vertical" onFinish={handleSaveAward}>
           <Form.Item
@@ -210,6 +221,7 @@ function ManagementAward() {
           </Form.Item>
         </Form>
       </Modal>
+
     </div>
   );
 }

@@ -114,7 +114,7 @@ function ManagementKoiRegis() {
   return (
     <div>
       <h2>Koi Registrations Management</h2>
-      <Table dataSource={koiRegistrations} columns={columns} rowKey="koi_id" />
+      <Table dataSource={koiRegistrations} columns={columns} rowKey="koi_id" pagination={{ pageSize: 3 }}/>
 
       <Modal
         title={<div className="modal-title">Update Koi Registration</div>}

@@ -9,6 +9,7 @@ import HistoryBet from '../Customer-HistoryBet/HistoryBet';
 import HistoryRegisKoi from '../Customer-HistoryRegistration/HistoryRegisKoi';
 import CompetitionResult from '../CustomerCompetition/CompetitionResult';
 import CustomerResetPassword from '../Customer-Password/CustomerResetPassword';
+import ResultMatch from '../CustomerCompetition/ResultMatch';
 
 function CustomeProfile() {
   const { user, setUser } = useUser();
@@ -140,6 +141,7 @@ function CustomeProfile() {
         <div className='button-customer'>
           <CustomerResetPassword/>
           <CompetitionResult/>
+          <ResultMatch/>
         </div>
 
 
