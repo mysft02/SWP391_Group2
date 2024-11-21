@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Input, message, Select, Collapse } from 'antd';
-import { UserOutlined, TrophyOutlined, DollarOutlined, LoginOutlined, AppstoreAddOutlined } from '@ant-design/icons'; // Added more icons
+import { UserOutlined, TrophyOutlined, DollarOutlined, LoginOutlined, AppstoreAddOutlined, CheckCircleOutlined, PhoneOutlined, MailFilled, NumberOutlined } from '@ant-design/icons'; // Added more icons
 import { api } from '../../../config/AxiosConfig';
 import { useUser } from '../../../data/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +124,7 @@ function NewsContentDisplay({ filteredNews }) {
             <p>Award: {news.award.award_name}</p>
             <p>Created At: {new Date(news.start_time).toLocaleDateString()}</p>
             <div style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-              <Button onClick={() => showRankDetailModal(news)} icon={<TrophyOutlined />}>Detail Rank</Button>
+              <Button onClick={() => showRankDetailModal(news)} icon={<TrophyOutlined />}>Detail Competition</Button>
               <Button onClick={() => showRegisterModal(news)} icon={<AppstoreAddOutlined />}>Register Competition</Button>
             </div>
           </div>
@@ -134,38 +134,46 @@ function NewsContentDisplay({ filteredNews }) {
       )}
 
       <Modal
-        title="Detail Rank"
+        title="Detail Competition"
         visible={isRankDetailModalVisible}
         onCancel={handleCancel}
         footer={[<Button key="back" onClick={handleCancel} icon={<LoginOutlined />}>Close</Button>]}
       >
         {selectedNews && (
           <div>
-            <Collapse>
-              <Panel header="Category Details" style={{ marginBottom: '15px' }}>
-                <p><strong>Category Name:</strong> {selectedNews.category.category_name}</p>
-                <p><strong>Color:</strong> {selectedNews.category.koiStandard?.color_koi || 'N/A'}</p>
-                <p><strong>Pattern:</strong> {selectedNews.category.koiStandard?.pattern_koi || 'N/A'}</p>
-                <p><strong>Size:</strong> {selectedNews.category.koiStandard?.size_koi || 'N/A'}</p>
-                <p><strong>Age:</strong> {selectedNews.category.koiStandard?.age_koi || 'N/A'}</p>
-                <p><strong>Body Shape:</strong> {selectedNews.category.koiStandard?.bodyshape_koi || 'N/A'}</p>
-                <p><strong>Variety:</strong> {selectedNews.category.koiStandard?.variety_koi || 'N/A'}</p>
-              </Panel>
+            <h4><TrophyOutlined style={{marginRight:5}}/>{selectedNews.competition_name}</h4>
 
-              <Panel header="Referee Details" style={{ marginBottom: '15px' }}>
-                <p><strong>Name:</strong> {selectedNews.referee?.refereeName || 'N/A'}</p>
-                <p><strong>Experience:</strong> {selectedNews.referee?.expJudge || 'N/A'}</p>
-                <p><strong>Full Name:</strong> {selectedNews.referee?.user?.full_name || 'N/A'}</p>
-                <p><strong>Email:</strong> {selectedNews.referee?.user?.email || 'N/A'}</p>
-                <p><strong>Phone:</strong> {selectedNews.referee?.user?.phone || 'N/A'}</p>
-              </Panel>
+            <p>
+              <strong><UserOutlined style={{ marginRight: '8px' }} /> Number of Attendees:</strong> {selectedNews.number_attendees || 'N/A'}
+            </p>
 
-              <Panel header="Award Details" style={{ marginBottom: '15px' }}>
-                <p><strong>Award Name:</strong> {selectedNews.award?.award_name || 'N/A'}</p>
-                <p><strong>Quantity:</strong> {selectedNews.award?.quantity || 'N/A'}</p>
-                <p><strong>Number of Attendees:</strong> {selectedNews.number_attendees || 'N/A'}</p>
-              </Panel>
-            </Collapse>
+      <Collapse>
+        {/* Category Details Panel */}
+        <Panel header="Category Details" style={{ marginBottom: '15px' }}>
+          <p><strong><DollarOutlined style={{ marginRight: '8px' }} /> Category Name:</strong> {selectedNews.category.category_name}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Color:</strong> {selectedNews.category.koiStandard?.color_koi || 'N/A'}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Pattern:</strong> {selectedNews.category.koiStandard?.pattern_koi || 'N/A'}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Size:</strong> {selectedNews.category.koiStandard?.size_koi || 'N/A'}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Age:</strong> {selectedNews.category.koiStandard?.age_koi || 'N/A'}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Body Shape:</strong> {selectedNews.category.koiStandard?.bodyshape_koi || 'N/A'}</p>
+          <p><strong><CheckCircleOutlined style={{ marginRight: '8px' }} /> Variety:</strong> {selectedNews.category.koiStandard?.variety_koi || 'N/A'}</p>
+        </Panel>
+
+        {/* Referee Details Panel */}
+        <Panel header="Referee Details" style={{ marginBottom: '15px' }}>
+          <p><strong><UserOutlined style={{ marginRight: '8px' }} /> Name:</strong> {selectedNews.referee?.refereeName || 'N/A'}</p>
+          <p><strong><TrophyOutlined style={{ marginRight: '8px' }} /> Experience:</strong> {selectedNews.referee?.expJudge || 'N/A'}</p>
+          <p><strong><UserOutlined style={{ marginRight: '8px' }} /> Full Name:</strong> {selectedNews.referee?.user?.full_name || 'N/A'}</p>
+          <p><strong><MailFilled style={{ marginRight: '8px' }} /> Email:</strong> {selectedNews.referee?.user?.email || 'N/A'}</p>
+          <p><strong><PhoneOutlined style={{ marginRight: '8px' }} /> Phone:</strong> {selectedNews.referee?.user?.phone || 'N/A'}</p>
+        </Panel>
+
+        {/* Award Details Panel */}
+        <Panel header="Award Details" style={{ marginBottom: '15px' }}>
+          <p><strong><TrophyOutlined style={{ marginRight: '8px' }} /> Award Name:</strong> {selectedNews.award?.award_name || 'N/A'}</p>
+          <p><strong><NumberOutlined style={{ marginRight: '8px' }} /> Quantity:</strong> {selectedNews.award?.quantity || 'N/A'}</p>
+        </Panel>
+      </Collapse>
           </div>
         )}
       </Modal>

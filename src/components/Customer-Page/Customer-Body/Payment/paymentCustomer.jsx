@@ -32,7 +32,7 @@ const PaymentCustomer = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get("vnp_ResponseCode");
     if (status && !hasDisplayedError) {
-      setHasDisplayedError(true);
+      setHasDisplayedError(false);
       if (status === "00") {
         processVnPay();
         antdMessage.success("Thanh toán thành công!");

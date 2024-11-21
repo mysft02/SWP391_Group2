@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, message, Modal, Col, Divider } from 'antd';
-import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, DollarOutlined, PlusOutlined } from '@ant-design/icons';
+import { UserOutlined, PhoneOutlined, MailOutlined, LockOutlined, DollarOutlined, PlusOutlined, DockerOutlined } from '@ant-design/icons';
 import { api } from '../../../../config/AxiosConfig';
 import { useUser } from '../../../../data/UserContext';
 import './CustomeProfile.css';
@@ -36,6 +36,10 @@ function CustomeProfile() {
   const handlePaymentClick = () => {
     // Điều hướng đến trang Payment khi nhấn vào nút "+"
     navigate('/member/payment');
+  };
+  const handleFishKoiClick = () => {
+    // Điều hướng đến trang Payment khi nhấn vào nút "+"
+    navigate('/member/fish-koi');
   };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -149,6 +153,10 @@ function CustomeProfile() {
           <Button type="primary" htmlType="submit" onClick={handlePaymentClick} style={{color: '#FFD700'}}>
           <PlusOutlined />
             Nạp Tiền
+          </Button>
+          <Button type="primary" htmlType="submit" onClick={handleFishKoiClick} style={{color: '#FFD700'}}>
+          <DockerOutlined/>
+            Tạo Cá Koi
           </Button>
           <CustomerResetPassword/>
           <CompetitionResult/>
